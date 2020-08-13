@@ -17,8 +17,7 @@ body {
 .feature-display {
   margin-top: 4rem;
 }
-  
-/* Center align the text within the three columns below the carousel */
+
 .feature-display .col-lg-4 {
   margin-bottom: 1.5rem;
   text-align: center;
@@ -35,25 +34,25 @@ body {
 }
 
 .fa-image {
-  font-size: 75px;
-  color: white;
   background:#DB4437;
-  padding:30px;
   border-radius: 50%;
+  color: white;
+  font-size: 75px;
+  padding:30px;
 }
 
 .fa-list {
-  font-size: 75px;
-  color: white;
   background: #F4B400;
-  padding:30px;
   border-radius: 50%;
+  color: white;
+  font-size: 75px;
+  padding:30px;
 }
 
 .fa-barcode {
-  font-size: 75px;
-  color: white;
   background:#0F9D58;
-  padding:30px;
   border-radius: 50%;
+  color: white;
+  font-size: 75px;
+  padding:30px;
 }
