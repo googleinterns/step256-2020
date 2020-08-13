@@ -1,16 +1,16 @@
 /* Padding below the footer and lighter body text */
 body {
-  padding-top: 3rem;
-  padding-bottom: 3rem;
   color: #5a5a5a;
+  padding-bottom: 3rem;
+  padding-top: 3rem;
 }
 
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
-  -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  -webkit-user-select: none;
   user-select: none; 
 }
   
@@ -25,11 +25,35 @@ body {
 }
 
 .feature-display h2 {
-  margin-top: 1.5rem;
   font-weight: 400;
+  margin-top: 1.5rem;
 }
 
 .feature-display .col-lg-4 p {
-  margin-right: .75rem;
   margin-left: .75rem;
+  margin-right: .75rem;
+}
+
+.fa-image {
+  font-size: 75px;
+  color: white;
+  background:#DB4437;
+  padding:30px;
+  border-radius: 50%;
+}
+
+.fa-list {
+  font-size: 75px;
+  color: white;
+  background: #F4B400;
+  padding:30px;
+  border-radius: 50%;
+}
+
+.fa-barcode {
+  font-size: 75px;
+  color: white;
+  background:#0F9D58;
+  padding:30px;
+  border-radius: 50%;
 }
