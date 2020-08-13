@@ -1,3 +1,8 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 /* Padding below the footer and lighter body text */
 body {
   color: #5a5a5a;
@@ -69,4 +74,12 @@ body {
 h1 {
   font-family: 'Patrick Hand SC', cursive;
   font-size: 55px;
+}
+
+/* Sticky footer */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #f5f5f5;
 }
