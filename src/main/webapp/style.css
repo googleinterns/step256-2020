@@ -1,0 +1,84 @@
+html {
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+  color: #5a5a5a;
+  padding-bottom: 3rem; /* Padding below the footer */
+  padding-top: 3rem;
+}
+
+.bd-placeholder-img {  
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  font-size: 1.125rem;
+  text-anchor: middle;
+  user-select: none; 
+}
+  
+.feature-display {
+  margin-top: 4rem;
+}
+
+.feature-display .col-lg-4 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.feature-display h2 {
+  font-weight: 400;
+  margin-top: 1.5rem;
+}
+
+.feature-display .col-lg-4 p {
+  margin-left: .75rem;
+  margin-right: .75rem;
+}
+
+.fa-image {
+  background:#DB4437;
+  border-radius: 50%;
+  color: white;
+  font-size: 75px;
+  padding:30px;
+}
+
+.fa-list {
+  background: #F4B400;
+  border-radius: 50%;
+  color: white;
+  font-size: 75px;
+  padding:30px;
+}
+
+.fa-barcode {
+  background:#0F9D58;
+  border-radius: 50%;
+  color: white;
+  font-size: 75px;
+  padding:30px;
+}
+
+.navbar-brand {
+  font-family: 'Patrick Hand SC', cursive;
+  font-size: 30px;
+}
+
+.nav-item {
+  font-size: 18px;
+}
+
+h1 {
+  font-family: 'Patrick Hand SC', cursive;
+  font-size: 55px;
+}
+
+/* Sticky footer */
+.footer {
+  background-color: #f5f5f5;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+}
