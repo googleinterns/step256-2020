@@ -22,7 +22,7 @@
   <link href="style.css" rel="stylesheet">
 </head>
 
-<body onload="fetchBlobstoreUrlAndShowForm();">
+<body onload="fetchBlobstoreUrlAndShowForm(); getAndShowImages();">
   <header>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -83,7 +83,7 @@
             <button class="close" onclick="closeDiv()"> + </button>
              <h1> Upload barcode </h1>
              <br>
-                <form id="upload-barcode" class="hidden" method="POST" enctype="multipart/form-data">
+                <form id="upload-barcode-form" class="hidden" method="POST" enctype="multipart/form-data">
                   <input type="file" name="barcode" required>
                   <br>
                   <button>Submit</button>
@@ -92,6 +92,10 @@
         </div>
 
       </div><!-- /.row -->
+
+      <div id="history"> <h1>History  </h1>
+      <div id= "history-images"> </div>   
+      <div>
 
   </main>
 
@@ -112,7 +116,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
     integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
     crossorigin="anonymous"></script>
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 
 </body>
 
