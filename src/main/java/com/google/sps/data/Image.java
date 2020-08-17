@@ -2,6 +2,9 @@ package com.google.sps.data;
 
 import com.google.auto.value.AutoValue;
 
+/**
+ * Class containing information about an uploaded image.
+ */
 @AutoValue public abstract class Image {
 
   public static Image create(long id, String blobKey, long timestamp) {
