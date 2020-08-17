@@ -74,13 +74,13 @@
           <p>
             Upload a barcode
           </p>
-          <p><button class="btn btn-secondary" id="upload-barcode" onclick="fileUploadDisplay()">Upload barcode photo »</button></p>
+          <p><button class="btn btn-secondary" id="upload-barcode" onclick="openFileUploadDialog()">Upload barcode photo »</button></p>
         </div><!-- /.col-lg-4 -->
 
         <!-- UPLOAD DIV -->
         <div class="bg-model">
           <div class= "model-content">
-            <button class="close" onclick="closeDiv()"> + </button>
+            <button class="close" onclick="closeFileUploadDialog()"> + </button>
              <h1> Upload barcode </h1>
              <br>
                 <form id="upload-barcode-form" class="hidden" method="POST" enctype="multipart/form-data">
@@ -93,9 +93,9 @@
 
       </div><!-- /.row -->
 
-      <div id="history">
+      <div id ="history">
           <h1>History</h1>
-          <div id= "history-images"> </div>   
+          <div id = "history-images"> </div>   
       <div>
 
   </main>

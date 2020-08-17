@@ -15,14 +15,14 @@
 /**
  * Event processing for upload button
  */
-function fileUploadDisplay() {
+function openFileUploadDialog() {
   document.querySelector('.bg-model').style.display = 'flex';
 }
 
 /**
  * Event processing for close button
  */
-function closeDiv() {
+function closeFileUploadDialog() {
   document.querySelector('.bg-model').style.display = 'none';
 }
 
@@ -54,8 +54,9 @@ function getAndShowImages() {
       'Accept': 'application/json',
     },
   })
-      .then((response) => response.json()).then((imageDetails) => {
-        if (imageDetails.length == 0) {
+      .then((response) => response.json())
+      .then((imageDetails) => {
+        if (imageDetails.length === 0) {
           imageListElement.innerText = 'No history';
         } else {
           imageDetails.forEach((imageDetail) => {
