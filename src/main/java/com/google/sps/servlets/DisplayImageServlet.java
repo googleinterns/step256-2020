@@ -31,7 +31,6 @@ public class DisplayImageServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     BlobKey blobKey = new BlobKey(request.getParameter("blob-key"));
     response.setContentType("image/jpeg");
     // Displays the picture when called with bolb-keys.
