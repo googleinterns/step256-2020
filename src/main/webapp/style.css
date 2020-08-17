@@ -83,61 +83,59 @@ h1 {
   width: 100%;
 }
 
-/* css for upload function */
+/* CSS for upload function */
 .bg-model {
-  padding-bottom: 3rem; /* Padding below the footer */
-  padding-top: 3rem;
-  margin-top: 4%;
-  margin-bottom: 3%;
-  width: 100%;
-  height:90%;
-  background-color: rgba(0, 0, 0, 0.9); /* For the child element to not inherit opacity use rgba!!!!!!Here a is alpha ie the opacity channel */
-  position: absolute ;
-  top:0;
-  left:0;
-  display: flex;
-  justify-content: center;
-  align-items: center; /* align vertically*/
-  display: none;
+  align-items: center; /* Align vertically*/
   background: cover;
-  color: white;
   background-attachment: fixed;
+  background-color: rgba(0, 0, 0, 0.9);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  color: white;
+  display: none;
   font-size: 20px;
+  height:90%;
+  justify-content: center;
+  margin-bottom: 3%;
+  margin-top: 4%;
+  position: absolute ;
+  top:0;
+  left:0;
+  padding-bottom: 3rem; /* Padding below the footer */
+  padding-top: 3rem;
+  width: 100%;
 }
 
 .model-content {
   height: 23%;
-  width: 80%;
-  text-align: center;
   padding: 10%;
   position: absolute;
   top: 0;
+  text-align: center;
+  width: 80%;
 }
 
 input {
-  width: 50%;
   display:  block;
   margin: 15px auto;
+  width: 50%;
 }
 
 .close {
-  position: absolute;
-  margin: 3%;
-  top: 0;
-  right: 14px;
-  font-size: 50px;
-  transform: rotate(45deg);
-  cursor: pointer;
   color: white;
+  cursor: pointer;
+  font-size: 50px;
+  margin: 3%;
+  position: absolute;
+  right: 14px;
+  top: 0;
+  transform: rotate(45deg);
 }
 
 .form-content {
-  text-align: left;
   padding: 2%;
-
+  text-align: left;
 }
 
 /* Upload images form is hidden by default. */

@@ -1,27 +1,36 @@
-/* event processing for upload button */
-function uploadFile() {
-    document.querySelector('.bg-model').style.display='flex';
+/**
+ * Event processing for upload button
+ */
+function fileUploadDisplay() {
+  document.querySelector('.bg-model').style.display = 'flex';
 }
-    
-/*event processing for close button */
+
+/**
+ * Event processing for close button
+ */
 function closeDiv() {
-    document.querySelector('.bg-model').style.display='none';
+  document.querySelector('.bg-model').style.display = 'none';
 }
 
-/** Makes the form visible and adds the 'action' to it by fetching
-the url(that the form needs to post to) from the servlet */
+/**
+ * Makes the form visible and adds the 'action' to it by fetching
+ * the url(that the form needs to post to) from the servlet
+ */
 function fetchBlobstoreUrlAndShowForm() {
-    fetch('/blobstore-upload-url')
-        .then((response) => response.text())
-        .then((imageUploadUrl) => {
-          const uploadForm = document.getElementById('upload-barcode-form');
-          uploadForm.action = imageUploadUrl;
-          uploadForm.classList.remove('hidden');
-        });
-  }
+  fetch('/blobstore-upload-url')
+      .then((response) => response.text())
+      .then((imageUploadUrl) => {
+        const uploadForm = document.getElementById('upload-barcode-form');
+        uploadForm.action = imageUploadUrl;
+        uploadForm.classList.remove('hidden');
+      });
+}
 
-  /** Fetching all image urls stored in datastore and
-presenting them on screen along with date/time and its message */
+/**
+ * Fetching all image keys stored in datastore and
+ * presenting them on screen along with date/time and its message
+ * using get-image-url servlet
+ */
 function getAndShowImages() {
   const imageListElement = document.getElementById('history-images');
 
@@ -32,7 +41,7 @@ function getAndShowImages() {
     },
   })
       .then((response) => response.json()).then((imageDetails) => {
-        if (imageDetails.length==0) {
+        if (imageDetails.length == 0) {
           imageListElement.innerText = 'No history';
         } else {
           imageDetails.forEach((imageDetail) => {
@@ -42,19 +51,25 @@ function getAndShowImages() {
       });
 }
 
-/** Creating an image element when imageDetail is passed to it
-from the getAndShowImages function*/
+/**
+ * Creating an image element when imageDetail is passed to it
+ * from the getAndShowImages function
+ * @return {Object} an imageElement ie the image and the
+ * date/time when it was first posted.
+ * @param {Object} imageDetail contains details of the images ie
+ * image key and date for each image key in datastore.
+ */
 function createImageElement(imageDetail) {
   const imageElement = document.createElement('li');
   imageElement.className = 'image-element';
 
   const blobstoreKey = imageDetail.blobKey;
-  const imageUrl= '/get-image-url?blob-key='+blobstoreKey;
+  const imageUrl = '/get-image?blob-key='+blobstoreKey;
 
   const myImg = document.createElement('IMG');
   myImg.className = 'image';
   myImg.setAttribute('src', imageUrl);
-  myImg.setAttribute('width', '100');
+  myImg.setAttribute('width', 'auto');
   myImg.setAttribute('height', '100');
   myImg.setAttribute('alt', imageUrl);
 
@@ -73,4 +88,3 @@ function createImageElement(imageDetail) {
   imageElement.appendChild(myExpandedImg);
   return imageElement;
 }
-    
