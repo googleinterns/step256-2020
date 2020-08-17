@@ -49,11 +49,11 @@ public class ImageHandlerServlet extends HttpServlet {
 
     // The form only contains a single file input, so get the first index.
     BlobKey blobKey = blobKeys.get(0);
-    String blobKey_String = blobKey.getKeyString();
+    String blobKeyString = blobKey.getKeyString();
 
     // Store the image Keys in Datastore
     Entity imageEntity = new Entity("barcode");
-    imageEntity.setProperty("blobKey", blobKey_String);
+    imageEntity.setProperty("blobKey", blobKeyString);
     imageEntity.setProperty("timestamp", System.currentTimeMillis());
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
