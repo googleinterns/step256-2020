@@ -12,18 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps;
+package com.google.sps.data;
+
+import com.google.auto.value.AutoValue;
 
 /**
- * Class responsible for testing the repository setup.
+ * Class containing information about an uploaded image.
  */
-public class Setup {
-  public static void main(String[] args) {
-    Setup setup = new Setup();
-    System.out.println(setup.echo());
+@AutoValue
+public abstract class Image {
+
+  public static Image create(long id, String blobKey, long timestamp) {
+    return new AutoValue_Image(id, blobKey, timestamp);
   }  
   
-  public static String echo() {
-    return "Hello World!";
-  }
+  public abstract long id();
+  public abstract String blobKey();
+  public abstract long timestamp();
 }
