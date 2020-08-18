@@ -22,11 +22,8 @@ public class SearchServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		String searchURL = GOOGLE_SEARCH_URL + "&q=Shoe&num=3";
-		//without proper User-Agent, we will get 403 error
+		// Without proper User-Agent, we will get 403 error
 		Document doc = Jsoup.connect(searchURL).userAgent("Mozilla/5.0").get();
-		
-		//below will print HTML data, save it to a file and open in browser to compare
-		//System.out.println(doc.html());
 
         ArrayList<String> media_list =new ArrayList<>();
         ArrayList<String> imports_list =new ArrayList<>();
