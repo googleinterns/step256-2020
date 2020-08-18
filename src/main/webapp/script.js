@@ -27,17 +27,21 @@ function closeFileUploadDialog() {
 }
 
 /**
- * Makes the form for uploading an image visible and adds the 'action' to it by fetching
+ * Makes the form for uploading an image visible and
+ * adds the 'action' to it by fetching
  * the url(that the form needs to post to) from the servlet
  */
-function fetchBlobstoreUrlAndShowForm() {
-  fetch('/blobstore-upload-url')
-      .then((response) => response.text())
-      .then((imageUploadUrl) => {
-        const uploadForm = document.getElementById('upload-barcode-form');
-        uploadForm.action = imageUploadUrl;
-        uploadForm.classList.remove('hidden');
-      });
+async function fetchBlobstoreUrlAndShowForm() {
+  const response = await fetch('/blobstore-upload-url');
+  let imageUploadUrl;
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  } else {
+    imageUploadUrl = await response.text();
+    const uploadForm = document.getElementById('upload-barcode-form');
+    uploadForm.action = imageUploadUrl;
+    uploadForm.classList.remove('hidden');
+  }
 }
 
 /**
@@ -45,25 +49,27 @@ function fetchBlobstoreUrlAndShowForm() {
  * displays them on the web page along with date, time and message
  * using get-image-url servlet
  */
-function getAndShowImages() {
+async function getAndShowImages() {
   const imageListElement = document.getElementById('history-images');
-
-  fetch('/handle-image', {
+  const response = await fetch('/handle-image', {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
-  })
-      .then((response) => response.json())
-      .then((imageDetails) => {
-        if (imageDetails.length === 0) {
-          imageListElement.innerText = 'No history';
-        } else {
-          imageDetails.forEach((imageDetail) => {
-            imageListElement.appendChild(createImageElement(imageDetail));
-          });
-        }
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  } else {
+    const imageDetails = await response.json();
+    if (imageDetails.length === 0) {
+      imageListElement.innerText = 'No history';
+    } else {
+      imageDetails.forEach((imageDetail) => {
+        imageListElement.appendChild(createImageElement(imageDetail));
       });
+    }
+  }
 }
 
 /**
