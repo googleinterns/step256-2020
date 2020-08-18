@@ -36,6 +36,7 @@ async function fetchBlobstoreUrlAndShowForm() {
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
+  
   let imageUploadUrl = await response.text();
   const uploadForm = document.getElementById('upload-barcode-form');
   uploadForm.action = imageUploadUrl;
@@ -58,11 +59,12 @@ async function getAndShowImages() {
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const imageDetails = await response.json();
+  if (imageDetails.length === 0) {
+    imageListElement.innerText = 'No history';
   } else {
-    const imageDetails = await response.json();
-    if (imageDetails.length === 0) {
-      imageListElement.innerText = 'No history';
-    }
     imageDetails.forEach((imageDetail) => {
       imageListElement.appendChild(createImageElement(imageDetail));
     });
