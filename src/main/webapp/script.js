@@ -33,15 +33,13 @@ function closeFileUploadDialog() {
  */
 async function fetchBlobstoreUrlAndShowForm() {
   const response = await fetch('/blobstore-upload-url');
-  let imageUploadUrl;
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
-  } else {
-    imageUploadUrl = await response.text();
-    const uploadForm = document.getElementById('upload-barcode-form');
-    uploadForm.action = imageUploadUrl;
-    uploadForm.classList.remove('hidden');
   }
+  let imageUploadUrl = await response.text();
+  const uploadForm = document.getElementById('upload-barcode-form');
+  uploadForm.action = imageUploadUrl;
+  uploadForm.classList.remove('hidden');
 }
 
 /**
@@ -64,11 +62,10 @@ async function getAndShowImages() {
     const imageDetails = await response.json();
     if (imageDetails.length === 0) {
       imageListElement.innerText = 'No history';
-    } else {
-      imageDetails.forEach((imageDetail) => {
-        imageListElement.appendChild(createImageElement(imageDetail));
-      });
     }
+    imageDetails.forEach((imageDetail) => {
+      imageListElement.appendChild(createImageElement(imageDetail));
+    });
   }
 }
 
