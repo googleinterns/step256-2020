@@ -58,7 +58,7 @@
             Choose an image with the product you are searching for, and we'll compile a shopping 
             list of similar products for you.
           </p>
-          <p><a class="btn btn-secondary" href="#" role="button">Upload product photo »</a></p>
+          <p><button class="btn btn-secondary">Upload product photo »</button></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <i class="fa fa-list"></i>
@@ -66,7 +66,7 @@
           <p>
             The shopping list may be hand-written.
           </p>
-          <p><a class="btn btn-secondary" href="#" role="button">Upload list photo »</a></p>
+          <p><button class="btn btn-secondary">Upload list photo »</button></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <i class="fa fa-barcode"></i>
@@ -74,18 +74,16 @@
           <p>
             Upload a barcode
           </p>
-          <p><a class="btn btn-secondary" href="#" role="button" id="upload-barcode" onclick="fileUploadDisplay()">Upload barcode photo »</a></p>
+          <p><button class="btn btn-secondary" id="upload-barcode" onclick="openFileUploadDialog()">Upload barcode photo »</button></p>
         </div><!-- /.col-lg-4 -->
 
         <!-- UPLOAD DIV -->
         <div class="bg-model">
-          <div class= "model-content">
-            <button class="close" onclick="closeDiv()"> + </button>
+          <div class="model-content">
+            <button class="close" onclick="closeFileUploadDialog()"> + </button>
              <h1> Upload barcode </h1>
-             <br>
                 <form id="upload-barcode-form" class="hidden" method="POST" enctype="multipart/form-data">
                   <input type="file" name="barcode" required>
-                  <br>
                   <button>Submit</button>
                 </form>
             </div>
@@ -95,7 +93,7 @@
 
       <div id="history">
           <h1>History</h1>
-          <div id= "history-images"> </div>   
+          <div id="history-images"> </div>   
       <div>
 
   </main>
