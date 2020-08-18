@@ -1,27 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Shopping with photos">
-  <meta name="author" content="Saakshi Saxena and Raluca Tudor">
-  <meta name="generator" content="Jekyll v4.1.1">
-  <title>Shopping with Photos</title>
-
+  
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand+SC&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand+SC&display=swap">
+    
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="shopping-results-style.css">
 
-  <link href="style.css" rel="stylesheet">
+  <title>Shopping with Photos</title>
 </head>
-
 <body>
   <header>
     <!-- Navigation Bar -->
@@ -46,37 +42,19 @@
 
   <main role="main">
 
-    <!-- Wrap the rest of the page in another container to center all the content. -->
+    <section class="jumbotron text-center">
+      <div class="container">
+        <h1>Shoping Results</h1>
+        <p class="lead text-muted">Here are the shopping results.</p>
+        <p>
+          <a href="index.html" class="btn btn-primary my-2">Back to search</a>
+        </p>
+      </div>
+    </section>
 
-    <div class="container feature-display">
-      <h1 class="text-center mb-5">Shop with...</h1>
-      <div class="row">
-        <div class="col-lg-4">
-          <i class="fa fa-image"></i>
-          <h2>Product Photo</h2>
-          <p>
-            Choose an image with the product you are searching for, and we'll compile a shopping 
-            list of similar products for you.
-          </p>
-          <p><a class="btn btn-secondary" href="#" role="button">Upload product photo »</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <i class="fa fa-list"></i>
-          <h2>Shopping List</h2>
-          <p>
-            The shopping list may be hand-written.
-          </p>
-          <p><a class="btn btn-secondary" href="#" role="button">Upload list photo »</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <i class="fa fa-barcode"></i>
-          <h2>Barcode</h2>
-          <p>
-            Upload a barcode
-          </p>
-          <p><a class="btn btn-secondary" href="#" role="button">Upload barcode photo »</a></p>
-        </div><!-- /.col-lg-4 -->
-      </div><!-- /.row -->
+    <div class="album py-5 bg-light">
+      <div class="container"></div>
+    </div>
 
   </main>
 
@@ -99,5 +77,4 @@
     crossorigin="anonymous"></script>
 
 </body>
-
 </html>
