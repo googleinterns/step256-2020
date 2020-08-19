@@ -1,5 +1,5 @@
 function buildUI() {
-  fetch('/test-search').then(response => response.text()).then((SERP) => {
+  fetch('/search-shopping-results').then(response => response.text()).then((SERP) => {
 
     let items = $('.u30d4', SERP);
 

@@ -15,13 +15,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/test-search")
-public class TestSearchServlet extends HttpServlet {
+@WebServlet("/search-shopping-results")
+public class ShoppingResultsServlet extends HttpServlet {
 
-  public static final String GOOGLE_SEARCH_URL = "https://www.google.com//search?safe=strict&hl=en&tbm=shop&source=h&tbs=vw:l";//&tbs=vw:g for view and removes ads, tbm=shop means google shopping
+  public static final String GOOGLE_SEARCH_URL = 
+      "https://www.google.com//search?safe=strict&hl=en&tbm=shop&source=h&tbs=vw:l";  // &tbs=vw:g for view and removes ads, tbm=shop means google shopping
+  
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		String searchURL = GOOGLE_SEARCH_URL + "&q=Shoe&num=3";
+		String searchURL = GOOGLE_SEARCH_URL + "&q=Running%20Shoes%20for%20women&num=10";
+
 		// Without proper User-Agent, we will get 403 error
 		Document doc = Jsoup.connect(searchURL).userAgent("Mozilla/5.0").get();
 
