@@ -34,11 +34,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/my-image-servlet")
-public class FormHandlerServlet extends HttpServlet {
+@WebServlet("/handle-image")
+public class ImageHandlerServlet extends HttpServlet {
   private final BlobstoreService blobstoreService;
 
-  public FormHandlerServlet() {
+  public ImageHandlerServlet() {
     blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
   }
 
@@ -47,13 +47,13 @@ public class FormHandlerServlet extends HttpServlet {
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
     List<BlobKey> blobKeys = blobs.get("barcode");
 
-    // Our form only contains a single file input, so get the first index.
+    // The form only contains a single file input, so get the first index.
     BlobKey blobKey = blobKeys.get(0);
-    String blobKey_String = blobKey.getKeyString();
+    String blobKeyString = blobKey.getKeyString();
 
-    // Storing the image Keys in Datastore
+    // Store the image Keys in Datastore
     Entity imageEntity = new Entity("barcode");
-    imageEntity.setProperty("blobKey", blobKey_String);
+    imageEntity.setProperty("blobKey", blobKeyString);
     imageEntity.setProperty("timestamp", System.currentTimeMillis());
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

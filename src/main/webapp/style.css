@@ -73,6 +73,7 @@ body {
 h1 {
   font-family: 'Patrick Hand SC', cursive;
   font-size: 55px;
+  margin-bottom: 5%;
 }
 
 /* Sticky footer */
@@ -119,6 +120,7 @@ h1 {
 input {
   display:  block;
   margin: 15px auto;
+  margin-bottom: 5%;
   width: 50%;
 }
 
@@ -131,11 +133,6 @@ input {
   right: 14px;
   top: 0;
   transform: rotate(45deg);
-}
-
-.form-content {
-  padding: 2%;
-  text-align: left;
 }
 
 /* Upload images form is hidden by default. */
