@@ -12,34 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.journaldev.jsoup;
+package com.google.sps.servlets;
 
 import java.io.IOException;
-
-import org.jsoup.Jsoup;
-import org.jsoup.helper.Validate;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import com.google.gson.Gson;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 @WebServlet("/search-shopping-results")
 public class ShoppingResultsServlet extends HttpServlet {
   
   public static final String GOOGLE_SEARCH_URL = 
-      "https://www.google.com//search?safe=strict&hl=en&tbm=shop&source=h&tbs=vw:l";  // &tbs=vw:g for view and removes ads, tbm=shop means google shopping
+      "https://www.google.com//search";  
   
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
-    String searchURL = GOOGLE_SEARCH_URL + "&q=Running%20Shoes%20for%20women&num=10";
+    String safetyCheck = "safe=strict";
+    String languageParam = "hl=en";
+    String searchType = "tbm=shop";
+    String source = "source=h";
+    String tbs = "tbs=vw:l"; // tbs=vw for view and removes ads
+    String query = "&q=Running%20Shoes%20for%20women";
+    String maxResultsNum = "num=10";
+
+    String searchURL = GOOGLE_SEARCH_URL + "?" + safetyCheck + "&" + languageParam + "&" + searchType 
+    + "&" +source + "&" + tbs + "&" + query + "&" + maxResultsNum;
     
-    // Without proper User-Agent, we will get 403 error
+    // Without proper User-Agent, it will result in a 403 error.
     Document doc = Jsoup.connect(searchURL).userAgent("Mozilla/5.0").get();
     
     response.setContentType("text/html");
