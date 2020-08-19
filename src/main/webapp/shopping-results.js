@@ -15,28 +15,41 @@
 function buildUI() {
   fetch('/search-shopping-results').then(response => response.text()).then((SERP) => {
 
-    let items = $('.u30d4', SERP);
+    // Get product elements from the HTML returned
+    let productElementsHTML = $('.u30d4', SERP);
 
-    for (let i = 0 ; i < items.length - 1; i++) {
-      let productImageLink = $('.oR27Gd > img', items[i]).attr('src');
+    for (let i = 0 ; i < productElementsHTML.length - 1; i++) {
+      let currentProductHTML = productElementsHTML[i];
 
-      let productLink = $('.rgHvZc > a', items[i]).attr('href');
+      let productImageLink = $('.oR27Gd > img', currentProductHTML).attr('src');
 
+      let productLink = $('.rgHvZc > a', currentProductHTML).attr('href');
+
+      // Fix product link - if the URL starts with '/url?q=', the URL redirection will not work.
       let wrongStartOfLink = '/url?q=';
-
+      // Therefore delete the start if this is the case, for the redirection to successfully work.
       if (productLink.substring(0, wrongStartOfLink.length) == wrongStartOfLink) {
         productLink = productLink.substring(wrongStartOfLink.length);
       }
       
-      let productTitle = $('.rgHvZc > a', items[i]).text();
+      // Get the info about the product by extracting from the HTML element
 
-      let productPrice = $('.dD8iuc > .HRLxBb', items[i]).text()
+      // Get the title as html instead of text in order to keep the <b> tags
+      let productTitle = $('.rgHvZc > a', currentProductHTML).html();
 
-      let productPriceAndSeller = $('.dD8iuc:nth-of-type(3)', items[i]).text();
+      let productPrice = $('.dD8iuc > .HRLxBb', currentProductHTML).text()
 
-      let productRatingInStars = $('.dD8iuc:nth-of-type(2)', items[i]).text();
+      // Some products do not have rating - define productPriceAndSeller for both cases
+      let productPriceAndSeller;
+      let productRatingInStars;
+      if ($('.dD8iuc:nth-of-type(3)', currentProductHTML).html() == undefined) {
+        productPriceAndSeller = $('.dD8iuc:nth-of-type(2)', currentProductHTML).html();
+      } else {
+        productRatingInStars = $('.dD8iuc:nth-of-type(2)', currentProductHTML).text();
+        productPriceAndSeller = $('.dD8iuc:nth-of-type(3)', currentProductHTML).html();
+      }
 
-      let productShippingPrice = $('.dD8iuc:nth-of-type(1)', items[i]).text();
+      let productShippingPrice = $('.dD8iuc:nth-of-type(1)', currentProductHTML).text();
 
       let htmlItem = 
        `<div class="col-md-4">
