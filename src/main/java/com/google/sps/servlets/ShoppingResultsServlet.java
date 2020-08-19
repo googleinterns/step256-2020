@@ -36,14 +36,14 @@ public class ShoppingResultsServlet extends HttpServlet {
     String source = "source=h";
     String tbs = "tbs=vw:l"; // tbs=vw for view and removes ads
     String query = "&q=Running%20Shoes%20for%20women";
-    String maxResultsNum = "num=10";
+    String maxResultsNum = "num=8";
 
     String searchURL = GOOGLE_SEARCH_URL + "?" + safetyCheck + "&" + languageParam + "&" + searchType 
     + "&" +source + "&" + tbs + "&" + query + "&" + maxResultsNum;
     
     // Without proper User-Agent, it will result in a 403 error.
     Document doc = Jsoup.connect(searchURL).userAgent("Mozilla/5.0").get();
-    
+
     response.setContentType("text/html");
     response.getWriter().println(doc.html());
   }
