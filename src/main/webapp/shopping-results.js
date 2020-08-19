@@ -50,11 +50,26 @@ function buildUI() {
       }
 
       let productShippingPrice = $('.dD8iuc:nth-of-type(1)', currentProductHTML).text();
+      
+      // create a node - append it to html page
+      // then load the content using jQuery's append
+      let itemContainer = document.createElement('div');
+      itemContainer.classList.add('col-md-4');
+      itemContainer.id = `item-${i}`;
 
-      let htmlItem = 
-       `<div class="col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <div class="col-4" style="width:75px;height:75px">
+      document.getElementById('shopping-results-wrapper').appendChild(itemContainer);
+
+      let productElementHTML = 
+          getProductElementHTML(productTitle, productImageLink, productPriceAndSeller, productLink, productShippingPrice);
+
+      $(`#item-${i}`).append(productElementHTML);
+    }
+  });
+}
+
+function getProductElementHTML(productTitle, productImageLink, productPriceAndSeller, productLink, productShippingPrice) {
+  return `<div class="card mb-4 shadow-sm">
+            <div class="col-4">
               <img src="${productImageLink}" class="mx-auto d-block">
             </div>
             <div class="card-body">
@@ -62,17 +77,16 @@ function buildUI() {
               <p class="card-text">${productPriceAndSeller}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href='${productLink}'">View</button>
+                  <button type="button" 
+                          class="btn btn-sm btn-outline-secondary" 
+                          onclick="window.location.href='${productLink}'">
+                    View
+                  </button>
                 </div>
                 <small class="text-muted">${productShippingPrice}</small>
               </div>
             </div>
-          </div>
-        </div>`;
-      
-      document.getElementById('shopping-results-wrapper').innerHTML += htmlItem;
-    }
-  });
+          </div>`;
 }
 
 buildUI();
