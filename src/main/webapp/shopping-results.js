@@ -7,6 +7,12 @@ function buildUI() {
       let productImageLink = $('.oR27Gd > img', items[i]).attr('src');
 
       let productLink = $('.rgHvZc > a', items[i]).attr('href');
+
+      let wrongStartOfLink = '/url?q=';
+
+      if (productLink.substring(0, wrongStartOfLink.length) == wrongStartOfLink) {
+        productLink = productLink.substring(wrongStartOfLink.length);
+      }
       
       let productTitle = $('.rgHvZc > a', items[i]).text();
 
@@ -29,7 +35,7 @@ function buildUI() {
               <p class="card-text">${productPriceAndSeller}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary" onclick="${productLink}">View</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href='${productLink}'">View</button>
                 </div>
                 <small class="text-muted">${productShippingPrice}</small>
               </div>
