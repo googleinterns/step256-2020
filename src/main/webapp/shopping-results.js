@@ -13,14 +13,17 @@
 // limitations under the License.
 
 function buildUI() {
-  fetch('/search-shopping-results').then(response => response.text()).then((SERP) => {
+  // Scrape Shopping Search Results & get SERP
+  fetch('/search-shopping-results').then(response => response.text()).then((shoppingSearchResultsPage) => {
 
     // Get product elements from the HTML returned
-    let productElementsHTML = $('.u30d4', SERP);
+    let productElementsHTML = $('.u30d4', shoppingSearchResultsPage);
 
     for (let i = 0 ; i < productElementsHTML.length - 1; i++) {
       let currentProductHTML = productElementsHTML[i];
-
+      
+      // Get the info about the product by extracting from the HTML element
+      
       let productImageLink = $('.oR27Gd > img', currentProductHTML).attr('src');
 
       let productLink = $('.rgHvZc > a', currentProductHTML).attr('href');
@@ -32,8 +35,6 @@ function buildUI() {
         productLink = productLink.substring(wrongStartOfLink.length);
       }
       
-      // Get the info about the product by extracting from the HTML element
-
       // Get the title as html instead of text in order to keep the <b> tags
       let productTitle = $('.rgHvZc > a', currentProductHTML).html();
 
@@ -51,18 +52,15 @@ function buildUI() {
 
       let productShippingPrice = $('.dD8iuc:nth-of-type(1)', currentProductHTML).text();
       
-      // create a node - append it to html page
-      // then load the content using jQuery's append
-      let itemContainer = document.createElement('div');
-      itemContainer.classList.add('col-md-4');
-      itemContainer.id = `item-${i}`;
-
-      document.getElementById('shopping-results-wrapper').appendChild(itemContainer);
-
+      // Create the wrapper node for the product - append it to the results HTML page,
+      // then load the content using jQuery's append.
+      let $itemContainer = $('<div>', {class: 'col-md-4'});     
+      
       let productElementHTML = 
           getProductElementHTML(productTitle, productImageLink, productPriceAndSeller, productLink, productShippingPrice);
-
-      $(`#item-${i}`).append(productElementHTML);
+      $itemContainer.append(productElementHTML);
+      
+      $('#shopping-results-wrapper').append($itemContainer);
     }
   });
 }
