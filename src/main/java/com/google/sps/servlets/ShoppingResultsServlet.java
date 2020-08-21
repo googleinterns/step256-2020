@@ -25,7 +25,7 @@ import org.jsoup.nodes.Document;
 @WebServlet("/search-shopping-results")
 public class ShoppingResultsServlet extends HttpServlet {
   
-  public static final String GOOGLE_SEARCH_URL = 
+  private static final String GOOGLE_SEARCH_URL = 
       "https://www.google.com//search";  
   
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -35,8 +35,8 @@ public class ShoppingResultsServlet extends HttpServlet {
     String searchType = "tbm=shop";
     String source = "source=h";
     String tbs = "tbs=vw:l"; // tbs=vw for view and removes ads
-    String query = "&q=Running%20Shoes%20for%20women";
-    String maxResultsNum = "num=8";
+    String query = "q=brush";
+    String maxResultsNum = "num=5";
 
     String searchURL = GOOGLE_SEARCH_URL + "?" + safetyCheck + "&" + languageParam + "&" + searchType 
     + "&" +source + "&" + tbs + "&" + query + "&" + maxResultsNum;
@@ -45,6 +45,7 @@ public class ShoppingResultsServlet extends HttpServlet {
     Document doc = Jsoup.connect(searchURL).userAgent("Mozilla/5.0").get();
 
     response.setContentType("text/html");
+    // Send back the html code of the search results.
     response.getWriter().println(doc.html());
   }
 }
