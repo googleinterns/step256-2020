@@ -25,21 +25,20 @@ import org.jsoup.nodes.Document;
 @WebServlet("/search-shopping-results")
 public class ShoppingResultsServlet extends HttpServlet {
   
-  private static final String GOOGLE_SEARCH_URL = 
-      "https://www.google.com//search";  
-  
+  private static final String GOOGLE_SEARCH_URL = "https://www.google.com//search";
+  private static final String searchType = "tbm=shop";  
+  private static final String tbs = "tbs=vw:l"; // tbs=vw for view and removes ads
+  private static final String safetyCheck = "safe=strict";
+
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
-    String safetyCheck = "safe=strict";
     String languageParam = "hl=en";
-    String searchType = "tbm=shop";
     String source = "source=h";
-    String tbs = "tbs=vw:l"; // tbs=vw for view and removes ads
     String query = "q=brush";
     String maxResultsNum = "num=5";
 
-    String searchURL = GOOGLE_SEARCH_URL + "?" + safetyCheck + "&" + languageParam + "&" + searchType 
-    + "&" +source + "&" + tbs + "&" + query + "&" + maxResultsNum;
+    String searchURL = GOOGLE_SEARCH_URL + "?" + searchType + "&" + tbs + "&" +  safetyCheck
+    + "&" + languageParam + "&" + source + "&" + query + "&" + maxResultsNum;
     
     // Without proper User-Agent, it will result in a 403 error.
     Document doc = Jsoup.connect(searchURL).userAgent("Mozilla/5.0").get();
