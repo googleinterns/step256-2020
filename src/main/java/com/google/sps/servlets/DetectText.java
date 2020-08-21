@@ -26,6 +26,7 @@ import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
 import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.Image;
+import com.google.cloud.vision.v1.ImageSource;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.protobuf.ByteString;
 import java.io.FileInputStream;
@@ -45,10 +46,10 @@ public class DetectText extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    
-     List<AnnotateImageRequest> reqs = new ArrayList<>();
+System.out.println("start");
+    List<AnnotateImageRequest> reqs = new ArrayList<>();
 
-     List<String> text = new ArrayList<>();
+    List<String> text = new ArrayList<>();
 
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
@@ -58,44 +59,49 @@ public class DetectText extends HttpServlet {
     BlobKey blobKey = blobKeys.get(0);
     String blobKeyString = blobKey.getKeyString();
 
-    // // read image from url
-    String filePath = "/get-image-url?blob-key=" + blobKeyString;
-    ByteString imgBytes = ByteString.readFrom(new FileInputStream(filePath));
-    
-    Image img = Image.newBuilder().setContent(imgBytes).build();
-
+    ImageSource imgSource = ImageSource.newBuilder().setImageUri("https://shop-by-photos-step-2020.ey.r.appspot.com/get-image-url?blob-key=" + blobKeyString).build();
+    Image img = Image.newBuilder().setSource(imgSource).build();
+System.out.println("after img");
     // // ByteString imgBytes = ByteString.readFrom("/get-image-url?blob-key=" + blobKeyString);
     // // Image img = Image.newBuilder().setContent(imgBytes).build();
 
     // // URL url = new URL("/get-image-url?blob-key=" + blobKeyString);
     // // Image img = ImageIO.read(url);
 
-    // Feature feat = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
-    // AnnotateImageRequest req =
-    //     AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
-    // reqs.add(req);
+    Feature feat = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
+    AnnotateImageRequest req =
+        AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
+    reqs.add(req);
+System.out.println("reqs:"+reqs);
+System.out.println("after reqs");
+    // Initialize client that will be used to send requests. This client only needs to be created
+    // once, and can be reused for multiple requests. After completing all of your requests, call
+    // the "close" method on the client to safely clean up any remaining background resources.
+    try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
+      BatchAnnotateImagesResponse resp = client.batchAnnotateImages(reqs);
+System.out.println("resp:"+resp);
+      List<AnnotateImageResponse> resps = resp.getResponsesList();
+System.out.println("resps:"+resps);
+      for (AnnotateImageResponse res : resps) {
+        // if (res.hasError()) {
+        //   text.add(System.out.format("Error: %s%n", res.getError().getMessage()));
+        //   return;
+        // }
 
-    // // Initialize client that will be used to send requests. This client only needs to be created
-    // // once, and can be reused for multiple requests. After completing all of your requests, call
-    // // the "close" method on the client to safely clean up any remaining background resources.
-    // try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
-    //   BatchAnnotateImagesResponse resp = client.batchAnnotateImages(reqs);
-    //   List<AnnotateImageResponse> resps = resp.getResponsesList();
-
-    //   for (AnnotateImageResponse res : resps) {
-    //     // if (res.hasError()) {
-    //     //   text.add(System.out.format("Error: %s%n", res.getError().getMessage()));
-    //     //   return;
-    //     // }
-
-    //     // For full list of available annotations, see http://g.co/cloud/vision/docs
-    //     for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
-    //       text.add("Text: " + annotation.getDescription());
-    //       text.add("Position : " + annotation.getBoundingPoly());
-    //     }
-    //   }
-    // }
-    // response.setContentType("text/html");
-    // response.getWriter().println(text);
+        // For full list of available annotations, see http://g.co/cloud/vision/docs
+        for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
+System.out.println("in for");
+          text.add("Text: " + annotation.getDescription());
+          text.add("<br>");
+System.out.println("text:"+text);
+          text.add("Position : " + annotation.getBoundingPoly());
+System.out.println("text:"+text);
+          text.add("<br>");
+        }
+      }
+    }
+    response.setContentType("text/html");
+    response.getWriter().println(text);
+System.out.println("end");
   } 
 }
