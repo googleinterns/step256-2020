@@ -53,13 +53,10 @@ public class ImageAnalysisServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    PrintWriter out = response.getWriter();
-
-    // Get the message entered by the user.
-    //String message = request.getParameter("message");
-
     // Get the BlobKey that points to the image uploaded by the user.
     BlobKey blobKey = getBlobKey(request, "barcode");
+
+    String blobKeyString = blobKey.getKeyString();
 
     // User didn't upload a file, so render an error message.
     if (blobKey == null) {
@@ -68,7 +65,7 @@ public class ImageAnalysisServlet extends HttpServlet {
     }
 
     // Get the URL of the image that the user uploaded.
-    String imageUrl = getUploadedFileUrl(blobKey);
+    String imageUrl = "/get-image-url?blob-key=" + blobKeyString;
 
     // Get the labels of the image that the user uploaded.
     byte[] blobBytes = getBlobBytes(blobKey);
@@ -76,17 +73,18 @@ public class ImageAnalysisServlet extends HttpServlet {
 
     // Output some HTML that shows the data the user entered.
     // A real codebase would probably store these in Datastore.
-    response.setContentType("text/html");
-    out.println("<p>Here's the image you uploaded:</p>");
-    out.println("<a href=\"" + imageUrl + "\">");
-    out.println("<img src=\"" + imageUrl + "\" />");
-    out.println("</a>");
-    out.println("<p>Here are the labels we extracted:</p>");
-    out.println("<ul>");
-    for (EntityAnnotation label : imageLabels) {
-      out.println("<li>" + label.getDescription() + " " + label.getScore());
-    }
-    out.println("</ul>");
+    // response.setContentType("text/html");
+    // out.println("<p>Here's the image you uploaded:</p>");
+    // out.println("<a href=\"" + imageUrl + "\">");
+    // out.println("<img src=\"" + imageUrl + "\" style=\"width: auto; height: 100;\"/>");
+    // out.println("</a>");
+    // out.println("<p>Here are the labels we extracted:</p>");
+    // out.println("<ul>");
+    // for (EntityAnnotation label : imageLabels) {
+    //   out.println("<li>" + label.getDescription() + " " + label.getScore());
+    // }
+    // out.println("</ul>");
+    response.sendRedirect("shopping-results.html");
   }
 
   /**
@@ -173,7 +171,7 @@ public class ImageAnalysisServlet extends HttpServlet {
   }
 
   /** Returns a URL that points to the uploaded file. */
-  private String getUploadedFileUrl(BlobKey blobKey) {
+  /*private String getUploadedFileUrl(BlobKey blobKey) {
     ImagesService imagesService = ImagesServiceFactory.getImagesService();
     ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
 
@@ -185,5 +183,5 @@ public class ImageAnalysisServlet extends HttpServlet {
     } catch (MalformedURLException e) {
       return imagesService.getServingUrl(options);
     }
-  }
+  }*/
 }
