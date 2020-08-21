@@ -53,6 +53,11 @@ public class ImageAnalysisServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+    PrintWriter out = response.getWriter();
+
+    // Get the message entered by the user.
+    //String message = request.getParameter("message");
+
     // Get the BlobKey that points to the image uploaded by the user.
     BlobKey blobKey = getBlobKey(request, "barcode");
 
@@ -73,18 +78,17 @@ public class ImageAnalysisServlet extends HttpServlet {
 
     // Output some HTML that shows the data the user entered.
     // A real codebase would probably store these in Datastore.
-    // response.setContentType("text/html");
-    // out.println("<p>Here's the image you uploaded:</p>");
-    // out.println("<a href=\"" + imageUrl + "\">");
-    // out.println("<img src=\"" + imageUrl + "\" style=\"width: auto; height: 100;\"/>");
-    // out.println("</a>");
-    // out.println("<p>Here are the labels we extracted:</p>");
-    // out.println("<ul>");
-    // for (EntityAnnotation label : imageLabels) {
-    //   out.println("<li>" + label.getDescription() + " " + label.getScore());
-    // }
-    // out.println("</ul>");
-    response.sendRedirect("shopping-results.html");
+    response.setContentType("text/html");
+    out.println("<p>Here's the image you uploaded:</p>");
+    out.println("<a href=\"" + imageUrl + "\">");
+    out.println("<img src=\"" + imageUrl + "\" style=\"width: auto; height: 100;\"/>");
+    out.println("</a>");
+    out.println("<p>Here are the labels we extracted:</p>");
+    out.println("<ul>");
+    for (EntityAnnotation label : imageLabels) {
+      out.println("<li>" + label.getDescription() + " " + label.getScore());
+    }
+    out.println("</ul>");
   }
 
   /**

@@ -29,7 +29,7 @@ public class BlobstoreUploadUrlServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String formActionUrl = blobstoreService.createUploadUrl("/image-analysis");
+    String formActionUrl = blobstoreService.createUploadUrl("/detect-text");
     response.setContentType("text/html");
     response.getWriter().println(formActionUrl);
   }
