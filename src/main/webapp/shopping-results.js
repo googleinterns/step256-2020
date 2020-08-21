@@ -74,10 +74,10 @@ async function buildShoppingResultsUI() {
 
     // Get the HTML for the container.
     const productElementHTML = getProductElementHTML(productTitle,
-      productImageLink,
-      productPriceAndSeller,
-      productLink,
-      productShippingPrice);
+                                                     productImageLink,
+                                                     productPriceAndSeller,
+                                                     productLink,
+                                                     productShippingPrice);
     // Load the content using jQuery's append.
     $productContainer.append(productElementHTML);
 
@@ -90,10 +90,10 @@ async function buildShoppingResultsUI() {
  * Returns the HTML for a product container, based on the arguments.
  */
 function getProductElementHTML(productTitle,
-  productImageLink,
-  productPriceAndSeller,
-  productLink,
-  productShippingPrice) {
+                               productImageLink,
+                               productPriceAndSeller,
+                               productLink,
+                               productShippingPrice) {
   return `<div class="card mb-4 shadow-sm">
             <div class="col-4">
               <img src="${productImageLink}" class="mx-auto d-block">
