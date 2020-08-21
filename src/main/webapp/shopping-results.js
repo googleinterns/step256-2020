@@ -13,7 +13,11 @@
 // limitations under the License.
 
 function buildUI() {
-  fetch('/search-shopping-results').then(response => response.text()).then((SERP) => {
+
+  const urlParams = new URLSearchParams(window.location.search);
+  let queryRaw = urlParams.get('query');
+  let query = queryRaw.replace('_','');
+  fetch(`/search-shopping-results?query=${query}`).then(response => response.text()).then((SERP) => {
 
     // Get product elements from the HTML returned
     let productElementsHTML = $('.u30d4', SERP);

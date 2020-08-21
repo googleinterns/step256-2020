@@ -40,12 +40,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 
 @WebServlet("/detect-text")
 public class DetectText extends HttpServlet {
 
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     List<AnnotateImageRequest> reqs = new ArrayList<>();
 
     List<String> text = new ArrayList<>();
@@ -77,16 +79,23 @@ public class DetectText extends HttpServlet {
         //   return;
         // }
 
+        int prePosition = 0;
+
         // For full list of available annotations, see http://g.co/cloud/vision/docs
         for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
-          text.add("Text: " + annotation.getDescription());
+          int position;
+          text.add("Text:" + annotation.getDescription());
           text.add("<br>");
-          text.add("Position : " + annotation.getBoundingPoly());
+          text.add("Position :" + annotation.getBoundingPoly());
           text.add("<br>");
         }
       }
     }
-    response.setContentType("text/html");
-    response.getWriter().println(text);
+    // String[] queryItems = text.get(0).split(":");
+    // String[] newQueryItems = queryItems[1].split("_");
+    String queryItem = text.get(4).split(":")[1];
+    // response.setContentType("text/html");
+    // response.getWriter().println(text);
+    response.sendRedirect("shopping-results.html?query="+queryItem);
   } 
 }
