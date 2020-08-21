@@ -12,59 +12,73 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-function buildUI() {
-  // Scrape Shopping Search Results & get SERP
+/**
+ * Builds the Shopping Results Page UI by integrating product results from 
+ * Google Shopping into the webpage. 
+ */
+function buildShoppingResultsUI() {
+  // Make a GET request to '/search-shopping-results' to scrape the Google Shopping 
+  // query search results. The request returns the complete HTML of the SERP.
   fetch('/search-shopping-results').then(response => response.text()).then((shoppingSearchResultsPage) => {
 
-    // Get product elements from the HTML returned
-    let productElementsHTML = $('.u30d4', shoppingSearchResultsPage);
+    // Get the array of product containers from SERP - each has the class "u30d4".
+    const productElementsHTML = $('.u30d4', shoppingSearchResultsPage);
 
     for (let i = 0 ; i < productElementsHTML.length - 1; i++) {
-      let currentProductHTML = productElementsHTML[i];
+      const currentProductHTML = productElementsHTML[i];
+
+      // Get info about the current product by extracting from the HTML element.
       
-      // Get the info about the product by extracting from the HTML element
-      
-      let productImageLink = $('.oR27Gd > img', currentProductHTML).attr('src');
+      const productImageLink = $('.oR27Gd > img', currentProductHTML).attr('src');
 
       let productLink = $('.rgHvZc > a', currentProductHTML).attr('href');
 
       // Fix product link - if the URL starts with '/url?q=', the URL redirection will not work.
-      let wrongStartOfLink = '/url?q=';
+      const wrongStartOfLink = '/url?q=';
       // Therefore delete the start if this is the case, for the redirection to successfully work.
       if (productLink.substring(0, wrongStartOfLink.length) == wrongStartOfLink) {
         productLink = productLink.substring(wrongStartOfLink.length);
       }
       
-      // Get the title as html instead of text in order to keep the <b> tags
-      let productTitle = $('.rgHvZc > a', currentProductHTML).html();
+      // Get the title as HTML instead of text, in order to keep the <b> tags.
+      const productTitle = $('.rgHvZc > a', currentProductHTML).html();
 
-      let productPrice = $('.dD8iuc > .HRLxBb', currentProductHTML).text()
+      const productPrice = $('.dD8iuc > .HRLxBb', currentProductHTML).text()
 
-      // Some products do not have rating - define productPriceAndSeller for both cases
+      // As some products do not have rating, the classes order may differ, therefore
+      // define productPriceAndSeller for both cases.
       let productPriceAndSeller;
       let productRatingInStars;
+      // If the product does not have a rating container, 
       if ($('.dD8iuc:nth-of-type(3)', currentProductHTML).html() == undefined) {
+        // only get the price and seller container.
         productPriceAndSeller = $('.dD8iuc:nth-of-type(2)', currentProductHTML).html();
       } else {
+        // Else, assign both values.
         productRatingInStars = $('.dD8iuc:nth-of-type(2)', currentProductHTML).text();
         productPriceAndSeller = $('.dD8iuc:nth-of-type(3)', currentProductHTML).html();
       }
 
-      let productShippingPrice = $('.dD8iuc:nth-of-type(1)', currentProductHTML).text();
+      const productShippingPrice = $('.dD8iuc:nth-of-type(1)', currentProductHTML).text();
       
-      // Create the wrapper node for the product - append it to the results HTML page,
-      // then load the content using jQuery's append.
-      let $itemContainer = $('<div>', {class: 'col-md-4'});     
+      // Create an HTML node for the item container.
+      let $productContainer = $('<div>', {class: 'col-md-4'});     
       
-      let productElementHTML = 
+      // Get the HTML for the container.
+      const productElementHTML = 
           getProductElementHTML(productTitle, productImageLink, productPriceAndSeller, productLink, productShippingPrice);
-      $itemContainer.append(productElementHTML);
-      
-      $('#shopping-results-wrapper').append($itemContainer);
+      // Load the content using jQuery's append.
+      $productContainer.append(productElementHTML);
+
+      // Add the container to the results page, into the corresponding product wrapper.
+      $('#shopping-results-wrapper').append($productContainer);
     }
   });
 }
 
+/**
+ * Returns the HTML for a product container, based on the arguments.
+ */
 function getProductElementHTML(productTitle, productImageLink, productPriceAndSeller, productLink, productShippingPrice) {
   return `<div class="card mb-4 shadow-sm">
             <div class="col-4">
@@ -87,4 +101,4 @@ function getProductElementHTML(productTitle, productImageLink, productPriceAndSe
           </div>`;
 }
 
-buildUI();
+buildShoppingResultsUI();
