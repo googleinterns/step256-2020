@@ -22,6 +22,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Servlet that generates a blobstore image upload url that links to the servlet (here
+ * "/detect-text") which will work on the uploaded image.
+ */
 @WebServlet("/blobstore-upload-url")
 public class BlobstoreUploadUrlServlet extends HttpServlet {
 
@@ -29,7 +33,9 @@ public class BlobstoreUploadUrlServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
     String formActionUrl = blobstoreService.createUploadUrl("/detect-text");
+
     response.setContentType("text/html");
     response.getWriter().println(formActionUrl);
   }

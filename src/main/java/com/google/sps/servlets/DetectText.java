@@ -43,6 +43,10 @@ import java.awt.image.BufferedImage;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 
+/**
+ * Servlet that detects text and sends it as a url query to be handled by the shopping results script
+ * and search shopping results servlet.
+ */
 @WebServlet("/detect-text")
 public class DetectText extends HttpServlet {
 
@@ -58,6 +62,13 @@ public class DetectText extends HttpServlet {
 
     // The form only contains a single file input, so get the first index.
     BlobKey blobKey = blobKeys.get(0);
+
+    // User didn't upload a file, so render an error message.
+    if (blobKey == null) {
+      out.println("Please upload an image file.");
+      return;
+    }
+
     String blobKeyString = blobKey.getKeyString();
 
     ImageSource imgSource = ImageSource.newBuilder().setImageUri("https://shop-by-photos-step-2020.ey.r.appspot.com/get-image-url?blob-key=" + blobKeyString).build();
@@ -98,4 +109,32 @@ public class DetectText extends HttpServlet {
     // response.getWriter().println(text);
     response.sendRedirect("shopping-results.html?query="+queryItem);
   } 
+
+    /**
+   * Returns the BlobKey that points to the file uploaded by the user, or null if the user didn't
+   * upload a file.
+   */
+  private BlobKey getBlobKey(HttpServletRequest request, String formInputElementName) {
+    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
+    List<BlobKey> blobKeys = blobs.get("barcode");
+
+    // User submitted form without selecting a file, so we can't get a BlobKey. (dev server)
+    if (blobKeys == null || blobKeys.isEmpty()) {
+      return null;
+    }
+
+    // Our form only contains a single file input, so get the first index.
+    BlobKey blobKey = blobKeys.get(0);
+
+    // User submitted form without selecting a file, so the BlobKey is empty. (live server)
+    BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
+    if (blobInfo.getSize() == 0) {
+      blobstoreService.delete(blobKey);
+      return null;
+    }
+
+    return blobKey;
+  }
+
 }
