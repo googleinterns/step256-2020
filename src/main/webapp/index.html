@@ -82,11 +82,16 @@
         <div class="bg-model">
           <div class="model-content">
             <button class="close" onclick="closeFileUploadDialog()"> + </button>
-             <h1> Upload barcode </h1>
-                <form id="upload-barcode-form" class="hidden" method="POST" enctype="multipart/form-data">
-                  <input type="file" name="barcode" required>
-                  <button>Submit</button>
-                </form>
+              <h1>Upload image</h1>
+              <select id="image-options" name="image-options" required>
+                <option value="product">Product</option>
+                <option value="list">List</option>
+                <option value="barcode">Barcode</option>
+              </select>
+              <form id="upload-image-form" class="hidden" method="POST" enctype="multipart/form-data">
+                <input type="file" name="barcode" required>
+                <button>Submit</button>
+              </form>
             </div>
         </div>
 

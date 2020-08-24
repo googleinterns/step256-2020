@@ -38,7 +38,7 @@ async function fetchBlobstoreUrlAndShowForm() {
   }
   
   let imageUploadUrl = await response.text();
-  const uploadForm = document.getElementById('upload-barcode-form');
+  const uploadForm = document.getElementById('upload-image-form');
   uploadForm.action = imageUploadUrl;
   uploadForm.classList.remove('hidden');
 }
