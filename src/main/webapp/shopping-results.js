@@ -44,14 +44,14 @@ async function buildShoppingResultsUI() {
     // Fix product link - if the URL starts with '/url?q=', the URL redirection will not work.
     const wrongStartOfLink = '/url?q=';
     // Therefore delete the start if this is the case, for the redirection to successfully work.
-    if (productLink.substring(0, wrongStartOfLink.length) == wrongStartOfLink) {
+    if (productLink.substring(0, wrongStartOfLink.length) === wrongStartOfLink) {
       productLink = productLink.substring(wrongStartOfLink.length);
     }
 
     // Get the title as HTML instead of text, in order to keep the <b> tags.
     const productTitle = $('.rgHvZc > a', currentProductHTML).html();
 
-    const productPrice = $('.dD8iuc > .HRLxBb', currentProductHTML).text()
+    const productPrice = $('.dD8iuc > .HRLxBb', currentProductHTML).text();
 
     // As some products do not have rating, the classes order may differ, therefore
     // define productPriceAndSeller for both cases.
