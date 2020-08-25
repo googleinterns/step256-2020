@@ -23,17 +23,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 /**
- * Servlet to search Google shopping for a query and return the results in the form of a html page.
+ * Class responsible for returning the Google Shopping results for a given query 
+ * in the form of an HTML page. 
  */
-@WebServlet("/search-shopping-results")
-public class ShoppingResultsServlet extends HttpServlet {
+public class ShoppingResultsWrapper {
 
   private static final String GOOGLE_SEARCH_URL = "https://www.google.com//search";
   private static final String searchType = "tbm=shop";
   private static final String tbs = "tbs=vw:l"; // "tbs=vw" removes ads and specifies the viewing style.
   private static final String safetyCheck = "safe=strict";
 
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public static String getShoppingResultsPage() throws IOException {
 
     String languageParam = "hl=en";
     String source = "source=h";
@@ -60,8 +60,7 @@ public class ShoppingResultsServlet extends HttpServlet {
     // Without proper User-Agent, it will result in a 403 error.
     Document doc = Jsoup.connect(searchURL).userAgent("Mozilla/5.0").get();
 
-    response.setContentType("text/html");
-    // Send back the html code of the search results.
-    response.getWriter().println(doc.html());
+    // Send back the HTML code of the search results.
+    return doc.html();
   }
 }
