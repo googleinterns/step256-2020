@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet that generates a blobstore image upload url that links to the servlet (here
- * "/distribute-task") which will work on the uploaded image.
+ * Servlet that generates a blobstore image upload url that links to the corresponding servlet
+ * which will work on the uploaded image.
  */
 @WebServlet("/blobstore-upload-url")
 public class BlobstoreUploadUrlServlet extends HttpServlet {
@@ -33,8 +33,20 @@ public class BlobstoreUploadUrlServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String formActionUrl = blobstoreService.createUploadUrl("/distribute-task");
-    response.setContentType("text/html");
-    response.getWriter().println(formActionUrl);
+    switch (request.getParameter("image-options")) {
+      case "product":
+        System.out.println("Product"); 
+        // String formActionUrl = blobstoreService.createUploadUrl("/detect-product");
+        break;
+      case "list":
+        System.out.println("List"); 
+        // String formActionUrl = blobstoreService.createUploadUrl("/detect-text");
+        break;
+      case "barcode":
+        System.out.println("Barcode"); 
+        break;
+    }
+    // response.setContentType("text/html");
+    // response.getWriter().println(formActionUrl);
   }
 }
