@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-function buildUI() {
+/**
+ * Builds the Shopping Results Page UI by integrating product results from 
+ * Google Shopping into the webpage. 
+ */
+async function buildShoppingResultsUI() {
+  // Make a GET request to '/photo-shopping-request' to scrape the Google Shopping 
+  // query search results. The request returns the complete HTML of the SERP, stored
+  // into {@code shoppingSearchResultsPage}.
 
-  const urlParams = new URLSearchParams(window.location.search);
-  let queryRaw = urlParams.get('query');
-  let query = queryRaw.replace('_','');
-
-  const response = await fetch(`/search-shopping-results?query=${query}`).catch(handleError);
+  const response = await fetch('/photo-shopping-request').catch(handleError);
 
   if (!response.ok) {
     return Promise.reject(response);

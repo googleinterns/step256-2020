@@ -14,27 +14,39 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet that generates a blobstore image upload url that links to the servlet (here
- * "/detect-text") which will work on the uploaded image.
- */
-@WebServlet("/blobstore-upload-url")
-public class BlobstoreUploadUrlServlet extends HttpServlet {
+@WebServlet("/get-image-blobkey")
+public class ReturnBlobKeyStringServlet extends HttpServlet {
+  private final BlobstoreService blobstoreService;
+  private String blobKeyString;
 
-  private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  public ReturnBlobKeyStringServlet() {
+    blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
+    List<BlobKey> blobKeys = blobs.get("barcode");
+
+    // The form only contains a single file input, so get the first index.
+    BlobKey blobKey = blobKeys.get(0);
+    blobKeyString = blobKey.getKeyString();
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String formActionUrl = blobstoreService.createUploadUrl("/get-image-blobkey");
     response.setContentType("text/html");
-    response.getWriter().println(formActionUrl);
+    response.getWriter().println(blobKeyString);
   }
 }

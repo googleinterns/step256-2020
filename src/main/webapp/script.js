@@ -43,32 +43,15 @@ async function fetchBlobstoreUrlAndShowForm() {
   uploadForm.classList.remove('hidden');
 }
 
-/**
- * Fetches all image keys stored in the database and
- * displays them on the web page along with date, time and message
- * using get-image-url servlet
- */
-async function getAndShowImages() {
-  const imageListElement = document.getElementById('history-images');
-  const response = await fetch('/handle-image', {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-  });
-
+let blobKeyString;
+async function fetchBlobKeyString() {
+  const response = await fetch('/get-image-blobkey');
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
-
-  const imageDetails = await response.json();
-  if (imageDetails.length === 0) {
-    imageListElement.innerText = 'No history';
-  } else {
-    imageDetails.forEach((imageDetail) => {
-      imageListElement.appendChild(createImageElement(imageDetail));
-    });
-  }
+  
+  blobKeyString = await response.text();
+  console.log(blobKeyString);
 }
 
 /**
