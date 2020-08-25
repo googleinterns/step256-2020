@@ -43,6 +43,17 @@ async function fetchBlobstoreUrlAndShowForm() {
   uploadForm.classList.remove('hidden');
 }
 
+let blobKeyString;
+async function fetchBlobKeyString() {
+  const response = await fetch('/get-image-blobkey');
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
+  blobKeyString = await response.text();
+  console.log(blobKeyString);
+}
+
 /**
  * Fetches all image keys stored in the database and
  * displays them on the web page along with date, time and message

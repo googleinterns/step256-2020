@@ -12,21 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.data;
+package com.google.sps.servlets;
 
-import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-/**
- * Class containing information about an uploaded image.
- */
-@AutoValue
-public abstract class Image {
+@WebServlet("")
+public class PhotoShoppingServlet extends HttpServlet {
 
-  public static Image create(long id, String blobKey, long timestamp) {
-    return new AutoValue_Image(id, blobKey, timestamp);
-  }  
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
   
-  public abstract long id();
-  public abstract String blobKey();
-  public abstract long timestamp();
+  }
 }
