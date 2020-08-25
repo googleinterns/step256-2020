@@ -14,27 +14,24 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.gson.Gson;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet that generates a blobstore image upload url that links to the servlet (here
- * "/distribute-task") which will work on the uploaded image.
- */
-@WebServlet("/blobstore-upload-url")
-public class BlobstoreUploadUrlServlet extends HttpServlet {
-
-  private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+@WebServlet("/distribute-task")
+public class TaskDistributionServlet extends HttpServlet {
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String formActionUrl = blobstoreService.createUploadUrl("/distribute-task");
-    response.setContentType("text/html");
-    response.getWriter().println(formActionUrl);
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    
   }
 }
