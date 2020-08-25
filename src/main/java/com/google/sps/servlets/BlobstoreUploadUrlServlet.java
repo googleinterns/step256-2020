@@ -33,19 +33,7 @@ public class BlobstoreUploadUrlServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    switch (request.getParameter("image-options")) {
-      case "product":
-        System.out.println("Product"); 
-        // String formActionUrl = blobstoreService.createUploadUrl("/detect-product");
-        break;
-      case "list":
-        System.out.println("List"); 
-        // String formActionUrl = blobstoreService.createUploadUrl("/detect-text");
-        break;
-      case "barcode":
-        System.out.println("Barcode"); 
-        break;
-    }
+    // String formActionUrl = blobstoreService.createUploadUrl("/detect-text");
     // response.setContentType("text/html");
     // response.getWriter().println(formActionUrl);
   }
