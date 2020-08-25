@@ -58,7 +58,6 @@
             Choose an image with the product you are searching for, and we'll compile a shopping 
             list of similar products for you.
           </p>
-          <p><button class="btn btn-secondary">Upload product photo »</button></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <i class="fa fa-list"></i>
@@ -66,7 +65,6 @@
           <p>
             The shopping list may be hand-written.
           </p>
-          <p><button class="btn btn-secondary">Upload list photo »</button></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <i class="fa fa-barcode"></i>
@@ -74,18 +72,26 @@
           <p>
             Upload a barcode
           </p>
-          <p><button class="btn btn-secondary" id="upload-barcode" onclick="openFileUploadDialog()">Upload barcode photo »</button></p>
         </div><!-- /.col-lg-4 -->
+        
+        <div class="col text-center">
+          <p><button class="btn btn-secondary" id="upload-photo" onclick="openFileUploadDialog()">Upload photo »</button></p>
+        </div>
 
         <!-- UPLOAD DIV -->
         <div class="bg-model">
           <div class="model-content">
             <button class="close" onclick="closeFileUploadDialog()"> + </button>
-             <h1> Upload barcode </h1>
-                <form id="upload-barcode-form" class="hidden" method="POST" enctype="multipart/form-data">
-                  <input type="file" name="barcode" required>
-                  <button>Submit</button>
-                </form>
+              <h1>Upload image</h1>
+              <select id="image-options" name="image-options" required>
+                <option value="product">Product</option>
+                <option value="list">List</option>
+                <option value="barcode">Barcode</option>
+              </select>
+              <form id="upload-image-form" class="hidden" method="POST" enctype="multipart/form-data">
+                <input type="file" name="barcode" required>
+                <button>Submit</button>
+              </form>
             </div>
         </div>
 
@@ -94,11 +100,6 @@
       <p class="text-center">
         <a href="shopping-results.html" class="btn btn-primary my-2">Get Results</a>
       </p>
-
-      <div id="history">
-        <h1>History</h1>
-        <div id="history-images"> </div>   
-      <div>
 
   </main>
 
@@ -109,9 +110,6 @@
       <p class="float-right"><a href="#">Back to top</a></p>
     </div>
   </footer>
-
-  <script async src="https://cse.google.com/cse.js?cx=d5e2d59a20b6d9657"></script>
-  <div class="gcse-search" enableAutoComplete="true" style="mergin: 5%; padding: 5%;"></div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
