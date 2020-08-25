@@ -34,6 +34,6 @@ public class PhotoShoppingServlet extends HttpServlet {
     // the {@code getShoppingResultsPage} method from GoogleShoppingResultsWrapper.
 
     response.setContentType("text/html");
-    response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage("Fountain%20Pen"));
+    response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage("Blue+Girl+Shoes"));
   }
 }
