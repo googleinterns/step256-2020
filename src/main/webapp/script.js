@@ -42,3 +42,14 @@ async function fetchBlobstoreUrlAndShowForm() {
   uploadForm.action = imageUploadUrl;
   uploadForm.classList.remove('hidden');
 }
+
+let blobKeyString;
+async function fetchBlobKeyString() {
+  const response = await fetch('/get-image-blobkey');
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
+  blobKeyString = await response.text();
+  console.log(blobKeyString);
+}
