@@ -12,13 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
+package com.google.sps.data;
 
 import java.io.IOException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -26,7 +22,7 @@ import org.jsoup.nodes.Document;
  * Class responsible for returning the Google Shopping results for a given query 
  * in the form of an HTML page. 
  */
-public class ShoppingResultsWrapper {
+public class GoogleShoppingResultsWrapper {
 
   private static final String GOOGLE_SEARCH_URL = "https://www.google.com//search";
   private static final String searchType = "tbm=shop";
