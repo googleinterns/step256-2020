@@ -37,9 +37,8 @@ public class ShoppingResultsServlet extends HttpServlet {
 
     String languageParam = "hl=en";
     String source = "source=h";
-    String query = request.getParameter("query");
-    query = "q=" + query;
-    String maxResultsNum = "num=12";
+    String query = "q=brush";
+    String maxResultsNum = "num=5";
 
     String searchURL =
         GOOGLE_SEARCH_URL
