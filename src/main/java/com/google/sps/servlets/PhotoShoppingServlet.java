@@ -30,9 +30,10 @@ public class PhotoShoppingServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // TODO: call methods from photo detection classes
+    // TODO: call methods from photo detection classes, which build the shopping query and call 
+    // the {@code getShoppingResultsPage} method from GoogleShoppingResultsWrapper.
 
     response.setContentType("text/html");
-    response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage());
+    response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage("Fountain%20Pen"));
   }
 }

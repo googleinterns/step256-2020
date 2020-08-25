@@ -17,11 +17,11 @@
  * Google Shopping into the webpage. 
  */
 async function buildShoppingResultsUI() {
-  // Make a GET request to '/search-shopping-results' to scrape the Google Shopping 
+  // Make a GET request to '/photo-shopping-request' to scrape the Google Shopping 
   // query search results. The request returns the complete HTML of the SERP, stored
   // into {@code shoppingSearchResultsPage}.
 
-  const response = await fetch('/search-shopping-results').catch(handleError);
+  const response = await fetch('/photo-shopping-request').catch(handleError);
 
   if (!response.ok) {
     return Promise.reject(response);

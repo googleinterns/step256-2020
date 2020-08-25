@@ -29,11 +29,11 @@ public class GoogleShoppingResultsWrapper {
   private static final String tbs = "tbs=vw:l"; // "tbs=vw" removes ads and specifies the viewing style.
   private static final String safetyCheck = "safe=strict";
 
-  public static String getShoppingResultsPage() throws IOException {
+  public static String getShoppingResultsPage(String shoppingQuery) throws IOException {
 
     String languageParam = "hl=en";
     String source = "source=h";
-    String query = "q=brush";
+    String query = "q=" + shoppingQuery;
     String maxResultsNum = "num=5";
 
     String searchURL =
