@@ -59,7 +59,7 @@ async function buildShoppingResultsUI() {
   const shoppingSearchResultsPage = await response.text();
 
   // Extract the needed information for the products.
-  products = ProductListExtractor.extract(shoppingSearchResultsPage);
+  const products = ProductListExtractor.extract(shoppingSearchResultsPage);
 
   // Integrate the products into the webpage.
   products.forEach(product => {
