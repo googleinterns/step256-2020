@@ -22,7 +22,7 @@
   <link href="style.css" rel="stylesheet">
 </head>
 
-<body onload="fetchBlobstoreUrlAndShowForm(); getAndShowImages();">
+<body onload="fetchBlobstoreUrlAndShowForm();">
   <header>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -82,17 +82,19 @@
         <div class="bg-model">
           <div class="model-content">
             <button class="close" onclick="closeFileUploadDialog()"> + </button>
+            <form id="upload-image-form" class="hidden" method="POST" enctype="multipart/form-data">
               <h1>Upload image</h1>
               <select id="image-options" name="image-options" required>
                 <option value="product">Product</option>
                 <option value="list">List</option>
                 <option value="barcode">Barcode</option>
               </select>
-              <form id="upload-image-form" class="hidden" method="POST" enctype="multipart/form-data">
-                <input type="file" name="barcode" required>
-                <button>Submit</button>
-              </form>
-            </div>
+
+              <input type="file" name="photo" required>
+              
+              <button>Submit</button>
+            </form>
+          </div>
         </div>
 
       </div><!-- /.row -->

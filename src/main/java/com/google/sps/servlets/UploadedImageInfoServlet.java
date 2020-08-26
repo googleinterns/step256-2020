@@ -14,26 +14,45 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet that generates a Blobstore image upload URL, which links to the "/get-image-info" servlet.
- */
-@WebServlet("/blobstore-upload-url")
-public class BlobstoreUploadUrlServlet extends HttpServlet {
+@WebServlet("/get-image-info")
+public class UploadedImageInfoServlet extends HttpServlet {
+  private final BlobstoreService blobstoreService;
+  private String blobKeyString;
+  private String photoCategory;
 
-  private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  public UploadedImageInfoServlet() {
+    blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
+    List<BlobKey> blobKeys = blobs.get("photo");
+
+    photoCategory = request.getParameter("image-options");
+
+    // The form only contains a single file input, so get the first index.
+    BlobKey blobKey = blobKeys.get(0);
+    blobKeyString = blobKey.getKeyString();
+
+    response.sendRedirect("/");
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String formActionUrl = blobstoreService.createUploadUrl("/get-image-info");
     response.setContentType("text/html");
-    response.getWriter().println(formActionUrl);
+    response.getWriter().println(photoCategory);
+    response.getWriter().println(blobKeyString);
   }
 }
