@@ -30,20 +30,21 @@ public class PhotoShoppingServlet extends HttpServlet {
     // passing request.getParameter("blob-key") as argument. These methods build the shopping query and call 
     // the {@code getShoppingResultsPage} method from GoogleShoppingResultsWrapper.
 
+    String query = getQuery(request.getParameter("photo-category"));
     response.setContentType("text/html");
+    response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage(query));
+  }
 
-    switch (request.getParameter("photo-category")) {
+  private String getQuery(String photoCategory) {
+    switch (photoCategory) {
       case "product":
-        response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage("Fountain pen"));
-        break;
+        return "Fountain pen";
       case "list":
-        response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage("Fuzzy socks"));
-        break;
+        return "Fuzzy socks";
       case "barcode":
-        response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage("Running shoes"));
-        break;
+        return "Running shoes";
       default:
-        response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage("Notebook"));
-    }
+        return "Notebook"; 
+    } 
   }
 }
