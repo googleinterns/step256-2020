@@ -16,7 +16,7 @@ let photoCategory;
 let blobKeyString;
 
 /**  
- * Gets and stores information about the photo uploaded by the user by making a GET request
+ * Gets and stores information about the photo uploaded by the user, by making a GET request
  * to '/get-image-info'. 
  * {@code photoCategory} and {@code blobKeyString} are needed for making the GET request to 
  * the PhotoShoppingServlet.
@@ -54,7 +54,7 @@ async function buildShoppingResultsUI() {
   // search query results. The request returns the complete HTML of the SERP, stored
   // into {@code shoppingSearchResultsPage}.
 
-  // Add needed parameters to the URL fetched.
+  // Build the URL to be fetched - add parameters to identify the uploaded photo.
   const fetchURL = 
       `/photo-shopping-request?photo-category=${photoCategory}&blob-key=${blobKeyString}`;
 
@@ -81,7 +81,7 @@ async function buildShoppingResultsUI() {
     // Create an HTML node for the item container.
     let $productContainer = $('<div>', {class: 'col-md-4'});
 
-    // Get the HTML for the container.
+    // Get the HTML content for the container.
     const productElementHTML = getProductElementHTML(product.title,
                                                      product.imageLink,
                                                      product.priceAndSeller,
@@ -96,7 +96,7 @@ async function buildShoppingResultsUI() {
 }
 
 /**
- * Returns the HTML for a product container, based on the arguments.
+ * Returns the HTML content for a product container, based on the arguments.
  */
 function getProductElementHTML(productTitle,
                                productImageLink,

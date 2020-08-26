@@ -28,7 +28,7 @@ class Product {
 
 /** 
  * Class responsible for extracting the needed information about products, given the 
- * Google Shopping results for a given query in the form of an HTML page. 
+ * Google Shopping results in the form of an HTML page.
  */
 class ProductListExtractor {
     
