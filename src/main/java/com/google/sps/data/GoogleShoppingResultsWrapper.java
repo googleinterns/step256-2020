@@ -19,8 +19,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 /**
- * Class responsible for returning the Google Shopping results for a given query 
- * in the form of an HTML page. 
+ * Return the Google Shopping results for a given query in the form of an HTML page. 
  */
 public class GoogleShoppingResultsWrapper {
 
