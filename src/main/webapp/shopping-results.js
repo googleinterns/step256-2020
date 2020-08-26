@@ -90,6 +90,25 @@ class ProductListExtractor {
   }
 }
 
+let photoCategory;
+let blobKeyString;
+
+async function fetchUploadedImageInfo() {
+  const response = await fetch('/get-image-info');
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
+  // Get and store the photo category (i.e. product, list or barcode) and the keystring 
+  // of the blobkey.
+  let uploadedPhotoInformation = await response.text();
+
+  uploadedPhotoInformation = uploadedPhotoInformation.split('\n');
+
+  photoCategory = uploadedPhotoInformation[0];
+  blobKeyString = uploadedPhotoInformation[1];
+}
+
 /**
  * Builds the Shopping Results Page UI by integrating product results from 
  * Google Shopping into the webpage. 
@@ -98,6 +117,9 @@ async function buildShoppingResultsUI() {
   // Make a GET request to '/photo-shopping-request' to scrape the Google Shopping 
   // search query results. The request returns the complete HTML of the SERP, stored
   // into {@code shoppingSearchResultsPage}.
+
+  console.log(photoCategory);
+  console.log(blobKeyString);
 
   const response = await fetch('/photo-shopping-request').catch(handleError);
 
@@ -169,4 +191,7 @@ function handleError(error) {
   }));
 };
 
-buildShoppingResultsUI();
+// Call buildShoppingResultsUI() only after fetchUploadedImageInfo() has completed.
+$.when($.ajax(fetchUploadedImageInfo())).then(function () {
+  buildShoppingResultsUI();
+});

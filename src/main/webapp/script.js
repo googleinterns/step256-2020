@@ -42,24 +42,3 @@ async function fetchBlobstoreUrlAndShowForm() {
   uploadForm.action = imageUploadUrl;
   uploadForm.classList.remove('hidden');
 }
-
-let photoCategory;
-let blobKeyString;
-
-async function fetchUploadedImageInfo() {
-  const response = await fetch('/get-image-info');
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  
-  // Get and store the photo category (i.e. product, list or barcode) and the keystring 
-  // of the blobkey.
-  let uploadedPhotoInformation = await response.text();
-
-  uploadedPhotoInformation = uploadedPhotoInformation.split('\n');
-
-  photoCategory = uploadedPhotoInformation[0];
-  blobKeyString = uploadedPhotoInformation[1];
-  console.log(photoCategory);
-  console.log(blobKeyString);
-}
