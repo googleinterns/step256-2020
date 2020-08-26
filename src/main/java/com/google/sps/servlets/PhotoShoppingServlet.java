@@ -37,7 +37,7 @@ public class PhotoShoppingServlet extends HttpServlet {
         response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage("Fountain pen"));
         break;
       case "list":
-        Sresponse.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage("Fuzzy socks"));
+        response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage("Fuzzy socks"));
         break;
       case "barcode":
         response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage("Running shoes"));
