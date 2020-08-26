@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/*
+ * Generate a search query and return search results, for that query, to front-end.
+ */
 @WebServlet("/photo-shopping-request")
 public class PhotoShoppingServlet extends HttpServlet {
   
