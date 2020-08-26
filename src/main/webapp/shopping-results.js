@@ -120,8 +120,10 @@ async function buildShoppingResultsUI() {
 
   console.log(photoCategory);
   console.log(blobKeyString);
+  const fetchURL = 
+      `/photo-shopping-request?photo-category=${photoCategory}&blob-key=${blobKeyString}`;
 
-  const response = await fetch('/photo-shopping-request').catch(handleError);
+  const response = await fetch(fetchURL).catch(handleError);
 
   if (!response.ok) {
     return Promise.reject(response);

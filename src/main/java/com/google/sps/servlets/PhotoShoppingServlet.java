@@ -30,7 +30,8 @@ public class PhotoShoppingServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // TODO: call methods from photo detection classes, which build the shopping query and call 
+    // TODO: Based on request.getParameter("photo-category"), call methods from photo detection classes, 
+    // passing request.getParameter("blob-key") as argument. These methods build the shopping query and call 
     // the {@code getShoppingResultsPage} method from GoogleShoppingResultsWrapper.
 
     response.setContentType("text/html");
