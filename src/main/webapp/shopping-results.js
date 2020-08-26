@@ -22,9 +22,17 @@ let blobKeyString;
  * the PhotoShoppingServlet.
  */
 async function fetchUploadedImageInfo() {
-  const response = await fetch('/get-image-info');
+  const response = await fetch('/get-image-info')
+      .catch((error) => {
+        console.warn(error);
+        return new Response(JSON.stringify({
+          code: 400,
+          message: 'Failed to fetch "/get-image-info"',
+        }));
+      });
+
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    return Promise.reject(response);
   }
   
   // Get and store the photo category (i.e. product, list or barcode) and the keystring 
@@ -50,7 +58,14 @@ async function buildShoppingResultsUI() {
   const fetchURL = 
       `/photo-shopping-request?photo-category=${photoCategory}&blob-key=${blobKeyString}`;
 
-  const response = await fetch(fetchURL).catch(handleError);
+  const response = await fetch(fetchURL)
+      .catch((error) => {
+        console.warn(error);
+        return new Response(JSON.stringify({
+          code: 400,
+          message: `Failed to fetch ${fetchURL}`,
+        }));
+      });
 
   if (!response.ok) {
     return Promise.reject(response);
@@ -108,17 +123,6 @@ function getProductElementHTML(productTitle,
             </div>
           </div>`;
 }
-
-/**
- * Handles error from asynchronous function that fetches '/photo-shopping-request'.
- */
-function handleError(error) {
-  console.warn(error);
-  return new Response(JSON.stringify({
-    code: 400,
-    message: 'Failed to fetch "/photo-shopping-request"',
-  }));
-};
 
 // Call buildShoppingResultsUI() only after fetchUploadedImageInfo() has completed.
 $.when($.ajax(fetchUploadedImageInfo())).then(function () {
