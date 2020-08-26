@@ -46,8 +46,8 @@ async function fetchBlobstoreUrlAndShowForm() {
 let photoCategory;
 let blobKeyString;
 
-async function fetchBlobKeyString() {
-  const response = await fetch('/get-image-blobkey');
+async function fetchUploadedImageInfo() {
+  const response = await fetch('/get-image-info');
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -60,4 +60,6 @@ async function fetchBlobKeyString() {
 
   photoCategory = uploadedPhotoInformation[0];
   blobKeyString = uploadedPhotoInformation[1];
+  console.log(photoCategory);
+  console.log(blobKeyString);
 }

@@ -25,20 +25,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/get-image-blobkey")
-public class ReturnBlobKeyStringServlet extends HttpServlet {
+@WebServlet("/get-image-info")
+public class UploadedImageInfoServlet extends HttpServlet {
   private final BlobstoreService blobstoreService;
   private String blobKeyString;
   private String photoCategory;
 
-  public ReturnBlobKeyStringServlet() {
+  public UploadedImageInfoServlet() {
     blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
-    List<BlobKey> blobKeys = blobs.get("barcode");
+    List<BlobKey> blobKeys = blobs.get("photo");
 
     photoCategory = request.getParameter("image-options");
 
