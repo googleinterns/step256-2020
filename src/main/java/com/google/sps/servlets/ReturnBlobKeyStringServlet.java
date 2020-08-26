@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ReturnBlobKeyStringServlet extends HttpServlet {
   private final BlobstoreService blobstoreService;
   private String blobKeyString;
+  private String photoCategory;
 
   public ReturnBlobKeyStringServlet() {
     blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
@@ -39,14 +40,19 @@ public class ReturnBlobKeyStringServlet extends HttpServlet {
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
     List<BlobKey> blobKeys = blobs.get("barcode");
 
+    photoCategory = request.getParameter("image-options");
+
     // The form only contains a single file input, so get the first index.
     BlobKey blobKey = blobKeys.get(0);
     blobKeyString = blobKey.getKeyString();
+
+    response.sendRedirect("/");
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html");
+    response.getWriter().println(photoCategory);
     response.getWriter().println(blobKeyString);
   }
 }

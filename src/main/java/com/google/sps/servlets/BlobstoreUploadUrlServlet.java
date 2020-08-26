@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet that generates a Blobstore image upload URL that links to the DisplayImageServlet
- * ("/get-image-blobkey"), which displays the uploaded image.
+ * Servlet that generates a Blobstore image upload URL that links to the servlet
+ * which returns the blobKey KeyString ("/get-image-blobkey").
  */
 @WebServlet("/blobstore-upload-url")
 public class BlobstoreUploadUrlServlet extends HttpServlet {
