@@ -22,14 +22,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Servlet that generates a Blobstore image upload URL, which links to the "/get-image-info"
+ * servlet.
+ */
 @WebServlet("/blobstore-upload-url")
 public class BlobstoreUploadUrlServlet extends HttpServlet {
 
-  private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  private final BlobstoreService blobstoreService;
+
+  private BlobstoreUploadUrlServlet() {
+    blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String formActionUrl = blobstoreService.createUploadUrl("/my-image-servlet");
+    String formActionUrl = blobstoreService.createUploadUrl("/get-image-info");
     response.setContentType("text/html");
     response.getWriter().println(formActionUrl);
   }
