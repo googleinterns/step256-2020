@@ -39,8 +39,10 @@ public class PhotoShoppingServlet extends HttpServlet {
     response.setContentType("text/html");
     try {
       response.getWriter().println(querier.query());
-    } catch(HttpStatusException e) {
-      response.sendError(e.getStatusCode(), e.getMessage());
+    } catch(HttpStatusException exception) {
+      response.sendError(exception.getStatusCode(), exception.getMessage());
+    } catch(IOException ex) {
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Getting results failed: " + ex.getMessage());
     }
   }
 
