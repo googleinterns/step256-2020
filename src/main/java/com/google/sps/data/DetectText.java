@@ -46,7 +46,7 @@ import javax.servlet.ServletException;
 
 public class DetectText {
 
-  public static String detectText(String blobKeyString) throws IOException {
+  public static List<String> detectText(String blobKeyString) throws IOException {
 
     List<AnnotateImageRequest> requests = new ArrayList<>();
 
@@ -56,9 +56,11 @@ public class DetectText {
     Image img = Image.newBuilder().setSource(imgSource).build();
 
     Feature feat = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
+
     AnnotateImageRequest request =
         AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
     requests.add(request);
+
     // Initialize client that will be used to send requests. This client only needs to be created
     // once, and can be reused for multiple requests. After completing all of your requests, call
     // the "close" method on the client to safely clean up any remaining background resources.
@@ -84,10 +86,14 @@ public class DetectText {
       }
     }
 
-    String queryItem = text.get(4).split(":")[1];
-
-    String result = GoogleShoppingResultsWrapper.getShoppingResultsPage(queryItem);
-
-    return result;
+    int startIndexToFetchText = 4;
+    List<String> queryItem = new ArrayList<>();
+    queryItem.add(text.get(startIndexToFetchText).split(":")[1]);
+    startIndexToFetchText += 4;
+    while(startIndexToFetchText < text.size()) {
+        queryItem.add(text.get(startIndexToFetchText).split(":")[1]);
+        startIndexToFetchText += 4;
+    }
+    return queryItem;
   } 
 }

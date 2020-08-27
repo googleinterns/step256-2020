@@ -12,16 +12,60 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+let photoCategory;
+let blobKeyString;
+
+/**  
+ * Gets and stores information about the photo uploaded by the user, by making a GET request
+ * to '/get-image-info'. 
+ * {@code photoCategory} and {@code blobKeyString} are needed for making the GET request to 
+ * the PhotoShoppingServlet.
+ */
+async function fetchUploadedImageInfo() {
+  const response = await fetch('/get-image-info')
+      .catch((error) => {
+        console.warn(error);
+        return new Response(JSON.stringify({
+          code: 400,
+          message: 'Failed to fetch "/get-image-info"',
+        }));
+      });
+
+  if (!response.ok) {
+    return Promise.reject(response);
+  }
+  
+  // Get and store the photo category (i.e. product, list or barcode) and the keystring 
+  // of the blobkey.
+  let uploadedPhotoInformation = await response.text();
+
+  uploadedPhotoInformation = uploadedPhotoInformation.split('\n');
+
+  photoCategory = uploadedPhotoInformation[0];
+  blobKeyString = uploadedPhotoInformation[1];
+}
+
 /**
  * Builds the Shopping Results Page UI by integrating product results from 
  * Google Shopping into the webpage. 
  */
 async function buildShoppingResultsUI() {
   // Make a GET request to '/photo-shopping-request' to scrape the Google Shopping 
-  // query search results. The request returns the complete HTML of the SERP, stored
+  // search query results. The request returns the complete HTML of the SERP, stored
   // into {@code shoppingSearchResultsPage}.
 
-  const response = await fetch('/photo-shopping-request').catch(handleError);
+  // Build the URL to be fetched - add parameters to identify the uploaded photo.
+  const fetchURL = 
+      `/photo-shopping-request?photo-category=${photoCategory}&blob-key=${blobKeyString}`;
+
+  const response = await fetch(fetchURL)
+      .catch((error) => {
+        console.warn(error);
+        return new Response(JSON.stringify({
+          code: 400,
+          message: `Failed to fetch ${fetchURL}`,
+        }));
+      });
 
   if (!response.ok) {
     return Promise.reject(response);
@@ -29,65 +73,30 @@ async function buildShoppingResultsUI() {
 
   const shoppingSearchResultsPage = await response.text();
 
-  // Get the array of product containers from SERP - each has the class "u30d4".
-  const productElementsHTML = $('.u30d4', shoppingSearchResultsPage);
+  // Extract the needed information for the products.
+  const products = ProductListExtractor.extract(shoppingSearchResultsPage);
 
-  for (let i = 0; i < productElementsHTML.length - 1; i++) {
-    const currentProductHTML = productElementsHTML[i];
-
-    // Get info about the current product by extracting from the HTML element.
-
-    const productImageLink = $('.oR27Gd > img', currentProductHTML).attr('src');
-
-    let productLink = $('.rgHvZc > a', currentProductHTML).attr('href');
-
-    // Fix product link - if the URL starts with '/url?q=', the URL redirection will not work.
-    const wrongStartOfLink = '/url?q=';
-    // Therefore delete the start if this is the case, for the redirection to successfully work.
-    if (productLink.substring(0, wrongStartOfLink.length) === wrongStartOfLink) {
-      productLink = productLink.substring(wrongStartOfLink.length);
-    }
-
-    // Get the title as HTML instead of text, in order to keep the <b> tags.
-    const productTitle = $('.rgHvZc > a', currentProductHTML).html();
-
-    const productPrice = $('.dD8iuc > .HRLxBb', currentProductHTML).text();
-
-    // As some products do not have rating, the classes order may differ, therefore
-    // define productPriceAndSeller for both cases.
-    let productPriceAndSeller;
-    let productRatingInStars;
-    // If the product does not have a rating container, 
-    if ($('.dD8iuc:nth-of-type(3)', currentProductHTML).html() == undefined) {
-      // only get the price and seller container.
-      productPriceAndSeller = $('.dD8iuc:nth-of-type(2)', currentProductHTML).html();
-    } else {
-      // Else, assign both values.
-      productRatingInStars = $('.dD8iuc:nth-of-type(2)', currentProductHTML).text();
-      productPriceAndSeller = $('.dD8iuc:nth-of-type(3)', currentProductHTML).html();
-    }
-
-    const productShippingPrice = $('.dD8iuc:nth-of-type(1)', currentProductHTML).text();
-
+  // Integrate the products into the webpage.
+  products.forEach(product => {
     // Create an HTML node for the item container.
-    let $productContainer = $('<div>', { class: 'col-md-4' });
+    let $productContainer = $('<div>', {class: 'col-md-4'});
 
-    // Get the HTML for the container.
-    const productElementHTML = getProductElementHTML(productTitle,
-                                                     productImageLink,
-                                                     productPriceAndSeller,
-                                                     productLink,
-                                                     productShippingPrice);
+    // Get the HTML content for the container.
+    const productElementHTML = getProductElementHTML(product.title,
+                                                     product.imageLink,
+                                                     product.priceAndSeller,
+                                                     product.link,
+                                                     product.shippingPrice);
     // Load the content using jQuery's append.
     $productContainer.append(productElementHTML);
 
     // Add the container to the results page, into the corresponding product wrapper.
     $('#shopping-results-wrapper').append($productContainer);
-  }
+  });
 }
 
 /**
- * Returns the HTML for a product container, based on the arguments.
+ * Returns the HTML content for a product container, based on the arguments.
  */
 function getProductElementHTML(productTitle,
                                productImageLink,
@@ -115,15 +124,7 @@ function getProductElementHTML(productTitle,
           </div>`;
 }
 
-/**
- * Handles error from asynchronous function that fetches '/search-shopping-results'.
- */
-function handleError(error) {
-  console.warn(error);
-  return new Response(JSON.stringify({
-    code: 400,
-    message: 'Failed to fetch "/search-shopping-results"',
-  }));
-};
-
-buildShoppingResultsUI();
+// Call buildShoppingResultsUI() only after fetchUploadedImageInfo() has completed.
+$.when($.ajax(fetchUploadedImageInfo())).then(function () {
+  buildShoppingResultsUI();
+});
