@@ -12,42 +12,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
+package com.google.sps.servlet;
 
-import com.google.sps.data.GoogleShoppingResultsWrapper;
+import com.google.sps.GoogleShoppingQuerier;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Generate a search query and return search results, for that query, to front-end.
- */
+/** Generate a search query and return search results, for that query, to front-end. */
 @WebServlet("/photo-shopping-request")
 public class PhotoShoppingServlet extends HttpServlet {
-  
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // TODO: Based on request.getParameter("photo-category"), call methods from photo detection classes, 
-    // passing request.getParameter("blob-key") as argument. These methods build the shopping query and call 
+    // TODO: Based on request.getParameter("photo-category"), call methods from photo detection
+    // classes,
+    // passing request.getParameter("blob-key") as argument. These methods build the shopping query
+    // and call
     // the {@code getShoppingResultsPage} method from GoogleShoppingResultsWrapper.
 
-    String query = getQuery(request.getParameter("photo-category"));
+    String shoppingQuery = getQuery(request.getParameter("photo-category"));
+    GoogleShoppingQuerier querier = new GoogleShoppingQuerier(shoppingQuery);
     response.setContentType("text/html");
-    response.getWriter().println(GoogleShoppingResultsWrapper.getShoppingResultsPage(query));
+    response.getWriter().println(querier.query());
   }
 
   private String getQuery(String photoCategory) {
     switch (photoCategory) {
       case "product":
         return "Fountain pen";
-      case "list":
+      case "shopping-list":
         return "Fuzzy socks";
       case "barcode":
         return "Running shoes";
       default:
-        return "Notebook"; 
-    } 
+        return "Notebook";
+    }
   }
 }
