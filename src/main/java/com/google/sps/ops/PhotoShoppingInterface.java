@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.data;
+package com.google.sps.ops;
 
 import java.io.IOException;
 
@@ -20,6 +20,6 @@ import java.io.IOException;
  * Interface for shopping with product, list or barcode photo - detect photo content,
  * construct shopping query and get results from Google Shopping.
  */
-interface PhotoShoppingInterface {
+public interface PhotoShoppingInterface {
   public String query();
 }

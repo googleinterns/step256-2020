@@ -15,7 +15,8 @@
 package com.google.sps.servlets;
 
 import com.google.gson.Gson;
-import com.google.sps.data.GoogleShoppingResultsWrapper;
+import com.google.sps.ops.GoogleShoppingResultsWrapper;
+import com.google.sps.ops.PhotoShoppingInterface;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
