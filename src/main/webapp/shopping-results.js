@@ -26,7 +26,7 @@ async function fetchUploadedImageInfo() {
       .catch((error) => {
         console.warn(error);
         return new Response(JSON.stringify({
-          code: 400,
+          code: error.response.status,
           message: 'Failed to fetch "/get-image-info"',
         }));
       });
@@ -62,7 +62,7 @@ async function buildShoppingResultsUI() {
       .catch((error) => {
         console.warn(error);
         return new Response(JSON.stringify({
-          code: 400,
+          code: error.response.status,
           message: `Failed to fetch ${fetchURL}`,
         }));
       });

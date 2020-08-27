@@ -13,8 +13,8 @@
 // limitations under the License.
 
 /** 
- * Class responsible for creating an object containing the product information
- * needed for displaying on the shopping results page.
+ * Creates an object containing the product information needed for displaying 
+ * on the shopping results page.
  */
 class Product {
   constructor(title, imageLink, priceAndSeller, link, shippingPrice) {
@@ -27,8 +27,8 @@ class Product {
 }
 
 /** 
- * Class responsible for extracting the needed information about products, given the 
- * Google Shopping results in the form of an HTML page.
+ * Extracts the needed information about products, given the Google Shopping results 
+ * in the form of an HTML page.
  */
 class ProductListExtractor {
     
@@ -48,7 +48,6 @@ class ProductListExtractor {
       const currentProductHTML = productElementsHTML[i];
 
       // Get info about the current product by extracting from the HTML element.
-
       const productImageLink = $('.oR27Gd > img', currentProductHTML).attr('src');
 
       let productLink = $('.rgHvZc > a', currentProductHTML).attr('href');
