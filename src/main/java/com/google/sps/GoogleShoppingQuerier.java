@@ -19,14 +19,20 @@ import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-/** Return the Google Shopping results for a given query in the form of an HTML page. */
+/** 
+ * Queries Google Shopping with the given input.
+ */
 public class GoogleShoppingQuerier {
 
   private String shoppingQuery;
+
+  // The parameters for {@code GOOGLE_SEARCH_BASE_URL} define the following:
+  // "tbm" defines the type of search;
+  // "tbs" defines advanced search parameters;
+  // "safe" defines the level of filtering for adult content;
+  // "hl" defines the language to use for the Google search.
   private final String GOOGLE_SEARCH_BASE_URL =
-      "https://www.google.com/search?tbm=shop&tbs=vw:l&safe=strict&hl=en&source=h";
-  // Above, "tbm=shop" is the search type; "tbs=vw" removes ads and specifies the viewing style;
-  // "hl=en" is the language parameter and "safe=strict" is the parameter for safety check.
+      "https://www.google.com/search?tbm=shop&tbs=vw:l&safe=active&hl=en&source=h";
 
   public GoogleShoppingQuerier(String shoppingQuery) {
     this.shoppingQuery = shoppingQuery;
