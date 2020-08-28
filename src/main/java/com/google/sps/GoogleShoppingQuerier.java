@@ -43,7 +43,7 @@ public class GoogleShoppingQuerier {
       throw new IOException("Invalid Shopping query.");
     }
 
-    shoppingQuery = cleanValidShoppingQuery(shoppingQuery);
+    shoppingQuery = polishShoppingQuery(shoppingQuery);
 
     String query = "q=" + shoppingQuery;
     String maxResultsNum = "num=6";
@@ -66,16 +66,26 @@ public class GoogleShoppingQuerier {
     if (shoppingQuery.isEmpty()) {
       return false;
     }
+
+    if (shoppingQuery == null) {
+      return false;
+    }
+
+    // TO DO: Check if the query defines something that cannot be purchased.
+
     return true;
   }
 
-  private String cleanValidShoppingQuery(String shoppingQuery) {
+  /** 
+   * Prepares the query input for Google Search and returns it.
+   */
+  private String polishShoppingQuery(String shoppingQuery) {
     shoppingQuery =
         shoppingQuery
             .replaceAll("\\s+", " ") // Remove duplicate spaces
             .trim() // Remove spaces from the beginning and end of string
-            .replaceAll(" ", "%20") // Replace all spaces with '%20'
-            .replaceAll("[ ,\n-._=+^\";:~#></|!*]", ""); // Remove all other special characters
+            .replaceAll(" ", "%20") // Replace single space with "%20"
+            .replaceAll("[-+=,\n._^\";:~#></|!*]", ""); // Remove special characters
     return shoppingQuery;
   }
 }
