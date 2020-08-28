@@ -24,8 +24,6 @@ import org.jsoup.nodes.Document;
  */
 public class GoogleShoppingQuerier {
 
-  private String shoppingQuery;
-
   // The parameters for {@code GOOGLE_SEARCH_BASE_URL} define the following:
   // "tbm" defines the type of search;
   // "tbs" defines advanced search parameters;
@@ -34,11 +32,8 @@ public class GoogleShoppingQuerier {
   private final String GOOGLE_SEARCH_BASE_URL =
       "https://www.google.com/search?tbm=shop&tbs=vw:l&safe=active&hl=en&source=h";
 
-  public GoogleShoppingQuerier(String shoppingQuery) {
-    this.shoppingQuery = shoppingQuery;
-  }
 
-  public String query() throws IOException, HttpStatusException {
+  public String query(String shoppingQuery) throws IOException, HttpStatusException {
     if (!isValidShoppingQuery(shoppingQuery)) {
       throw new IOException("Invalid Shopping query.");
     }

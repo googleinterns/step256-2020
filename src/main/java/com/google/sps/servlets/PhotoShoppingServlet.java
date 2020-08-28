@@ -35,10 +35,10 @@ public class PhotoShoppingServlet extends HttpServlet {
     // the {@code getShoppingResultsPage} method from GoogleShoppingResultsWrapper.
 
     String shoppingQuery = getQuery(request.getParameter("photo-category"));
-    GoogleShoppingQuerier querier = new GoogleShoppingQuerier(shoppingQuery);
+    GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
     response.setContentType("text/html");
     try {
-      response.getWriter().println(querier.query());
+      response.getWriter().println(querier.query(shoppingQuery));
     } catch(HttpStatusException exception) {
       response.sendError(exception.getStatusCode(), exception.getMessage());
     } catch(IOException ex) {
