@@ -15,6 +15,7 @@
 package com.google.sps.servlets;
 
 import com.google.sps.GoogleShoppingQuerier;
+import com.google.sps.data.ShoppingQueryInput;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,10 +36,13 @@ public class PhotoShoppingServlet extends HttpServlet {
     // the {@code getShoppingResultsPage} method from GoogleShoppingResultsWrapper.
 
     String shoppingQuery = getQuery(request.getParameter("photo-category"));
+
+    ShoppingQueryInput input = new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(3).build();
+
     GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
     response.setContentType("text/html");
     try {
-      response.getWriter().println(querier.query(shoppingQuery));
+      response.getWriter().println(querier.query(input));
     } catch(HttpStatusException exception) {
       response.sendError(exception.getStatusCode(), exception.getMessage());
     } catch(IOException ex) {

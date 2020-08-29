@@ -14,6 +14,7 @@
 
 package com.google.sps;
 
+import com.google.sps.data.ShoppingQueryInput;
 import java.io.IOException;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -28,12 +29,13 @@ public class GoogleShoppingQuerier {
   // "tbm" defines the type of search;
   // "tbs" defines advanced search parameters;
   // "safe" defines the level of filtering for adult content;
-  // "hl" defines the language to use for the Google search.
   private final String GOOGLE_SEARCH_BASE_URL =
-      "https://www.google.com/search?tbm=shop&tbs=vw:l&safe=active&hl=en&source=h";
+      "https://www.google.com/search?tbm=shop&tbs=vw:l&safe=active&source=h";
 
+//   public String query(String shoppingQuery) throws IOException, HttpStatusException {
+  public String query(ShoppingQueryInput shoppingQueryInput) throws IOException, HttpStatusException {
+    String shoppingQuery = shoppingQueryInput.getShoppingQuery();
 
-  public String query(String shoppingQuery) throws IOException, HttpStatusException {
     if (!isValidShoppingQuery(shoppingQuery)) {
       throw new IOException("Invalid Shopping query.");
     }
@@ -41,8 +43,12 @@ public class GoogleShoppingQuerier {
     shoppingQuery = polishShoppingQuery(shoppingQuery);
 
     String query = "q=" + shoppingQuery;
-    String maxResultsNum = "num=6";
-    String searchURL = GOOGLE_SEARCH_BASE_URL + "&" + query + "&" + maxResultsNum;
+    // "num" parameter defines the maximum number of results to return.
+    String maxResultsNumber = "num=" + String.valueOf(shoppingQueryInput.getMaxResultsNumber());
+      // "hl" parameter defines the language to use for the Google search.
+    String language = "hl=" + shoppingQueryInput.getLanguage();
+    
+    String searchURL = GOOGLE_SEARCH_BASE_URL + "&" + query + "&" + language + "&" + maxResultsNumber;
 
     Document doc;
     try {
