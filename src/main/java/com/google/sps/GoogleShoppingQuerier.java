@@ -18,7 +18,6 @@ import com.google.sps.data.ShoppingQueryInput;
 import java.io.IOException;
 
 import org.jsoup.Connection.Response;
-import org.jsoup.Connection.Response;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -54,12 +53,16 @@ public class GoogleShoppingQuerier {
     String searchURL = GOOGLE_SEARCH_BASE_URL + "&" + query + "&" + language + "&" + maxResultsNumber;
 
     Response response = Jsoup.connect(searchURL)
-        .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
+        .userAgent("Mozilla/5.0 (X11; CrOS x86_64 13099.110.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.136 Safari/537.36")
         .execute();
 
     int statusCode = response.statusCode();
     if (statusCode == 200) {
+      // Parse the response object to obtain the document.
       Document doc = response.parse();
+
+      // TODO: Extract product info from the document.
+
       return doc.html();
     }
     else {
