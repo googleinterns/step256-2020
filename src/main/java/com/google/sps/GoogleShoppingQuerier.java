@@ -16,6 +16,9 @@ package com.google.sps;
 
 import com.google.sps.data.ShoppingQueryInput;
 import java.io.IOException;
+
+import org.jsoup.Connection.Response;
+import org.jsoup.Connection.Response;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -50,17 +53,19 @@ public class GoogleShoppingQuerier {
     
     String searchURL = GOOGLE_SEARCH_BASE_URL + "&" + query + "&" + language + "&" + maxResultsNumber;
 
-    Document doc;
-    try {
-      // Without proper User-Agent, it will result in a 403 error.
-      doc = Jsoup.connect(searchURL).userAgent("Mozilla/5.0").get();
-    } catch (HttpStatusException e) {
-      throw new HttpStatusException(
-          "Error while getting results from Google search", e.getStatusCode(), e.getUrl());
-    }
+    Response response = Jsoup.connect(searchURL)
+        .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
+        .execute();
 
-    // Send back the HTML code of the search results.
-    return doc.html();
+    int statusCode = response.statusCode();
+    if (statusCode == 200) {
+      Document doc = response.parse();
+      return doc.html();
+    }
+    else {
+      System.out.println("Received error code : " + statusCode);
+      return "";
+    }
   }
 
   private boolean isValidShoppingQuery(String shoppingQuery) {
