@@ -42,7 +42,7 @@ public class GoogleShoppingQuerier {
     String shoppingQuery = shoppingQueryInput.getShoppingQuery();
 
     if (!isValidShoppingQuery(shoppingQuery)) {
-      throw new IOException("Invalid Shopping query.");
+      throw new IllegalArgumentException("Invalid Shopping query.");
     }
 
     shoppingQuery = polishShoppingQuery(shoppingQuery);
@@ -79,11 +79,8 @@ public class GoogleShoppingQuerier {
    * Checks if the query to be serched is a valid one.
    */
   private boolean isValidShoppingQuery(String shoppingQuery) {
-    if (shoppingQuery.isEmpty()) {
-      return false;
-    }
-
-    if (shoppingQuery == null) {
+    // Return false if the string does not contain at least one letter.
+    if (!shoppingQuery.matches(".*[a-zA-Z].*")) {
       return false;
     }
 
