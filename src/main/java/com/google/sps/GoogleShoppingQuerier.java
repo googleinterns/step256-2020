@@ -34,7 +34,10 @@ public class GoogleShoppingQuerier {
   private final String GOOGLE_SEARCH_BASE_URL =
       "https://www.google.com/search?tbm=shop&tbs=vw:l&safe=active&source=h";
 
-//   public String query(String shoppingQuery) throws IOException, HttpStatusException {
+
+  /** 
+   * @param ShoppingQueryInput object, containing fields for the values of search parameters.
+   */
   public String query(ShoppingQueryInput shoppingQueryInput) throws IOException, HttpStatusException {
     String shoppingQuery = shoppingQueryInput.getShoppingQuery();
 
@@ -53,7 +56,8 @@ public class GoogleShoppingQuerier {
     String searchURL = GOOGLE_SEARCH_BASE_URL + "&" + query + "&" + language + "&" + maxResultsNumber;
 
     Response response = Jsoup.connect(searchURL)
-        .userAgent("Mozilla/5.0 (X11; CrOS x86_64 13099.110.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.136 Safari/537.36")
+        .userAgent("Mozilla/5.0 (X11; CrOS x86_64 13099.110.0) AppleWebKit/537.36 (KHTML, like Gecko) " +
+            "Chrome/84.0.4147.136 Safari/537.36")
         .execute();
 
     int statusCode = response.statusCode();
@@ -71,6 +75,9 @@ public class GoogleShoppingQuerier {
     }
   }
 
+  /** 
+   * Checks if the query to be serched is a valid one.
+   */
   private boolean isValidShoppingQuery(String shoppingQuery) {
     if (shoppingQuery.isEmpty()) {
       return false;
