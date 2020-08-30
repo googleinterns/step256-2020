@@ -15,10 +15,14 @@
 package com.google.sps;
 
 import com.google.sps.data.ShoppingQueryInput;
+
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+import org.jsoup.HttpStatusException;
+import org.jsoup.UnsupportedMimeTypeException;
 
 import org.jsoup.Connection.Response;
-import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -38,7 +42,7 @@ public class GoogleShoppingQuerier {
   /** 
    * @param ShoppingQueryInput object, containing fields for the values of search parameters.
    */
-  public String query(ShoppingQueryInput shoppingQueryInput) throws IOException, HttpStatusException {
+  public String query(ShoppingQueryInput shoppingQueryInput) throws IOException, ShoppingQuerierConnectionException {
     String shoppingQuery = shoppingQueryInput.getShoppingQuery();
 
     if (!isValidShoppingQuery(shoppingQuery)) {
@@ -55,24 +59,38 @@ public class GoogleShoppingQuerier {
     
     String searchURL = GOOGLE_SEARCH_BASE_URL + "&" + query + "&" + language + "&" + maxResultsNumber;
 
-    Response response = Jsoup.connect(searchURL)
-        .userAgent("Mozilla/5.0 (X11; CrOS x86_64 13099.110.0) AppleWebKit/537.36 (KHTML, like Gecko) " +
-            "Chrome/84.0.4147.136 Safari/537.36")
-        .execute();
-
-    int statusCode = response.statusCode();
-    if (statusCode == 200) {
-      // Parse the response object to obtain the document.
-      Document doc = response.parse();
-
-      // TODO: Extract product info from the document.
-
-      return doc.html();
+    Response response = null;
+    
+    try {
+      response = Jsoup.connect(searchURL)
+          .userAgent("Mozilla/5.0 (X11; CrOS x86_64 13099.110.0) AppleWebKit/537.36 (KHTML, like Gecko) " +
+              "Chrome/84.0.4147.136 Safari/537.36")
+          .execute();
+    } catch (MalformedURLException exception) {
+      // Re-throw the exception via ShoppingQuerierConnectionException custom exception.
+      throw new ShoppingQuerierConnectionException(
+          "The request URL must be a HTTP or HTTPS URL and must not be malformed.", exception);
+    } catch (HttpStatusException exception) {
+      throw new ShoppingQuerierConnectionException(
+          "The response must be OK.", exception);
+    } catch (UnsupportedMimeTypeException exception) {
+      throw new ShoppingQuerierConnectionException(
+          "The response mime type must be supported.", exception);
+    } catch (SocketTimeoutException exception) {
+      throw new ShoppingQuerierConnectionException(
+          "The connection must not time out.", exception);
+    } catch (IOException exception) {
+      // Re-throw IOException.
+      throw exception;
     }
-    else {
-      System.out.println("Received error code : " + statusCode);
-      return "";
-    }
+
+    // Here, after handling the exceptions, response.statusCode() is 200.
+    // Parse the response object to obtain the document.
+    Document doc = response.parse();
+
+    // TODO: Extract product info from the document.
+
+    return doc.html();
   }
 
   /** 
