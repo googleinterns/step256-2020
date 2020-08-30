@@ -43,8 +43,10 @@ public class PhotoShoppingServlet extends HttpServlet {
 
     GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
     response.setContentType("text/html");
+
+    String shoppingQuerierResults = null;
     try {
-      response.getWriter().println(querier.query(input));
+      shoppingQuerierResults = querier.query(input);
     } catch(IllegalArgumentException exception) {
       response.sendError(500, exception.getMessage());
     } catch(ShoppingQuerierConnectionException exception) {
@@ -52,6 +54,8 @@ public class PhotoShoppingServlet extends HttpServlet {
     } catch(IOException exception) {
       response.sendError(500, exception.getMessage());
     } 
+
+    response.getWriter().println(shoppingQuerierResults);
   }
 
   private String getQuery(String photoCategory) {
