@@ -34,21 +34,25 @@ public class GoogleShoppingQuerier {
   // The parameters for {@code GOOGLE_SEARCH_BASE_URL} define the following:
   // "tbm" defines the type of search;
   // "tbs" defines advanced search parameters;
+  //       Here, "tbs=vw:l" sets that the items are displayed as list and not as grid.
   // "safe" defines the level of filtering for adult content;
   private final String GOOGLE_SEARCH_BASE_URL =
-      "https://www.google.com/search?tbm=shop&tbs=vw:l&safe=active&source=h";
+      "https://www.google.com/search?tbm=shop&tbs=vw:l&safe=active";
 
 
   /** 
+   * Scrapes Google Shopping based on the input and returns the results.
    * @param ShoppingQueryInput object, containing fields for the values of search parameters.
    */
   public String query(ShoppingQueryInput shoppingQueryInput) throws IOException, ShoppingQuerierConnectionException {
+    // Get the query to be searched and check for validity.
     String shoppingQuery = shoppingQueryInput.getShoppingQuery();
 
     if (!isValidShoppingQuery(shoppingQuery)) {
       throw new IllegalArgumentException("Invalid Shopping query.");
     }
 
+    // Clean the valid query input before building {@code searchURL}.
     shoppingQuery = polishShoppingQuery(shoppingQuery);
 
     String query = "q=" + shoppingQuery;
@@ -62,9 +66,9 @@ public class GoogleShoppingQuerier {
     Response response = null;
     
     try {
+      // Get the Connection for fetching content from the {@code searchURL}.
       response = Jsoup.connect(searchURL)
-          .userAgent("Mozilla/5.0 (X11; CrOS x86_64 13099.110.0) AppleWebKit/537.36 (KHTML, like Gecko) " +
-              "Chrome/84.0.4147.136 Safari/537.36")
+          .userAgent("Mozilla/5.0")
           .execute();
     } catch (MalformedURLException exception) {
       // Re-throw the exception via ShoppingQuerierConnectionException custom exception.

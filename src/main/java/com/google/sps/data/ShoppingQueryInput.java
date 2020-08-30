@@ -14,7 +14,10 @@
 
 package com.google.sps.data;
 
-/** Builder Pattern */
+/**
+ * Class containing input for querying Google Shopping.
+ * Follows the Builder Pattern.
+ */
 public final class ShoppingQueryInput {
   private final String shoppingQuery;
   private final String language;

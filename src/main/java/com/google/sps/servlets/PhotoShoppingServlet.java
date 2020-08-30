@@ -32,19 +32,20 @@ public class PhotoShoppingServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // TODO: Based on request.getParameter("photo-category"), call methods from photo detection
-    // classes,
-    // passing request.getParameter("blob-key") as argument. These methods build the shopping query
-    // and call
-    // the {@code getShoppingResultsPage} method from GoogleShoppingResultsWrapper.
+    // classes, passing request.getParameter("blob-key") as argument. These methods build the 
+    // shopping query and call the {@code query} method from GoogleShoppingQuerier.
 
     String shoppingQuery = getQuery(request.getParameter("photo-category"));
+    // Build the shopping query input - set language and maxResultsNumber to hard-coded values for now.
+    ShoppingQueryInput input = 
+        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(20).build();
 
-    ShoppingQueryInput input = new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(3).build();
-
+    // Initialize the Google Shopping querier.
     GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
     response.setContentType("text/html");
-
+    
     String shoppingQuerierResults = null;
+
     try {
       shoppingQuerierResults = querier.query(input);
     } catch(IllegalArgumentException exception) {
