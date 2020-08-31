@@ -15,12 +15,21 @@
 package com.google.sps.servlets;
 
 import com.google.sps.GoogleShoppingQuerier;
+import com.google.sps.ShoppingQuerierConnectionException;
+import com.google.sps.data.Product;
+import com.google.sps.data.ShoppingQueryInput;
+
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.HttpStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.Gson;
 
 /** Generate a search query and return search results, for that query, to front-end. */
 @WebServlet("/photo-shopping-request")
@@ -29,21 +38,35 @@ public class PhotoShoppingServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // TODO: Based on request.getParameter("photo-category"), call methods from photo detection
-    // classes,
-    // passing request.getParameter("blob-key") as argument. These methods build the shopping query
-    // and call
-    // the {@code getShoppingResultsPage} method from GoogleShoppingResultsWrapper.
+    // classes, passing request.getParameter("blob-key") as argument. These methods build the 
+    // shopping query and call the {@code query} method from GoogleShoppingQuerier.
 
     String shoppingQuery = getQuery(request.getParameter("photo-category"));
-    GoogleShoppingQuerier querier = new GoogleShoppingQuerier(shoppingQuery);
-    response.setContentType("text/html");
+    // Build the shopping query input - set language and maxResultsNumber to hard-coded values for now.
+    ShoppingQueryInput input = 
+        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(20).build();
+
+    // Initialize the Google Shopping querier.
+    GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
+    
+    response.setContentType("application/json;");
+    
+    List<Product> shoppingQuerierResults = new ArrayList<>();
     try {
-      response.getWriter().println(querier.query());
-    } catch(HttpStatusException exception) {
-      response.sendError(exception.getStatusCode(), exception.getMessage());
-    } catch(IOException ex) {
-      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Getting results failed: " + ex.getMessage());
-    }
+      shoppingQuerierResults = querier.query(input);
+    } catch(IllegalArgumentException exception) {
+      response.sendError(500, exception.getMessage());
+    } catch(ShoppingQuerierConnectionException exception) {
+      response.sendError(500, exception.getMessage());
+    } catch(IOException exception) {
+      response.sendError(500, exception.getMessage());
+    } 
+     
+    // Convert products List into a JSON string using Gson library and
+    // send the JSON as the response.
+    Gson gson = new Gson();
+
+    response.getWriter().println(gson.toJson(shoppingQuerierResults));
   }
 
   private String getQuery(String photoCategory) {
