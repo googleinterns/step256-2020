@@ -70,19 +70,13 @@ public class GoogleShoppingQuerier {
       response = Jsoup.connect(searchURL)
           .userAgent("Mozilla/5.0")
           .execute();
-    } catch (MalformedURLException exception) {
+    } catch (MalformedURLException | 
+             HttpStatusException | 
+             UnsupportedMimeTypeException | 
+             SocketTimeoutException exception) {
       // Re-throw the exception via ShoppingQuerierConnectionException custom exception.
       throw new ShoppingQuerierConnectionException(
-          "The request URL must be a HTTP or HTTPS URL and must not be malformed.", exception);
-    } catch (HttpStatusException exception) {
-      throw new ShoppingQuerierConnectionException(
-          "The response must be OK.", exception);
-    } catch (UnsupportedMimeTypeException exception) {
-      throw new ShoppingQuerierConnectionException(
-          "The response mime type must be supported.", exception);
-    } catch (SocketTimeoutException exception) {
-      throw new ShoppingQuerierConnectionException(
-          "The connection must not time out.", exception);
+          "Failed to fetch from Google Search.", exception);
     } catch (IOException exception) {
       // Re-throw IOException.
       throw exception;
