@@ -29,15 +29,14 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/blobstore-upload-url")
 public class BlobstoreUploadUrlServlet extends HttpServlet {
 
-  private final BlobstoreService blobstoreService;
-
-  private BlobstoreUploadUrlServlet() {
-    blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-  }
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    
+    // Create the URL that allows a user to upload a file to Blobstore.
     String formActionUrl = blobstoreService.createUploadUrl("/get-image-info");
+
+    // Send the URL as the response.
     response.setContentType("text/html");
     response.getWriter().println(formActionUrl);
   }
