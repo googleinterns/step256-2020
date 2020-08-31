@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.HttpStatusException;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,13 +55,9 @@ public class PhotoShoppingServlet extends HttpServlet {
     List<Product> shoppingQuerierResults = new ArrayList<>();
     try {
       shoppingQuerierResults = querier.query(input);
-    } catch(IllegalArgumentException exception) {
-      response.sendError(500, exception.getMessage());
-    } catch(ShoppingQuerierConnectionException exception) {
-      response.sendError(500, exception.getMessage());
-    } catch(IOException exception) {
-      response.sendError(500, exception.getMessage());
-    } 
+    } catch(IllegalArgumentException | ShoppingQuerierConnectionException | IOException exception) {
+      response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+    }
      
     // Convert products List into a JSON string using Gson library and
     // send the JSON as the response.
