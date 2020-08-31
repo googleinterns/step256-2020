@@ -16,6 +16,7 @@ package com.google.sps.servlets;
 
 import com.google.sps.GoogleShoppingQuerier;
 import com.google.sps.ShoppingQuerierConnectionException;
+import com.google.sps.data.Product;
 import com.google.sps.data.ShoppingQueryInput;
 
 import java.io.IOException;
@@ -24,6 +25,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.HttpStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.Gson;
 
 /** Generate a search query and return search results, for that query, to front-end. */
 @WebServlet("/photo-shopping-request")
@@ -42,10 +48,10 @@ public class PhotoShoppingServlet extends HttpServlet {
 
     // Initialize the Google Shopping querier.
     GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
-    response.setContentType("text/html");
     
-    String shoppingQuerierResults = null;
-
+    response.setContentType("application/json;");
+    
+    List<Product> shoppingQuerierResults = new ArrayList<>();
     try {
       shoppingQuerierResults = querier.query(input);
     } catch(IllegalArgumentException exception) {
@@ -55,8 +61,12 @@ public class PhotoShoppingServlet extends HttpServlet {
     } catch(IOException exception) {
       response.sendError(500, exception.getMessage());
     } 
+     
+    // Convert products List into a JSON string using Gson library and
+    // send the JSON as the response.
+    Gson gson = new Gson();
 
-    response.getWriter().println(shoppingQuerierResults);
+    response.getWriter().println(gson.toJson(shoppingQuerierResults));
   }
 
   private String getQuery(String photoCategory) {
