@@ -14,7 +14,6 @@
 
 package com.google.sps;
 
-import com.google.sps.ProductListExtractor;
 import com.google.sps.data.Product;
 import com.google.sps.data.ShoppingQueryInput;
 
