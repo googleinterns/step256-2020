@@ -14,6 +14,8 @@
 
 package com.google.sps;
 
+import com.google.sps.ProductListExtractor;
+import com.google.sps.data.Product;
 import com.google.sps.data.ShoppingQueryInput;
 
 import java.io.IOException;
@@ -25,6 +27,8 @@ import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import java.util.List;
 
 /** 
  * Queries Google Shopping with the given input.
@@ -39,12 +43,11 @@ public class GoogleShoppingQuerier {
   private final String GOOGLE_SEARCH_BASE_URL =
       "https://www.google.com/search?tbm=shop&tbs=vw:l&safe=active";
 
-
   /** 
    * Scrapes Google Shopping based on the input and returns the results.
    * @param ShoppingQueryInput object, containing fields for the values of search parameters.
    */
-  public String query(ShoppingQueryInput shoppingQueryInput) throws IOException, ShoppingQuerierConnectionException {
+  public List<Product> query(ShoppingQueryInput shoppingQueryInput) throws IOException, ShoppingQuerierConnectionException {
     // Get the query to be searched and check for validity.
     String shoppingQuery = shoppingQueryInput.getShoppingQuery();
 
@@ -86,9 +89,11 @@ public class GoogleShoppingQuerier {
     // Parse the response object to obtain the document.
     Document doc = response.parse();
 
-    // TODO: Extract product info from the document.
+    // Extract product info from the document.
+    ProductListExtractor productListExtractor = new ProductListExtractor();
+    List<Product> products = productListExtractor.extract(doc);
 
-    return doc.html();
+    return products;
   }
 
   /** 
