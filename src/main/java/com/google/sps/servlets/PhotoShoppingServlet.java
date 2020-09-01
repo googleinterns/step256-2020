@@ -40,7 +40,7 @@ public class PhotoShoppingServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // TODO: Based on HttpSession session variable's "photoCategory", call methods from photo detection
-    // classes, passing session.getAttribute("blobKeyString") as argument. These methods build the 
+    // classes, passing {@code session.getAttribute("blobKeyString")} as argument. These methods build the 
     // shopping query and call the {@code query} method from GoogleShoppingQuerier.
 
     // Get the session, which contains user-specific data
