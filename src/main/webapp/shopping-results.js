@@ -14,7 +14,7 @@
 
 
 /**
- * Builds the Shopping Results Page results from 
+ * Builds the Shopping Results Page UI by integrating product results from 
  * Google Shopping into the webpage. 
  */
 async function buildShoppingResultsUI() {
