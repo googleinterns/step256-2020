@@ -37,7 +37,6 @@ public class UploadedImageInfoServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
     // Get the session, which contains user-specific data
     HttpSession session = request.getSession();
 
@@ -90,5 +89,4 @@ public class UploadedImageInfoServlet extends HttpServlet {
 
     return blobKey;
   }
-
 }

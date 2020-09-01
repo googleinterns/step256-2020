@@ -44,7 +44,7 @@ public class PhotoShoppingServlet extends HttpServlet {
     // shopping query and call the {@code query} method from GoogleShoppingQuerier.
 
     // Get the session, which contains user-specific data
-	HttpSession session = request.getSession();
+    HttpSession session = request.getSession();
 
     String shoppingQuery = getQuery(session.getAttribute("photoCategory").toString());
     // Build the shopping query input - set language and maxResultsNumber to hard-coded values for now.
