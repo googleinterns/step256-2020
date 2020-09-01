@@ -15,11 +15,12 @@
 package com.google.sps.ops;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Interface for shopping with product, list or barcode photo - detect photo content,
  * construct shopping query and get results from Google Shopping.
  */
 public interface PhotoShoppingInterface {
-  public String query();
+  public List<String> productDetection(String blobKeyString)throws IOException;
 }
