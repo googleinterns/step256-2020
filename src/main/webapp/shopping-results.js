@@ -53,7 +53,6 @@ async function buildShoppingResultsUI() {
                                                      product.link,
                                                      product.shippingPrice);
 
-    console.log(product.link);
     // Load the content using jQuery's append.
     $productContainer.append(productElementHTML);
 
