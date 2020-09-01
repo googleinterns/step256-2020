@@ -24,6 +24,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.jsoup.HttpStatusException;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
@@ -38,11 +39,14 @@ public class PhotoShoppingServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // TODO: Based on request.getParameter("photo-category"), call methods from photo detection
-    // classes, passing request.getParameter("blob-key") as argument. These methods build the 
+    // TODO: Based on HttpSession session variable's "photoCategory", call methods from photo detection
+    // classes, passing session.getAttribute("blobKeyString") as argument. These methods build the 
     // shopping query and call the {@code query} method from GoogleShoppingQuerier.
 
-    String shoppingQuery = getQuery(request.getParameter("photo-category"));
+    // Get the session, which contains user-specific data
+	HttpSession session = request.getSession();
+
+    String shoppingQuery = getQuery(session.getAttribute("photoCategory").toString());
     // Build the shopping query input - set language and maxResultsNumber to hard-coded values for now.
     ShoppingQueryInput input = 
         new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(20).build();
