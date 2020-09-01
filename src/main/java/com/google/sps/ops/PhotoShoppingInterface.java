@@ -22,5 +22,5 @@ import java.util.List;
  * construct shopping query and get results from Google Shopping.
  */
 public interface PhotoShoppingInterface {
-  public List<String> productDetection(String blobKeyString)throws IOException;
+  public List<String> productDetection(String blobKeyString) throws IOException;
 }
