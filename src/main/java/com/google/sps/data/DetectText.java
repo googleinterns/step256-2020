@@ -44,9 +44,9 @@ import javax.servlet.ServletException;
  * and search shopping results servlet.
  */
 
-public class DetectText {
+public class DetectText implements PhotoShoppingInterface {
 
-  public static List<String> detectText(String blobKeyString) throws IOException {
+  public List<String> productDetection(String blobKeyString) throws IOException {
 
     List<AnnotateImageRequest> requests = new ArrayList<>();
 
