@@ -57,7 +57,7 @@ public class UploadedImageInfoServlet extends HttpServlet {
     String photoCategory = request.getParameter("photo-category");
 
     // Store the item in the session
-	session.setAttribute("blobKeyString", blobKeyString);
+    session.setAttribute("blobKeyString", blobKeyString);
     session.setAttribute("photoCategory", photoCategory);
 
     response.sendRedirect("/");
