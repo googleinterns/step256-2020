@@ -12,6 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+let photoCategory;
+let blobKeyString;
+
+/**  
+ * Gets and stores information about the photo uploaded by the user, by making a GET request
+ * to '/get-image-info'. 
+ * {@code photoCategory} and {@code blobKeyString} are needed for making the GET request to 
+ * the PhotoShoppingServlet.
+ */
+async function fetchUploadedImageInfo() {
+  const response = await fetch('/get-image-info')
+      .catch((error) => {
+        console.warn(error);
+        return new Response(JSON.stringify({
+          code: error.response.status,
+          message: 'Failed to fetch "/get-image-info"',
+        }));
+      });
+
+  if (!response.ok) {
+    return Promise.reject(response);
+  }
+
+  // Get and store the photo category (i.e. product, list or barcode) and the keystring 
+  // of the blobkey.
+  let uploadedPhotoInformation = await response.text();
+
+  uploadedPhotoInformation = uploadedPhotoInformation.split('\n');
+
+  photoCategory = uploadedPhotoInformation[0];
+  blobKeyString = uploadedPhotoInformation[1];
+}
+
 /**
  * Builds the Shopping Results Page UI by integrating product results from 
  * Google Shopping into the webpage. 
@@ -21,10 +54,9 @@ async function buildShoppingResultsUI() {
   // search query results. The request returns a JSON with data about each product
   // from the Google Shopping results page.
 
-  // Build the URL to be fetched - add (hard-coded, for now) parameters to identify 
-  // the uploaded photo.
+  // Build the URL to be fetched - add parameters to identify the uploaded photo.
   const fetchURL = 
-      `/photo-shopping-request?photo-category=product`;
+      `/photo-shopping-request?photo-category=${photoCategory}&blob-key=${blobKeyString}`;
 
   const response = await fetch(fetchURL)
       .catch((error) => {
@@ -90,4 +122,7 @@ function getProductElementHTML(productTitle,
           </div>`;
 }
 
-buildShoppingResultsUI();
+// Call buildShoppingResultsUI() only after fetchUploadedImageInfo() has completed.
+$.when($.ajax(fetchUploadedImageInfo())).then(function () {
+  buildShoppingResultsUI();
+});
