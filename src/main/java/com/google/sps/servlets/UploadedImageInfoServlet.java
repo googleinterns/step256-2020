@@ -29,15 +29,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-/** Get and save uploaded image info and return it when requested from front-end. */
+/** Get and upload the HttpSession session variable with the image info */
 @WebServlet("/get-image-info")
 public class UploadedImageInfoServlet extends HttpServlet {
-  private String blobKeyString;
-  private String photoCategory;
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    // Get the session, which contains user-specific data
+    HttpSession session = request.getSession();
+
     // Get the BlobKey that points to the image uploaded by the user.
     BlobKey blobKey = getBlobKey(request, "photo");
 
@@ -46,17 +49,18 @@ public class UploadedImageInfoServlet extends HttpServlet {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Client must upload an image file.");
     }
 
-    blobKeyString = blobKey.getKeyString();
+    String blobKeyString = blobKey.getKeyString();
 
     if (request.getParameter("photo-category").isEmpty()) {
       response.sendError(
           HttpServletResponse.SC_BAD_REQUEST, "Client must select a photo category when submitting the form.");
     }
-    photoCategory = request.getParameter("photo-category");
+    String photoCategory = request.getParameter("photo-category");
 
-    response.setContentType("text/html");
-    response.getWriter().println(photoCategory);
-    response.getWriter().println(blobKeyString);
+    // Store the item in the session
+	session.setAttribute("blobKeyString", blobKeyString);
+    session.setAttribute("photoCategory", photoCategory);
+
     response.sendRedirect("/");
   }
 
@@ -87,10 +91,4 @@ public class UploadedImageInfoServlet extends HttpServlet {
     return blobKey;
   }
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html");
-    response.getWriter().println(photoCategory);
-    response.getWriter().println(blobKeyString);
-  }
 }
