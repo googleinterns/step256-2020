@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 /**
  * Builds the Shopping Results Page UI by integrating product results from 
  * Google Shopping into the webpage. 
@@ -22,9 +21,7 @@ async function buildShoppingResultsUI() {
   // search query results. The request returns a JSON with data about each product
   // from the Google Shopping results page.
 
-  // Build the URL to be fetched - add parameters to identify the uploaded photo.
-  const fetchURL = 
-      `/photo-shopping-request`;
+  const fetchURL = `/photo-shopping-request`;
 
   const response = await fetch(fetchURL)
       .catch((error) => {
