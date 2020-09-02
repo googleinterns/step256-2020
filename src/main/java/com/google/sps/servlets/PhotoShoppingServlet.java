@@ -15,6 +15,7 @@
 package com.google.sps.servlets;
 
 import com.google.sps.GoogleShoppingQuerier;
+import com.google.sps.ProductPhotoShoppingImpl;
 import com.google.sps.ShoppingQuerierConnectionException;
 import com.google.sps.data.Product;
 import com.google.sps.data.ShoppingQueryInput;
@@ -46,21 +47,21 @@ public class PhotoShoppingServlet extends HttpServlet {
     // Get the session, which contains user-specific data
     HttpSession session = request.getSession();
 
-    String shoppingQuery = getQuery(session.getAttribute("photoCategory").toString());
-    // Build the shopping query input - set language and maxResultsNumber to hard-coded values for now.
-    ShoppingQueryInput input = 
-        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(20).build();
-
-    // Initialize the Google Shopping querier.
-    GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
-    
+    String photoCategory = session.getAttribute("photoCategory").toString();
+    String blobKeyString = session.getAttribute("blobKeyString").toString();
+  
     response.setContentType("application/json;");
-    
     List<Product> shoppingQuerierResults = new ArrayList<>();
-    try {
-      shoppingQuerierResults = querier.query(input);
-    } catch(IllegalArgumentException | ShoppingQuerierConnectionException | IOException exception) {
-      response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+
+    if (photoCategory.equals("product")) {
+      // Initialize the ProductPhotoShoppingImpl object.
+      ProductPhotoShoppingImpl productPhotoShoppingImpl = new ProductPhotoShoppingImpl();
+
+      try {
+        shoppingQuerierResults = productPhotoShoppingImpl.shopWithPhoto(blobKeyString);
+      } catch(IllegalArgumentException | ShoppingQuerierConnectionException | IOException exception) {
+        response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+      }
     }
      
     // Convert products List into a JSON string using Gson library and
@@ -68,18 +69,5 @@ public class PhotoShoppingServlet extends HttpServlet {
     Gson gson = new Gson();
 
     response.getWriter().println(gson.toJson(shoppingQuerierResults));
-  }
-
-  private String getQuery(String photoCategory) {
-    switch (photoCategory) {
-      case "product":
-        return "Fountain pen";
-      case "shopping-list":
-        return "Fuzzy socks";
-      case "barcode":
-        return "Running shoes";
-      default:
-        return "Notebook";
-    }
   }
 }
