@@ -27,6 +27,8 @@ import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
+import com.google.cloud.vision.v1.ColorInfo;
+import com.google.cloud.vision.v1.DominantColorsAnnotation;
 import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.Image;
@@ -42,8 +44,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.awt.Color;
+
 public class ProductPhotoShoppingImpl {
-  public List<Product> shopWithPhoto(String blobKey) throws IOException, ShoppingQuerierConnectionException  {
+  public List<Product> shopWithPhoto(String blobKey) 
+      throws IOException, ProductPhotoShoppingException, ShoppingQuerierConnectionException  {
     // Get the labels of the image that the user uploaded.
     String firstLabel = detectLabels(blobKey);
 
@@ -64,7 +69,7 @@ public class ProductPhotoShoppingImpl {
     return shoppingQuerierResults;
   }
 
-  public static String detectLabels(String blobKey) throws IOException {
+  public static String detectLabels(String blobKey) throws ProductPhotoShoppingException, IOException {
     // Builds the image annotation request
     List<AnnotateImageRequest> requests = new ArrayList<>();
 
@@ -74,10 +79,21 @@ public class ProductPhotoShoppingImpl {
             .build();
     Image img = Image.newBuilder().setSource(imgSource).build();
 
-    Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
-    AnnotateImageRequest request =
-        AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
-    requests.add(request);
+    Feature labelDetectionFeature = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
+    AnnotateImageRequest labelDetectionRequest =
+        AnnotateImageRequest.newBuilder().addFeatures(labelDetectionFeature).setImage(img).build();
+    requests.add(labelDetectionRequest);
+
+    Feature logoDetectionFeature = Feature.newBuilder().setType(Feature.Type.LOGO_DETECTION).build();
+    AnnotateImageRequest logoDetectionRequest =
+        AnnotateImageRequest.newBuilder().addFeatures(logoDetectionFeature).setImage(img).build();
+    requests.add(logoDetectionRequest);
+
+    Feature imagePropertiesDetectionFeature = 
+        Feature.newBuilder().setType(Feature.Type.IMAGE_PROPERTIES).build();
+    AnnotateImageRequest imagePropertiesDetectionRequest =
+        AnnotateImageRequest.newBuilder().addFeatures(imagePropertiesDetectionFeature).setImage(img).build();
+    requests.add(imagePropertiesDetectionRequest);
 
     // Initialize client that will be used to send requests. This client only needs to be created
     // once, and can be reused for multiple requests.
@@ -90,23 +106,39 @@ public class ProductPhotoShoppingImpl {
       
       List<AnnotateImageResponse> responses = response.getResponsesList();
 
+      List<String> labels = new ArrayList(); 
+      List<String> logos = new ArrayList(); 
+
       for (AnnotateImageResponse res : responses) {
         if (res.hasError()) {
+          // throw new ProductPhotoShoppingException(res.getError().getMessage());
           System.out.format("Error: %s%n", res.getError().getMessage());
           return "shoe";
         }
         
         for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-          return annotation.getDescription(); // get first label
+          System.out.println(annotation.getDescription());
+          labels.add(annotation.getDescription());
         }
 
-        // for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-        //   annotation
-        //       .getAllFields()
-        //       .forEach((k, v) -> System.out.format("%s : %s%n", k, v.toString()));
-        // }
+        for (EntityAnnotation annotation : res.getLogoAnnotationsList()) {
+          System.out.println(annotation.getDescription());
+          logos.add(annotation.getDescription());
+        }
+
+        DominantColorsAnnotation colors = res.getImagePropertiesAnnotation().getDominantColors();
+        for (ColorInfo color : colors.getColorsList()) {
+          System.out.format(
+              "fraction: %f%nr: %f, g: %f, b: %f%n",
+              color.getPixelFraction(),
+              color.getColor().getRed(),
+              color.getColor().getGreen(),
+              color.getColor().getBlue());
+        }
       }
+      
+      System.out.println(logos.get(0) + labels.get(0));
+      return logos.get(0) + " " + labels.get(0); // get logo + first label
     }
-    return "pen";
   }
 }
