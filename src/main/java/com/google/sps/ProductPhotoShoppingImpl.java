@@ -50,10 +50,10 @@ public class ProductPhotoShoppingImpl {
   public List<Product> shopWithPhoto(String blobKey) 
       throws IOException, ProductPhotoShoppingException, ShoppingQuerierConnectionException  {
     // Get the labels of the image that the user uploaded.
-    String firstLabel = detectLabels(blobKey);
+    String shoppingQuery = buildShoppingQuery(blobKey);
 
     ShoppingQueryInput input = 
-        new ShoppingQueryInput.Builder(firstLabel).language("en").maxResultsNumber(20).build();
+        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(20).build();
 
     // Initialize the Google Shopping querier.
     GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
@@ -69,7 +69,7 @@ public class ProductPhotoShoppingImpl {
     return shoppingQuerierResults;
   }
 
-  public static String detectLabels(String blobKey) throws ProductPhotoShoppingException, IOException {
+  public static String buildShoppingQuery(String blobKey) throws ProductPhotoShoppingException, IOException {
     // Builds the image annotation request
     List<AnnotateImageRequest> requests = new ArrayList<>();
 
@@ -106,39 +106,46 @@ public class ProductPhotoShoppingImpl {
       
       List<AnnotateImageResponse> responses = response.getResponsesList();
 
-      List<String> labels = new ArrayList(); 
-      List<String> logos = new ArrayList(); 
-
-      for (AnnotateImageResponse res : responses) {
-        if (res.hasError()) {
-          // throw new ProductPhotoShoppingException(res.getError().getMessage());
-          System.out.format("Error: %s%n", res.getError().getMessage());
-          return "shoe";
-        }
-        
-        for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-          System.out.println(annotation.getDescription());
-          labels.add(annotation.getDescription());
-        }
-
-        for (EntityAnnotation annotation : res.getLogoAnnotationsList()) {
-          System.out.println(annotation.getDescription());
-          logos.add(annotation.getDescription());
-        }
-
-        DominantColorsAnnotation colors = res.getImagePropertiesAnnotation().getDominantColors();
-        for (ColorInfo color : colors.getColorsList()) {
-          System.out.format(
-              "fraction: %f%nr: %f, g: %f, b: %f%n",
-              color.getPixelFraction(),
-              color.getColor().getRed(),
-              color.getColor().getGreen(),
-              color.getColor().getBlue());
-        }
-      }
+      List<String> labels = getLabels(responses.get(0));
+      List<String> logos = getLogos(responses.get(1));
       
-      System.out.println(logos.get(0) + labels.get(0));
-      return logos.get(0) + " " + labels.get(0); // get logo + first label
+      if (!logos.isEmpty()) {
+        return logos.get(0) + " " + labels.get(0); // get logo + first label
+      } else {
+        return labels.get(0); // get logo + first label
+      }
     }
+  }
+
+  public static List<String> getLabels(AnnotateImageResponse res) {
+    List<String> labels = new ArrayList(); 
+    if (res.hasError()) {
+      // throw new ProductPhotoShoppingException(res.getError().getMessage());
+      System.out.format("Error: %s%n", res.getError().getMessage());
+      labels.add("shoe");
+      return labels;
+    }
+        
+    for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
+      System.out.println(annotation.getDescription());
+      labels.add(annotation.getDescription());
+    }
+    return labels;
+  }
+
+  public static List<String> getLogos(AnnotateImageResponse res) {
+    List<String> logos = new ArrayList(); 
+    if (res.hasError()) {
+      // throw new ProductPhotoShoppingException(res.getError().getMessage());
+      System.out.format("Error: %s%n", res.getError().getMessage());
+      return logos;
+    }
+
+    for (EntityAnnotation annotation : res.getLogoAnnotationsList()) {
+      System.out.println(annotation.getDescription());
+      logos.add(annotation.getDescription());
+    }
+
+    return logos;
   }
 }
