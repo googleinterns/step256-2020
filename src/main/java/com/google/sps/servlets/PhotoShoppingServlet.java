@@ -15,8 +15,11 @@
 package com.google.sps.servlets;
 
 import com.google.gson.Gson;
-import com.google.sps.data.GoogleShoppingResultsWrapper;
-import com.google.sps.data.DetectText;
+import com.google.sps.GoogleShoppingQuerier;
+import com.google.sps.DetectText;
+import com.google.sps.data.Product;
+import com.google.sps.data.ShoppingQueryInput;
+import com.google.sps.ShoppingQuerierConnectionException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,29 +27,48 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.jsoup.HttpStatusException;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
-/**
- * Generate a search query and return search results, for that query, to front-end.
- */
+/** Generate a search query and return search results, for that query, to front-end. */
 @WebServlet("/photo-shopping-request")
 public class PhotoShoppingServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // TODO: Based on request.getParameter("photo-category"), call methods from photo detection classes, 
-    // passing request.getParameter("blob-key") as argument. These methods build the shopping query and call 
-    // the {@code getShoppingResultsPage} method from GoogleShoppingResultsWrapper.
+    // TODO: Based on HttpSession session variable's "photoCategory", call methods from photo detection
+    // classes, passing {@code session.getAttribute("blobKeyString")} as argument. These methods build the 
+    // shopping query and call the {@code query} method from GoogleShoppingQuerier.
 
-    List<String> result = new ArrayList<>();
-    List<String> queries = new ArrayList<>();
-    queries = getQuery(request.getParameter("photo-category"), request.getParameter("blob-key"));
-    for(String query : queries) {
-        result.add(GoogleShoppingResultsWrapper.getShoppingResultsPage(query));
+    // Get the session, which contains user-specific data
+    HttpSession session = request.getSession();
+
+    List<String> shoppingQuery = getQuery(session.getAttribute("photoCategory").toString(), session.getAttribute("blobKeyString").toString());
+System.out.println("Shopping query: "+shoppingQuery);
+    // Build the shopping query input - set language and maxResultsNumber to hard-coded values for now.
+    List<ShoppingQueryInput> inputs = new ArrayList<>();
+    for(String query : shoppingQuery) {
+        inputs.add(new ShoppingQueryInput.Builder(query).language("en").maxResultsNumber(18).build());
     }
-System.out.println("queries:"+queries);
+
+    // Initialize the Google Shopping querier.
+    GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
+
+    List<List<Product>> shoppingQuerierResults = new ArrayList<>();
+    for(ShoppingQueryInput input : inputs) {
+        try {
+        shoppingQuerierResults.add(querier.query(input));
+        } catch(IllegalArgumentException | ShoppingQuerierConnectionException | IOException exception) {
+        response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+        }
+    }
+
+    // Convert products List into a JSON string using Gson library and
+    // send the JSON as the response.
     Gson gson = new Gson();
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(result));
+    response.getWriter().println(gson.toJson(shoppingQuerierResults));
   }
 
   private List<String> getQuery(String photoCategory, String blobKeyString) throws IOException {
@@ -56,7 +78,10 @@ System.out.println("queries:"+queries);
         result.add("Fountain pen");
         break;
       case "list":
-        return DetectText.detectText(blobKeyString);
+        DetectText detectText = new DetectText();
+        return detectText.productDetection(blobKeyString);
+        // result.add("Pajayamas");
+        // break;
       case "barcode":
         result.add("Cotton candy");
         break;

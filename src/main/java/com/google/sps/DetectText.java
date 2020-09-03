@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.sps.data;
+package com.google.sps;
 
 import java.net.URL;
 import com.google.appengine.api.blobstore.BlobKey;
@@ -36,64 +36,62 @@ import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
+import java.lang.IndexOutOfBoundsException;
 
 /**
  * Class that detects text and sends it as a url query to be handled by the shopping results script
  * and search shopping results servlet.
  */
+public class DetectText {
 
-public class DetectText implements PhotoShoppingInterface {
-
-  public List<String> productDetection(String blobKeyString) throws IOException {
-
+  public List<String> productDetection(String blobKeyString) throws IOException { 
     List<AnnotateImageRequest> requests = new ArrayList<>();
-
-    List<String> text = new ArrayList<>();
 
     ImageSource imgSource = ImageSource.newBuilder().setImageUri("https://shop-by-photos-step-2020.ey.r.appspot.com/get-image-url?blob-key=" + blobKeyString).build();
     Image img = Image.newBuilder().setSource(imgSource).build();
-
     Feature feat = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
-
     AnnotateImageRequest request =
         AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
     requests.add(request);
+
+
+
+    List<String> text = new ArrayList<>();
+
 
     // Initialize client that will be used to send requests. This client only needs to be created
     // once, and can be reused for multiple requests. After completing all of your requests, call
     // the "close" method on the client to safely clean up any remaining background resources.
     try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
       BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
+System.out.println("response"+response);
       List<AnnotateImageResponse> responses = response.getResponsesList();
       for (AnnotateImageResponse res : responses) {
         // if (res.hasError()) {
-        //   text.add(System.out.format("Error: %s%n", res.getError().getMessage()));
+        //   System.out.format("Error: %s%n", res.getError().getMessage());
         //   return;
         // }
 
-        int prePosition = 0;
-
         // For full list of available annotations, see http://g.co/cloud/vision/docs
         for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
-          int position;
           text.add("Text:" + annotation.getDescription());
-          text.add("<br>");
           text.add("Position :" + annotation.getBoundingPoly());
-          text.add("<br>");
         }
       }
     }
 
-    int startIndexToFetchText = 4;
     List<String> queryItem = new ArrayList<>();
-    queryItem.add(text.get(startIndexToFetchText).split(":")[1]);
-    startIndexToFetchText += 4;
-    while(startIndexToFetchText < text.size()) {
-        queryItem.add(text.get(startIndexToFetchText).split(":")[1]);
-        startIndexToFetchText += 4;
+    // ToDo Make an algorithm to get query sentences.
+    try {
+        queryItem.add(text.get(0).split(":", 2)[1]);// ( , 2) as to prevent it from splitting many times than necessary
+    } catch (IndexOutOfBoundsException exception) {
+        
     }
-    return queryItem;
+
+for(int i=0; i<queryItem.size();i++ ) {
+   queryItem.set(i, queryItem.get(i).replaceAll("\\s+", " ").trim());
+}
+
+   return queryItem;
   } 
 }
