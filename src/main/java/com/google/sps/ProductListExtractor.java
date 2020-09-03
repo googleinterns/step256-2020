@@ -61,7 +61,7 @@ public class ProductListExtractor {
       String productLink;
       if (extractedProductLink.length() >= wrongStartOfLink.length() &&
           extractedProductLink.substring(0, wrongStartOfLink.length()).equals(wrongStartOfLink)) {
-          productLink = extractedProductLink.substring(wrongStartOfLink.length());
+        productLink = extractedProductLink.substring(wrongStartOfLink.length());
       } else {
         productLink = extractedProductLink;
       }
