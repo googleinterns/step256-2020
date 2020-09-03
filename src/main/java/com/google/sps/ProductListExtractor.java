@@ -59,8 +59,9 @@ public class ProductListExtractor {
       String wrongStartOfLink = "/url?q=";
       // Therefore delete the start if this is the case, for the redirection to successfully work.
       String productLink;
-      if (extractedProductLink.substring(0, wrongStartOfLink.length()).equals(wrongStartOfLink)) {
-        productLink = extractedProductLink.substring(wrongStartOfLink.length());
+      if (extractedProductLink.length() >= wrongStartOfLink.length() &&
+          extractedProductLink.substring(0, wrongStartOfLink.length()).equals(wrongStartOfLink)) {
+          productLink = extractedProductLink.substring(wrongStartOfLink.length());
       } else {
         productLink = extractedProductLink;
       }
