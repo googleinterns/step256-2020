@@ -15,6 +15,7 @@
 package com.google.sps.servlets;
 
 import com.google.sps.GoogleShoppingQuerier;
+import com.google.sps.ProductPhotoShoppingException;
 import com.google.sps.ProductPhotoShoppingImpl;
 import com.google.sps.ShoppingQuerierConnectionException;
 import com.google.sps.data.Product;
@@ -59,7 +60,10 @@ public class PhotoShoppingServlet extends HttpServlet {
 
       try {
         shoppingQuerierResults = productPhotoShoppingImpl.shopWithPhoto(blobKeyString);
-      } catch(IllegalArgumentException | ShoppingQuerierConnectionException | IOException exception) {
+      } catch(IllegalArgumentException | 
+              ShoppingQuerierConnectionException | 
+              ProductPhotoShoppingException | 
+              IOException exception) {
         response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
       }
     }
