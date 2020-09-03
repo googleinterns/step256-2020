@@ -52,6 +52,13 @@ public class ProductListExtractor {
         continue;
       }
 
+    	// Get the title as HTML instead of text, in order to keep the <b> tags.
+      String productTitle = currentProduct.select(".rgHvZc > a").html();
+			// Skip ".u30d4" container if it does not contain a title.
+			if (productTitle.isEmpty()) {
+				continue;
+			}
+
       String productImageLink = currentProduct.select(".oR27Gd > img").attr("src");
       
       String extractedProductLink = currentProduct.select(".rgHvZc > a").attr("href");
@@ -65,9 +72,6 @@ public class ProductListExtractor {
       } else {
         productLink = extractedProductLink;
       }
-
-      // Get the title as HTML instead of text, in order to keep the <b> tags.
-      String productTitle = currentProduct.select(".rgHvZc > a").html();
   
       // As some products do not have rating, the classes order may differ, therefore
       // define {@code productPriceAndSeller} for both cases.
