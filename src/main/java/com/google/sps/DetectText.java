@@ -57,7 +57,6 @@ public class DetectText {
     // the "close" method on the client to safely clean up any remaining background resources.
     try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
       BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
-      System.out.println("response" + response); //DO ERROR HANDLING
       List<AnnotateImageResponse> responses = response.getResponsesList();
       for (AnnotateImageResponse res : responses) {
         if (res.hasError()) {
@@ -84,4 +83,9 @@ public class DetectText {
     }
     return queryItem;
   }
+
+  public boolean isInSameLine() {
+      
+  }
+
 }
