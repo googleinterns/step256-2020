@@ -21,7 +21,10 @@ async function buildShoppingResultsUI() {
   // search query results. The request returns a JSON with data about each product
   // from the Google Shopping results page.
 
-  const fetchURL = '/photo-shopping-request';
+  // Build the URL to be fetched - add (hard-coded, for now) parameters to identify 
+  // the uploaded photo.
+  const fetchURL = 
+      `/photo-shopping-request?photo-category=product`;
 
   const response = await fetch(fetchURL)
       .catch((error) => {
