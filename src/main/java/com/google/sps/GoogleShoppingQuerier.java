@@ -16,18 +16,16 @@ package com.google.sps;
 
 import com.google.sps.data.Product;
 import com.google.sps.data.ShoppingQueryInput;
-
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import org.jsoup.HttpStatusException;
-import org.jsoup.UnsupportedMimeTypeException;
-
 import org.jsoup.Connection.Response;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
+import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.nodes.Document;
-
-import java.util.List;
 
 /** 
  * Queries Google Shopping with the given input.
@@ -46,7 +44,7 @@ public class GoogleShoppingQuerier {
    * Scrapes Google Shopping based on the input and returns the results.
    * @param ShoppingQueryInput object, containing fields for the values of search parameters.
    */
-  public List<Product> query(ShoppingQueryInput shoppingQueryInput) throws IOException, ShoppingQuerierConnectionException {
+  public Document query(ShoppingQueryInput shoppingQueryInput) throws IOException, ShoppingQuerierConnectionException {
     // Get the query to be searched and check for validity.
     String shoppingQuery = shoppingQueryInput.getShoppingQuery();
 
@@ -92,7 +90,18 @@ public class GoogleShoppingQuerier {
     ProductListExtractor productListExtractor = new ProductListExtractor();
     List<Product> products = productListExtractor.extract(doc);
 
-    return products;
+    // Initialize the Document for the shopping results page skeleton.
+    File shoppingResultsSkeletonFile = new File("./shopping-results.html");
+    Document shoppingResultsSkeletonDoc = Jsoup.parse(shoppingResultsSkeletonFile, "UTF-8");
+
+    // Initialize the ShoppingResultsUIBuilder object.
+    ShoppingResultsUIBuilder shoppingResultsUIBuilder = new ShoppingResultsUIBuilder();
+
+    // Add the products data extracted before into the {@code shoppingResultsSkeletonDoc}.
+    Document shoppingResultsDoc = 
+        shoppingResultsUIBuilder.buildShoppingResultsUI(products, shoppingResultsSkeletonDoc);
+
+    return shoppingResultsDoc;
   }
 
   /** 
