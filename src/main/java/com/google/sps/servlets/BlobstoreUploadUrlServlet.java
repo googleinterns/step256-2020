@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * When the form is submitted, the user's browser uploads the file directly to the Blobstore 
  * via the generated URL. The Blobstore then passes the request to the handler at the 
- * "/get-shopping-results" path. This handler does additional processing based on the blob key.
+ * "/handle-photo" path. This handler does additional processing based on the blob key.
  */
 @WebServlet("/blobstore-upload-url")
 public class BlobstoreUploadUrlServlet extends HttpServlet {
@@ -37,7 +37,7 @@ public class BlobstoreUploadUrlServlet extends HttpServlet {
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     
     // Create the URL that allows a user to upload a file to Blobstore.
-    String formActionUrl = blobstoreService.createUploadUrl("/get-shopping-results");
+    String formActionUrl = blobstoreService.createUploadUrl("/handle-photo");
 
     // Send the URL as the response.
     response.setContentType("text/html");

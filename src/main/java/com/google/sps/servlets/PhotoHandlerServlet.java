@@ -46,8 +46,8 @@ import org.jsoup.nodes.Document;
 /**
  * Get shopping results based on the image uploaded by the user.
  */
-@WebServlet("/get-shopping-results")
-public class PhotoShoppingServlet extends HttpServlet {
+@WebServlet("/handle-photo")
+public class PhotoHandlerServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
