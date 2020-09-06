@@ -13,20 +13,6 @@
 // limitations under the License.
 
 /**
- * Event processing for upload button
- */
-function openFileUploadDialog() {
-  document.querySelector('.bg-model').style.display = 'flex';
-}
-
-/**
- * Event processing for close button
- */
-function closeFileUploadDialog() {
-  document.querySelector('.bg-model').style.display = 'none';
-}
-
-/**
  * Makes the form for uploading an image visible and
  * adds the 'action' to it by fetching
  * the url(that the form needs to post to) from the servlet
