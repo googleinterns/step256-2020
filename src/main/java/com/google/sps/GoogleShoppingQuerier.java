@@ -97,7 +97,7 @@ public class GoogleShoppingQuerier {
     // Initialize the ShoppingResultsUIBuilder object.
     ShoppingResultsUIBuilder shoppingResultsUIBuilder = new ShoppingResultsUIBuilder();
 
-    // Add the products data extracted before into the {@code shoppingResultsSkeletonDoc}.
+    // Add the extracted products data into the {@code shoppingResultsSkeletonDoc}.
     Document shoppingResultsDoc = 
         shoppingResultsUIBuilder.buildShoppingResultsUI(products, shoppingResultsSkeletonDoc);
 
