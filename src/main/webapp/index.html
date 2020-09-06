@@ -74,36 +74,52 @@
           </p>
         </div><!-- /.col-lg-4 -->
         
+        <!-- Button to open the modal for image uploading --> 
         <div class="col text-center">
-          <p><button class="btn btn-secondary" id="upload-photo" onclick="openFileUploadDialog()">Upload photo »</button></p>
+          <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#upload-image-modal">
+            Upload photo »
+          </button>
         </div>
 
-        <!-- UPLOAD DIV -->
-        <div class="bg-model">
-          <div class="model-content">
-            <button class="close" onclick="closeFileUploadDialog()"> + </button>
-            <form id="upload-image-form" class="hidden" method="POST" enctype="multipart/form-data">
-              <h1>Upload image</h1>
+        <!-- Modal for image uploading -->
+        <div class="modal fade" id="upload-image-modal">
+          <div class="modal-dialog">
+            <div class="modal-content">
               
-              <select id="photo-category" name="photo-category" required>
-                <option value="product">Product</option>
-                <option value="list">List</option>
-                <option value="barcode">Barcode</option>
-              </select>
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Upload image</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div><!-- /.modal-header -->
+                
+              <!-- Modal body -->
+              <div class="modal-body">
+                <form id="upload-image-form" class="hidden" method="POST" enctype="multipart/form-data">  
+                  <select id="photo-category" name="photo-category" required>
+                    <option value="product">Product</option>
+                    <option value="list">List</option>
+                    <option value="barcode">Barcode</option>
+                  </select>
 
-              <input type="file" name="photo" required>
+                  <input type="file" name="photo" required>
 
-              <button>Submit</button>
-            </form>
-          </div>
-        </div>
+                  <button>Submit</button>
+                </form>
+              </div><!-- /.modal-body -->
+                
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <p>
+                  After submitting the form, please wait for the results page to load.
+                </p>
+              </div><!-- /.modal-footer -->
+                
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
       </div><!-- /.row -->
-
-      <p class="text-center">
-        <a href="shopping-results.html" class="btn btn-primary my-2">Get Results</a>
-      </p>
-
+    </div><!-- /.container -->
   </main>
 
   <!-- Sticky Footer -->
