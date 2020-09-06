@@ -23,8 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet that generates a Blobstore image upload URL, which links to the "/get-image-info"
- * servlet.
+ * Generates the destination (action) of the "Upload image form" by calling the Blobstore API.
+ *
+ * When the form is submitted, the user's browser uploads the file directly to the Blobstore 
+ * via the generated URL. The Blobstore then passes the request to the handler at the 
+ * "/get-shopping-results" path. This handler does additional processing based on the blob key.
  */
 @WebServlet("/blobstore-upload-url")
 public class BlobstoreUploadUrlServlet extends HttpServlet {
@@ -34,7 +37,7 @@ public class BlobstoreUploadUrlServlet extends HttpServlet {
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     
     // Create the URL that allows a user to upload a file to Blobstore.
-    String formActionUrl = blobstoreService.createUploadUrl("/get-image-info");
+    String formActionUrl = blobstoreService.createUploadUrl("/get-shopping-results");
 
     // Send the URL as the response.
     response.setContentType("text/html");
