@@ -14,72 +14,131 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.blobstore.BlobInfo;
+import com.google.appengine.api.blobstore.BlobInfoFactory;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+
 import com.google.sps.GoogleShoppingQuerier;
+import com.google.sps.ProductPhotoShoppingException;
+import com.google.sps.ProductPhotoShoppingImpl;
 import com.google.sps.ShoppingQuerierConnectionException;
 import com.google.sps.data.Product;
 import com.google.sps.data.ShoppingQueryInput;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import org.jsoup.HttpStatusException;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.jsoup.nodes.Document;
 
-import com.google.gson.Gson;
-
-/** Generate a search query and return search results, for that query, to front-end. */
-@WebServlet("/photo-shopping-request")
+/**
+ * Get shopping results based on the image uploaded by the user.
+ */
+@WebServlet("/get-shopping-results")
 public class PhotoShoppingServlet extends HttpServlet {
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // TODO: Based on HttpSession session variable's "photoCategory", call methods from photo detection
-    // classes, passing {@code session.getAttribute("blobKeyString")} as argument. These methods build the 
-    // shopping query and call the {@code query} method from GoogleShoppingQuerier.
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the BlobKey that points to the image uploaded by the user.
+    BlobKey blobKey = getBlobKey(request, "photo");
 
-    // Get the session, which contains user-specific data
-    HttpSession session = request.getSession();
-
-    String shoppingQuery = getQuery(session.getAttribute("photoCategory").toString());
-    // Build the shopping query input - set language and maxResultsNumber to hard-coded values for now.
-    ShoppingQueryInput input = 
-        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(20).build();
-
-    // Initialize the Google Shopping querier.
-    GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
-    
-    response.setContentType("application/json;");
-    
-    List<Product> shoppingQuerierResults = new ArrayList<>();
-    try {
-      shoppingQuerierResults = querier.query(input);
-    } catch(IllegalArgumentException | ShoppingQuerierConnectionException | IOException exception) {
-      response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+    // Send an error if the user did not upload a file.
+    if (blobKey == null) {
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Client must upload an image file.");
     }
-     
-    // Convert products List into a JSON string using Gson library and
-    // send the JSON as the response.
-    Gson gson = new Gson();
 
-    response.getWriter().println(gson.toJson(shoppingQuerierResults));
+    if (request.getParameter("photo-category").isEmpty()) {
+      response.sendError(
+          HttpServletResponse.SC_BAD_REQUEST, "Client must select a photo category when submitting the form.");
+    }
+    String photoCategory = request.getParameter("photo-category");
+
+    // Get the image the user uploaded as bytes.
+    byte[] imageBytes = getBlobBytes(blobKey);
+
+    response.setContentType("text/html");
+    Document shoppingQuerierResults;
+
+    if (photoCategory.equals("product")) {
+      // Initialize the ProductPhotoShoppingImpl object.
+      ProductPhotoShoppingImpl productPhotoShoppingImpl = new ProductPhotoShoppingImpl();
+
+      try {
+        shoppingQuerierResults = productPhotoShoppingImpl.shopWithPhoto(imageBytes);
+        response.getWriter().println(shoppingQuerierResults);
+      } catch(IllegalArgumentException | 
+              ShoppingQuerierConnectionException | 
+              ProductPhotoShoppingException | 
+              IOException exception) {
+        response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+      }
+    }
   }
 
-  private String getQuery(String photoCategory) {
-    switch (photoCategory) {
-      case "product":
-        return "Fountain pen";
-      case "shopping-list":
-        return "Fuzzy socks";
-      case "barcode":
-        return "Running shoes";
-      default:
-        return "Notebook";
+  /**
+   * Returns the BlobKey corresponding to the file uploaded by the user, or null if the user did not
+   * upload a file.
+   */
+  private BlobKey getBlobKey(HttpServletRequest request, String formFileInputElementName) {
+    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
+    List<BlobKey> blobKeys = blobs.get(formFileInputElementName);
+
+    // User submitted form without selecting a file. (dev server)
+    if (blobKeys == null || blobKeys.isEmpty()) {
+      return null;
     }
+
+    // The form only contains a single file input, so get the first index.
+    BlobKey blobKey = blobKeys.get(0);
+
+    // User submitted form without selecting a file, so the BlobKey is empty. (live server)
+    BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
+    if (blobInfo.getSize() == 0) {
+      blobstoreService.delete(blobKey);
+      return null;
+    }
+
+    return blobKey;
+  }
+
+  /**
+   * Blobstore stores files as binary data. This function retrieves the image represented by the
+   * binary data stored at the BlobKey parameter.
+   */
+  private byte[] getBlobBytes(BlobKey blobKey) throws IOException {
+    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+
+    int fetchSize = BlobstoreService.MAX_BLOB_FETCH_SIZE;
+    long currentByteIndex = 0;
+    boolean continueReading = true;
+    while (continueReading) {
+      // End index is inclusive, subtract 1 to get fetchSize bytes.
+      byte[] b =
+          blobstoreService.fetchData(blobKey, currentByteIndex, currentByteIndex + fetchSize - 1);
+      outputBytes.write(b);
+
+      // If fewer bytes than requested have been read, the end is reached.
+      if (b.length < fetchSize) {
+        continueReading = false;
+      }
+
+      currentByteIndex += fetchSize;
+    }
+
+    return outputBytes.toByteArray();
   }
 }
