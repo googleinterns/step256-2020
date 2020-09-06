@@ -44,7 +44,8 @@ import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import org.jsoup.nodes.Document;
 
 /**
- * Get shopping results based on the image uploaded by the user.
+ * When the user submits the form for image uploading, Blobstore processes the file upload and 
+ * forwards the request to this servlet, which gets the shopping results for the respective photo.
  */
 @WebServlet("/handle-photo")
 public class PhotoHandlerServlet extends HttpServlet {
@@ -59,6 +60,7 @@ public class PhotoHandlerServlet extends HttpServlet {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Client must upload an image file.");
     }
 
+    // Get the photo category (i.e. product, shopping-list or barcode) entered by the user.
     if (request.getParameter("photo-category").isEmpty()) {
       response.sendError(
           HttpServletResponse.SC_BAD_REQUEST, "Client must select a photo category when submitting the form.");
@@ -68,16 +70,22 @@ public class PhotoHandlerServlet extends HttpServlet {
     // Get the image the user uploaded as bytes.
     byte[] imageBytes = getBlobBytes(blobKey);
 
+    // The shopping results page is returned as the response, therefore set its content type
+    // to "text/html".
     response.setContentType("text/html");
-    Document shoppingQuerierResults;
+
+    // Based on the {@code photoCategory}, call methods from the photo detection classes, 
+    // passing {@code imageBytes} as argument. These methods detect the image content, build 
+    // the shopping query and call GoogleShoppingQuerier to return shopping results.
 
     if (photoCategory.equals("product")) {
       // Initialize the ProductPhotoShoppingImpl object.
       ProductPhotoShoppingImpl productPhotoShoppingImpl = new ProductPhotoShoppingImpl();
 
       try {
-        shoppingQuerierResults = productPhotoShoppingImpl.shopWithPhoto(imageBytes);
-        response.getWriter().println(shoppingQuerierResults);
+        // Get the shopping results page as jsoup Document.
+        Document shoppingResultsDocument = productPhotoShoppingImpl.shopWithPhoto(imageBytes);
+        response.getWriter().println(shoppingResultsDocument);
       } catch(IllegalArgumentException | 
               ShoppingQuerierConnectionException | 
               ProductPhotoShoppingException | 
@@ -126,7 +134,7 @@ public class PhotoHandlerServlet extends HttpServlet {
     long currentByteIndex = 0;
     boolean continueReading = true;
     while (continueReading) {
-      // End index is inclusive, subtract 1 to get fetchSize bytes.
+      // End index is inclusive, therefore subtract 1 to get fetchSize bytes.
       byte[] b =
           blobstoreService.fetchData(blobKey, currentByteIndex, currentByteIndex + fetchSize - 1);
       outputBytes.write(b);
