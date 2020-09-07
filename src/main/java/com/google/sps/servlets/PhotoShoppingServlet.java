@@ -19,6 +19,7 @@ import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import com.google.gson.Gson;
 import com.google.sps.DetectText;
 import com.google.sps.GoogleShoppingQuerier;
+import com.google.sps.PhotoShoppingException;
 import com.google.sps.ShoppingQuerierConnectionException;
 import com.google.sps.data.Product;
 import com.google.sps.data.ShoppingQueryInput;
@@ -30,7 +31,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import com.google.sps.PhotoShoppingException;
 
 /** Generate a search query and return search results, for that query, to front-end. */
 @WebServlet("/photo-shopping-request")
@@ -46,13 +46,14 @@ public class PhotoShoppingServlet extends HttpServlet {
     // Get the session, which contains user-specific data
     HttpSession session = request.getSession();
 
-    List<String> shoppingQuery =new ArrayList<>();
+    List<String> shoppingQuery = new ArrayList<>();
     try {
-        shoppingQuery = getQuery(
-            session.getAttribute("photoCategory").toString(),
-            session.getAttribute("blobKeyString").toString());
+      shoppingQuery =
+          getQuery(
+              session.getAttribute("photoCategory").toString(),
+              session.getAttribute("blobKeyString").toString());
     } catch (PhotoShoppingException exception) {
-            response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+      response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
     }
     System.out.println("Shopping query: " + shoppingQuery);
 
@@ -79,8 +80,6 @@ public class PhotoShoppingServlet extends HttpServlet {
       shoppingQuerierResults.add(result);
     }
 
- 
-
     // Convert products List into a JSON string using Gson library and
     // send the JSON as the response.
     Gson gson = new Gson();
@@ -88,7 +87,8 @@ public class PhotoShoppingServlet extends HttpServlet {
     response.getWriter().println(gson.toJson(shoppingQuerierResults));
   }
 
-  private List<String> getQuery(String photoCategory, String blobKeyString) throws IOException, PhotoShoppingException {
+  private List<String> getQuery(String photoCategory, String shoppingImageKey)
+      throws IOException, PhotoShoppingException {
     List<String> result = new ArrayList<>();
     switch (photoCategory) {
       case "product":
@@ -96,7 +96,7 @@ public class PhotoShoppingServlet extends HttpServlet {
         break;
       case "shopping-list":
         DetectText detectText = new DetectText();
-        return detectText.productDetection(blobKeyString);
+        return detectText.imageToShoppingListExtractor(shoppingImageKey);
       case "barcode":
         result.add("Cotton candy");
         break;

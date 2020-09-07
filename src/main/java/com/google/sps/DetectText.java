@@ -27,65 +27,68 @@ import com.google.cloud.vision.v1.ImageSource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.sps.PhotoShoppingException;
 
 /**
- * Class that detects text and sends it as a url query to be handled by the shopping results script
- * and search shopping results servlet.
+ * Class that detects text and its position. Then sends the text as a url query to be handled by the
+ * shopping results script and search shopping results servlet.
  */
 public class DetectText {
 
-  public List<String> productDetection(String blobKeyString) throws IOException, PhotoShoppingException {
+  public List<String> imageToShoppingListExtractor(String shoppingImageKey)
+      throws IOException, PhotoShoppingException {
+    // ToDo: Check error conditions
+    // shoppingImageKey null or space or \n in key parameter
     List<AnnotateImageRequest> requests = new ArrayList<>();
 
-    ImageSource imgSource =
+    ImageSource shoppingImageSource =
         ImageSource.newBuilder()
             .setImageUri(
                 "https://shop-by-photos-step-2020.ey.r.appspot.com/get-image-url?blob-key="
-                    + blobKeyString)
+                    + shoppingImageKey)
             .build();
-    Image img = Image.newBuilder().setSource(imgSource).build();
-    Feature feat = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
+    // ToDo: Check if shoppingImageSource has a valid value not null
+
+    Image shoppingImage = Image.newBuilder().setSource(shoppingImageSource).build();
+
+    Feature textDetectionFeature =
+        Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
+
     AnnotateImageRequest request =
-        AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
+        AnnotateImageRequest.newBuilder()
+            .addFeatures(textDetectionFeature)
+            .setImage(shoppingImage)
+            .build();
     requests.add(request);
 
-    List<String> text = new ArrayList<>();
+    List<String> shoppingList = new ArrayList<>();
 
     // Initialize client that will be used to send requests. This client only needs to be created
     // once, and can be reused for multiple requests. After completing all of your requests, call
     // the "close" method on the client to safely clean up any remaining background resources.
-    try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
-      BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
+    try (ImageAnnotatorClient cloudVisionClient = ImageAnnotatorClient.create()) {
+      BatchAnnotateImagesResponse response = cloudVisionClient.batchAnnotateImages(requests);
       List<AnnotateImageResponse> responses = response.getResponsesList();
       for (AnnotateImageResponse res : responses) {
         if (res.hasError()) {
-         throw new PhotoShoppingException (res.getError().getMessage());
+          throw new PhotoShoppingException(res.getError().getMessage());
         }
 
-        // For full list of available annotations, see http://g.co/cloud/vision/docs
         for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
-          text.add("Text:" + annotation.getDescription());
-          text.add("Position :" + annotation.getBoundingPoly());
+          shoppingList.add("Text:" + annotation.getDescription());
+          shoppingList.add("Position :" + annotation.getBoundingPoly());
         }
       }
     }
 
     List<String> queryItem = new ArrayList<>();
-    //check length
     // ToDo: Make an algorithm to get query sentences.
-    if (text.size()>1) {
-        queryItem.add(text.get(0).split(":", 2)[1]); // split with limit 2
+    if (shoppingList.size() > 1) {
+      queryItem.add(shoppingList.get(0).split(":", 2)[1]); // split with limit 2
 
-        for (int i = 0; i < queryItem.size(); i++) {
+      for (int i = 0; i < queryItem.size(); i++) {
         queryItem.set(i, queryItem.get(i).replaceAll("\\s+", " ").trim());
-        }
+      }
     }
     return queryItem;
   }
-
-  public boolean isInSameLine() {
-      
-  }
-
 }
