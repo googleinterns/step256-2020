@@ -59,12 +59,14 @@ public class PhotoHandlerServlet extends HttpServlet {
     // Send an error if the user did not upload a file.
     if (blobKey == null) {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Client must upload an image file.");
+      return;
     }
 
     // Get the photo category (i.e. product, shopping-list or barcode) entered by the user.
     if (request.getParameter("photo-category").isEmpty()) {
       response.sendError(
           HttpServletResponse.SC_BAD_REQUEST, "Client must select a photo category when submitting the form.");
+      return;
     }
     String photoCategory = request.getParameter("photo-category");
 
