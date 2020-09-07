@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -82,16 +83,19 @@ public class PhotoHandlerServlet extends HttpServlet {
       // Initialize the ProductPhotoShoppingImpl object.
       ProductPhotoShoppingImpl productPhotoShoppingImpl = new ProductPhotoShoppingImpl();
 
+      Document shoppingResultsDocument;
       try {
         // Get the shopping results page as jsoup Document.
-        Document shoppingResultsDocument = productPhotoShoppingImpl.shopWithPhoto(imageBytes);
-        response.getWriter().println(shoppingResultsDocument);
+        shoppingResultsDocument = productPhotoShoppingImpl.shopWithPhoto(imageBytes);
       } catch(IllegalArgumentException | 
               ShoppingQuerierConnectionException | 
               ProductPhotoShoppingException | 
               IOException exception) {
         response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+        return;
       }
+      
+      response.getWriter().println(shoppingResultsDocument);
     }
   }
 
@@ -105,7 +109,7 @@ public class PhotoHandlerServlet extends HttpServlet {
     List<BlobKey> blobKeys = blobs.get(formFileInputElementName);
 
     // User submitted form without selecting a file. (dev server)
-    if (blobKeys == null || blobKeys.isEmpty()) {
+    if (blobKeys.equals(Optional.empty()) || blobKeys.isEmpty()) {
       return null;
     }
 
