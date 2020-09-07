@@ -34,33 +34,45 @@ import java.util.List;
  */
 public class DetectText {
 
-  public List<String> imageToShoppingListExtractor(String shoppingImageKey)
-      throws IOException, PhotoShoppingException {
-    // ToDo: Check error conditions
-    // shoppingImageKey null or space or \n in key parameter
-    List<AnnotateImageRequest> requests = new ArrayList<>();
+ final String IMAGE_BASE_URI = "https://shop-by-photos-step-2020.ey.r.appspot.com/get-image-url?blob-key=";
+ final Feature TEXT_DETECTION_FEATURE;
 
-    ImageSource shoppingImageSource =
-        ImageSource.newBuilder()
-            .setImageUri(
-                "https://shop-by-photos-step-2020.ey.r.appspot.com/get-image-url?blob-key="
-                    + shoppingImageKey)
-            .build();
-    // ToDo: Check if shoppingImageSource has a valid value not null
-
-    Image shoppingImage = Image.newBuilder().setSource(shoppingImageSource).build();
-
-    Feature textDetectionFeature =
+public DetectText() {
+TEXT_DETECTION_FEATURE =
         Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
+}
+
+  public ImageSource shoppingImageInitializer(String shoppingImageKey) throws PhotoShoppingException {
+    ImageSource shoppingImageSource;
+    if(isValidImageKey(shoppingImageKey)) {
+      shoppingImageSource =
+        ImageSource.newBuilder()
+            .setImageUri(IMAGE_BASE_URI + shoppingImageKey)
+            .build();  
+    } else {
+        throw new PhotoShoppingException("Invalid blob key");
+    }
+    return shoppingImageSource;
+  }
+
+// shoppingImageRequestGenerator() generates the request query to be sent to CloudVisionAPI client. 
+  public List<AnnotateImageRequest> shoppingImageRequestGenerator(ImageSource shoppingImageSource) {
+    List<AnnotateImageRequest> requests = new ArrayList<>();
+    // ToDo: Check if shoppingImageSource has a valid value not null
+    Image shoppingImage = Image.newBuilder().setSource(shoppingImageSource).build();
 
     AnnotateImageRequest request =
         AnnotateImageRequest.newBuilder()
-            .addFeatures(textDetectionFeature)
+            .addFeatures(TEXT_DETECTION_FEATURE)
             .setImage(shoppingImage)
             .build();
+    
     requests.add(request);
+    return requests;
+  }
 
-    List<String> shoppingList = new ArrayList<>();
+public List<String> cloudVisionAPIClient(List<AnnotateImageRequest> requests) throws IOException, PhotoShoppingException {
+        List<String> shoppingList = new ArrayList<>();
 
     // Initialize client that will be used to send requests. This client only needs to be created
     // once, and can be reused for multiple requests. After completing all of your requests, call
@@ -79,16 +91,54 @@ public class DetectText {
         }
       }
     }
+    return shoppingList;
+}
 
-    List<String> queryItem = new ArrayList<>();
-    // ToDo: Make an algorithm to get query sentences.
-    if (shoppingList.size() > 1) {
-      queryItem.add(shoppingList.get(0).split(":", 2)[1]); // split with limit 2
 
-      for (int i = 0; i < queryItem.size(); i++) {
-        queryItem.set(i, queryItem.get(i).replaceAll("\\s+", " ").trim());
-      }
+  public List<String> createShoppingListQuery(List<String> shoppingList) throws PhotoShoppingException {
+        List<String> queryItem = new ArrayList<>();
+        // ToDo: Make an algorithm to get query sentences.
+        if (shoppingList.size() >= 1) {   
+          if(shoppingList.get(0).contains(":")){
+            queryItem.add(shoppingList.get(0).split(":", 2)[1]); // split with limit 2
+          }
+            for (int i = 0; i < queryItem.size(); i++) {
+                queryItem.set(i, polishShoppingQuery(queryItem.get(i)));
+            }  
+        } else {
+            throw new PhotoShoppingException ("Shopping List doesn't contain any text");
+        }
+        return queryItem;
     }
+
+  private String polishShoppingQuery(String queryItem) {
+    queryItem =
+        queryItem
+            .replaceAll("\\s+", " ") // Remove duplicate spaces
+            .trim() // Remove spaces from the beginning and end of string
+            .replaceAll("[-+=,\n._^\";:~#></|!*]", ""); // Remove special characters
     return queryItem;
   }
+
+  private boolean isValidImageKey(String shoppingImageKey) {
+      if(shoppingImageKey.contains("[ \n]") || shoppingImageKey.equals("") || shoppingImageKey.isEmpty()) { // If the key contains space or escape charaters then invalid
+        return false;
+      }
+      return true;
+  }
+
+  public List<String> imageToShoppingListExtractor(String shoppingImageKey)
+      throws IOException, PhotoShoppingException {
+    // ToDo: Check error conditions
+    // shoppingImageKey null or space or \n in key parameter
+
+    ImageSource shoppingImageSource = shoppingImageInitializer(shoppingImageKey);
+
+    List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImageSource);
+
+    List<String> shoppingList = cloudVisionAPIClient(requests);
+
+    return createShoppingListQuery(shoppingList);
+  }
+
 }

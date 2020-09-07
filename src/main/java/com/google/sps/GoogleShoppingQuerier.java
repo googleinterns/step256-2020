@@ -119,7 +119,6 @@ public class GoogleShoppingQuerier {
             .trim() // Remove spaces from the beginning and end of string
             .replaceAll(" ", "%20") // Replace single space with "%20"
             .replaceAll("[-+=,\n._^\";:~#></|!*]", ""); // Remove special characters
-System.out.println("Polished query: "+shoppingQuery);
     return shoppingQuery;
   }
 }
