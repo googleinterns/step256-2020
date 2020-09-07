@@ -26,6 +26,7 @@ import org.jsoup.nodes.Element;
 public class ShoppingResultsUIBuilder {
 
   /** 
+   * Integrates the products data into the shopping results page.
    * @param products - array of Product objects, containing extracted data from scraping Google Shopping.
    * @param shoppingResultsDoc - the skeleton of the shopping results page.
    * @return - the completed shopping results page, having products info appended.
