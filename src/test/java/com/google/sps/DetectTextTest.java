@@ -28,13 +28,15 @@ import org.junit.jupiter.api.Assertions;
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.Feature;
+import com.google.cloud.vision.v1.ImageSource;
 
 /** Test for DetectText class. */
 @RunWith(JUnit4.class)
 public final class DetectTextTest {
 
   private String nullImageKey = "";
-  private String invalidImageKey = "abcd";
+  private String invalidImageKey = "abc £$%  d\n\n\n";
+  // This key is copied from Cloud Datastore. Make sure it exists there before running the tests.
   private String validImageKey = "AMIfv943BzZrlhyLIN_el9l15Zz2LUp4H3bRNwHj2yvPaDNuv0uZjsp8vSySw0u5pEp-sspSVv4U5fkCT6SY1vbTeObItcslXvPswVieK3rInnCc0nBkTDlfIgWqxlvYjFVPS1QQqCjiY7NlRNSHA3gRXtsv6hrj7_J3_c_DaCP4jhpbZid2bkKvOA1XD0geHOXbCjKHf0ZIbEU4wKqQgGcCxT0X4Ddi4o6Nk8rhN7CNbN27GD-iBfrIG2RwNXr24xLLlFg8Bw9xCUxrbaXO6tkJNHndSghb0x4KAZ-IEPYKHfuWtLfXSmgMV_D1hHZdqShTaUZIyJu-";
 
   private List<String> nullShoppingList = new ArrayList<>(); 
@@ -56,31 +58,58 @@ public final class DetectTextTest {
     invalidShoppingList.add("!%^&*+");
   }
 
-      @Test
-  public void imageToShoppingListExtractor_forNullImageKey() {
-    Assertions.assertThrows(PhotoShoppingException.class, ()-> {detectText.imageToShoppingListExtractor(nullImageKey);});  
+/****************************************
+***** TESTS FOR shoppingImageInitializer
+****************************************/
+  @Test
+  public void shoppingImageInitializer_forNullImageKey() {
+    Assertions.assertThrows(PhotoShoppingException.class, ()-> {detectText.shoppingImageInitializer(nullImageKey);});
   }
 
-//     @Test
-//   public void shoppingImageRequestGenerator_ForNullImageKey() {
-//     List<AnnotateImageRequest> actual = detectText.shoppingImageRequestGenerator(nullImageKey);
-//     //AnnotateImageRequest request = 
-//     List<AnnotateImageRequest> expected = new ArrayList<>();
-//     //expected.add(request);
+    @Test
+  public void shoppingImageInitializer_forInvalidImageKey() {
+    Assertions.assertThrows(PhotoShoppingException.class, ()-> {detectText.shoppingImageInitializer(invalidImageKey);});
+  }
 
 
-// //     image {
-// //   source {
-// //     image_uri: "https://shop-by-photos-step-2020.ey.r.appspot.com/get-image-url?blob-key="
-// //   }
-// // }
-// // features {
-// //   type: TEXT_DETECTION
-// // }
+/********************************************
+***** TESTS FOR shoppingImageRequestGenerator
+********************************************/
 
+    @Test // Testing the shoppingImageRequestGenerator routine with valid Image source
+  public void shoppingImageRequestGenerator_forValidImageKey() {
+    String expectedUri = detectText.IMAGE_BASE_URI + validImageKey;
+    try {
+        ImageSource shoppingImageSource = detectText.shoppingImageInitializer(validImageKey);
+        List<AnnotateImageRequest> actual_requests = detectText.shoppingImageRequestGenerator(shoppingImageSource);
+        Assert.assertEquals(expectedUri, actual_requests.get(0).getImage().getSource().getImageUri());
 
-//     Assert.assertEquals(expected, actual);
+    } catch (PhotoShoppingException e) {
+        Assert.fail("Threw PhotoShoppingException for ImageSource");
+    } 
+  }
+
+/********************************************
+***** TESTS FOR cloudVisionResponseParser
+********************************************/
+
+//     @Test // Testing the cloudVisionResponseParser routine with valid Image source
+//   public void cloudVisionResponseParser_forValidImageKey() {
+//     //String expectedUri = detectText.IMAGE_BASE_URI + validImageKey;
+//     BatchAnnotateImagesResponse fakeCloudVisionResponse = fakeTextDetectionApi.generatefakeResponse();
+//     try {
+//         List<String> detectText.cloudVisionResponseParser(fakeCloudVisionResponse);
+//         List<AnnotateImageRequest> actual_requests = detectText.shoppingImageRequestGenerator(shoppingImageSource);
+//         Assert.assertEquals(expectedUri, actual_requests.get(0).getImage().getSource().getImageUri());
+
+//     } catch (PhotoShoppingException e) {
+//         Assert.fail("Threw PhotoShoppingException for ImageSource");
+//     } 
 //   }
+
+/****************************************
+***** TESTS FOR createShoppingListQuery
+****************************************/
 
   @Test   // Negative test with Null list string
   public void createShoppingListQuery_forNullList() {
@@ -99,7 +128,7 @@ public final class DetectTextTest {
     Assert.assertEquals(expected, actual);
   }
 
-    @Test   // Negative test with valid list string
+    @Test   // Positive test with valid list string
   public void createShoppingListQuery_forValidList() {
     List<String> actual = new ArrayList<>();
     try {
@@ -113,9 +142,5 @@ public final class DetectTextTest {
     Assert.assertEquals(expected, actual);
   }
 
-  @Test
-  public void shoppingImageInitializer_forNullImageKey() {
-    Assertions.assertThrows(PhotoShoppingException.class, ()-> {detectText.shoppingImageInitializer(nullImageKey);});
-  }
 
 }

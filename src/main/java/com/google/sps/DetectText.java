@@ -43,15 +43,13 @@ TEXT_DETECTION_FEATURE =
 }
 
   public ImageSource shoppingImageInitializer(String shoppingImageKey) throws PhotoShoppingException {
-    ImageSource shoppingImageSource;
-    if(isValidImageKey(shoppingImageKey)) {
-      shoppingImageSource =
-        ImageSource.newBuilder()
-            .setImageUri(IMAGE_BASE_URI + shoppingImageKey)
-            .build();  
-    } else {
+    if(!isValidImageKey(shoppingImageKey)) {
         throw new PhotoShoppingException("Invalid blob key");
-    }
+    }         
+    ImageSource shoppingImageSource = 
+    ImageSource.newBuilder()
+        .setImageUri(IMAGE_BASE_URI + shoppingImageKey)
+         .build();  
     return shoppingImageSource;
   }
 
@@ -71,15 +69,22 @@ TEXT_DETECTION_FEATURE =
     return requests;
   }
 
-public List<String> cloudVisionAPIClient(List<AnnotateImageRequest> requests) throws IOException, PhotoShoppingException {
-        List<String> shoppingList = new ArrayList<>();
-
+public BatchAnnotateImagesResponse cloudVisionAPIClient(List<AnnotateImageRequest> requests) throws IOException {
     // Initialize client that will be used to send requests. This client only needs to be created
     // once, and can be reused for multiple requests. After completing all of your requests, call
     // the "close" method on the client to safely clean up any remaining background resources.
+    BatchAnnotateImagesResponse response;
     try (ImageAnnotatorClient cloudVisionClient = ImageAnnotatorClient.create()) {
-      BatchAnnotateImagesResponse response = cloudVisionClient.batchAnnotateImages(requests);
-      List<AnnotateImageResponse> responses = response.getResponsesList();
+      response = cloudVisionClient.batchAnnotateImages(requests);
+    }
+    return response;
+}
+
+public List<String> cloudVisionResponseParser(BatchAnnotateImagesResponse response) throws IOException, PhotoShoppingException {
+System.out.println("Response: \n"+response);
+    List<String> shoppingList = new ArrayList<>();
+    List<AnnotateImageResponse> responses = response.getResponsesList();
+System.out.println("Responses : \n"+responses);
       for (AnnotateImageResponse res : responses) {
         if (res.hasError()) {
           throw new PhotoShoppingException(res.getError().getMessage());
@@ -90,10 +95,8 @@ public List<String> cloudVisionAPIClient(List<AnnotateImageRequest> requests) th
           shoppingList.add("Position :" + annotation.getBoundingPoly());
         }
       }
-    }
     return shoppingList;
 }
-
 
   public List<String> createShoppingListQuery(List<String> shoppingList) throws PhotoShoppingException {
         List<String> queryItem = new ArrayList<>();
@@ -121,7 +124,7 @@ public List<String> cloudVisionAPIClient(List<AnnotateImageRequest> requests) th
   }
 
   private boolean isValidImageKey(String shoppingImageKey) {
-      if(shoppingImageKey.contains("[ \n]") || shoppingImageKey.equals("") || shoppingImageKey.isEmpty()) { // If the key contains space or escape charaters then invalid
+      if(shoppingImageKey.contains("[\n]") || shoppingImageKey.equals("") || shoppingImageKey.isEmpty() || shoppingImageKey.contains(" ")) { // If the key contains space or escape charaters then invalid
         return false;
       }
       return true;
@@ -136,7 +139,9 @@ public List<String> cloudVisionAPIClient(List<AnnotateImageRequest> requests) th
 
     List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImageSource);
 
-    List<String> shoppingList = cloudVisionAPIClient(requests);
+    BatchAnnotateImagesResponse response = cloudVisionAPIClient(requests);
+   
+   List<String> shoppingList = cloudVisionResponseParser(response);
 
     return createShoppingListQuery(shoppingList);
   }
