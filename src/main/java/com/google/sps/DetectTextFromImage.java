@@ -29,34 +29,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class detects text and its position. Then sends the text as a url query to be handled by the
- * shopping results script and search shopping results servlet.
+ * This class generates a shopping list based on image
+ * 1) It uses cloudVisionAPI to scan an image containing shopping list items and detect text from it. 
+ * 2) It then uses an algorithm to create shopping sentences (queries) from the text and their position.
+ * 3) This list of queries is returned to the Servlet from {@code imageToShoppingListExtractor()}.
  */
 public class DetectTextFromImage {
-
-  final String IMAGE_BASE_URI =
+  private final String IMAGE_BASE_URI =
       "https://shop-by-photos-step-2020.ey.r.appspot.com/get-image-url?blob-key=";
-  final Feature TEXT_DETECTION_FEATURE;
+  private final Feature TEXT_DETECTION_FEATURE = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
+  private ImageSource shoppingImageSource;
 
-  public DetectTextFromImage() {
-    TEXT_DETECTION_FEATURE = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
-  }
-
-  public ImageSource shoppingImageInitializer(String shoppingImageKey)
-      throws PhotoShoppingException {
+  /*
+  * This constructor creates object only if a valid ImageKey is provided. 
+  * It then initializes shoppingImageSource to be used by the Generator function.
+  * If the ImageKey is invalid/mull, it throws an exception and the object never gets created.
+  */
+  public DetectTextFromImage(String shoppingImageKey) throws PhotoShoppingException {
     if (!isValidImageKey(shoppingImageKey)) {
-      throw new PhotoShoppingException("Invalid blob key");
+      throw new PhotoShoppingException("ERROR : Invalid blob key");
     }
-    ImageSource shoppingImageSource =
-        ImageSource.newBuilder().setImageUri(IMAGE_BASE_URI + shoppingImageKey).build();
-    return shoppingImageSource;
+    shoppingImageSource = ImageSource.newBuilder().setImageUri(IMAGE_BASE_URI + shoppingImageKey).build();
   }
 
-  // {@code shoppingImageRequestGenerator()} generates the request query to be sent to CloudVisionAPI
-  // client.
-  public List<AnnotateImageRequest> shoppingImageRequestGenerator(ImageSource shoppingImageSource) {
+  /** {@code shoppingImageRequestGenerator()} generates the request query to be sent to CloudVisionAPI client. */
+  // Keeping it public so that it could be tested from the unit tests
+  public List<AnnotateImageRequest> shoppingImageRequestGenerator() {
     List<AnnotateImageRequest> requests = new ArrayList<>();
-    // ToDo: Check if shoppingImageSource has a valid value not null
     Image shoppingImage = Image.newBuilder().setSource(shoppingImageSource).build();
 
     AnnotateImageRequest request =
@@ -69,28 +68,37 @@ public class DetectTextFromImage {
     return requests;
   }
 
-  public BatchAnnotateImagesResponse cloudVisionAPIQuerier(List<AnnotateImageRequest> requests)
-      throws IOException {
-    // Initialize client that will be used to send requests. This client only needs to be created
-    // once, and can be reused for multiple requests. After completing all of your requests, call
-    // the "close" method on the client to safely clean up any remaining background resources.
-    BatchAnnotateImagesResponse response;
-    try (ImageAnnotatorClient cloudVisionClient = ImageAnnotatorClient.create()) {
-      response = cloudVisionClient.batchAnnotateImages(requests);
-      cloudVisionClient.close();
+/** 
+ * This function is used to send request to cloudVisionAPI 
+ *  The cloudVisionAPI scans the image and returns back the text, its position and properties as the response.
+ */
+  private BatchAnnotateImagesResponse cloudVisionAPIQuerier(List<AnnotateImageRequest> requests) 
+    throws PhotoShoppingException {
+    ImageAnnotatorClient cloudVisionClient;
+    try {
+         cloudVisionClient = ImageAnnotatorClient.create();
+    } catch (IOException exception) {
+        throw new PhotoShoppingException ("ERROR : Failed to create cloudVisionClient\n" + exception.getMessage());
     }
+    BatchAnnotateImagesResponse response = cloudVisionClient.batchAnnotateImages(requests);
+    cloudVisionClient.close();
     return response;
   }
 
-  public List<String> cloudVisionResponseParser(BatchAnnotateImagesResponse response)
-      throws IOException, PhotoShoppingException {
+/** 
+ * {@code cloudVisionResponseParser} takes cloudVisionAPI's response and generates shopping list as Text, Position.
+ * ToDo : This position will be used in sentence formation algorithm to separate individual queries from the shopping list.
+ */
+  private List<String> cloudVisionResponseParser(BatchAnnotateImagesResponse response)
+      throws PhotoShoppingException {
     List<String> shoppingList = new ArrayList<>();
     List<AnnotateImageResponse> responses = response.getResponsesList();
-    for (AnnotateImageResponse res : responses) {
-      if (res.hasError()) {
-        throw new PhotoShoppingException(res.getError().getMessage());
+    for (AnnotateImageResponse identifiedText : responses) {
+      if (identifiedText.hasError()) {
+        throw new PhotoShoppingException("ERROR : An error occurred while identifying the text from the image\n" 
+            + identifiedText.getError().getMessage());
       }
-      for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
+      for (EntityAnnotation annotation : identifiedText.getTextAnnotationsList()) {
         shoppingList.add("Text:" + annotation.getDescription());
         shoppingList.add("Position :" + annotation.getBoundingPoly());
       }
@@ -98,20 +106,23 @@ public class DetectTextFromImage {
     return shoppingList;
   }
 
+  /** createShoppingListQuery function creates query from the text detected by cloudVision API. */
+  // Keeping it public so that it could be tested from the unit tests
   public String createShoppingListQuery(List<String> shoppingList) throws PhotoShoppingException {
-    // ToDo: Make an algorithm to get query sentences.
+    // ToDo: Make an algorithm to create query sentences by separating out text returned by cloudVisionAPI 
+    // to group shoppping items based on their position (y axis).
     if (shoppingList.size() < 1) {
       throw new PhotoShoppingException("Shopping List doesn't contain any text");
     }
     if (!shoppingList.get(0).contains(":")) {
       throw new PhotoShoppingException("Invalid Shopping List");
     }
-    String queryItem = shoppingList.get(0).split(":", 2)[1]; // split with limit 2
-    queryItem = polishQueryItem(queryItem);
-    return queryItem;
+    // split only first :. Ignore other : values.
+    String queryItem = shoppingList.get(0).split(":", 2)[1];
+    return formatQueryItem(queryItem);
   }
 
-  private String polishQueryItem(String queryItem) {
+  private String formatQueryItem(String queryItem) {
     queryItem =
         queryItem
             .replaceAll("\\s+", " ") // Remove duplicate spaces
@@ -121,8 +132,8 @@ public class DetectTextFromImage {
   }
 
   private boolean isValidImageKey(String shoppingImageKey) {
-    // If the key contains space or escape charaters then invalid
-    if (shoppingImageKey.contains("[\n ]")
+    // If the key contains space or escape charaters or if null then it is invalid.
+    if (shoppingImageKey.contains("[\n]")
         | shoppingImageKey.equals("")
         | shoppingImageKey.isEmpty()
         | shoppingImageKey.contains(" ")) {
@@ -131,11 +142,11 @@ public class DetectTextFromImage {
     return true;
   }
 
-  public String imageToShoppingListExtractor(String shoppingImageKey)
+  public String imageToShoppingListExtractor()
       throws IOException, PhotoShoppingException {
-    ImageSource shoppingImageSource = shoppingImageInitializer(shoppingImageKey);
+    // ImageSource shoppingImageSource = shoppingImageInitializer(shoppingImageKey);
 
-    List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImageSource);
+    List<AnnotateImageRequest> requests = shoppingImageRequestGenerator();
 
     BatchAnnotateImagesResponse response = cloudVisionAPIQuerier(requests);
 

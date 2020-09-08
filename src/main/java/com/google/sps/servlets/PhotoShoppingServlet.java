@@ -86,8 +86,8 @@ public class PhotoShoppingServlet extends HttpServlet {
       case "product":
         return "Fountain pen";
       case "shopping-list":
-        DetectTextFromImage detectText = new DetectTextFromImage();
-        return detectText.imageToShoppingListExtractor(shoppingImageKey);
+        DetectTextFromImage detectText = new DetectTextFromImage(shoppingImageKey);
+        return detectText.imageToShoppingListExtractor();
       case "barcode":
         return "Cotton candy";
       default:
