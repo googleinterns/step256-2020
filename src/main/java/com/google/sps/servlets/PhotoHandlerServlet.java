@@ -82,12 +82,10 @@ public class PhotoHandlerServlet extends HttpServlet {
       return;
     }
     ShoppingQueryInput shoppingQueryInput = 
-        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(21).build();
+        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(24).build();
 
     // Initialize the Google Shopping querier.
     GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
-
-    response.setContentType("application/json;");
 
     List<Product> shoppingQuerierResults = new ArrayList<>();
     try {
@@ -97,10 +95,18 @@ public class PhotoHandlerServlet extends HttpServlet {
       return;
     }
      
-    // Convert products List into a JSON string using Gson library and send the JSON as response.
+    // Convert {@code shoppingQuery} and products List - {@code shoppingQuerierResults} - into JSON strings 
+    // using Gson library and send a JSON array with both of the JSON strings as response.
     Gson gson = new Gson();
 
-    response.getWriter().println(gson.toJson(shoppingQuerierResults));
+    String shoppingQueryJSON = gson.toJson(shoppingQuery); 
+    String shoppingQuerierResultsJSON = gson.toJson(shoppingQuerierResults); 
+    response.setContentType("application/json;");
+    response.getWriter().write("[");
+    response.getWriter().write(shoppingQueryJSON);
+    response.getWriter().write(",");
+    response.getWriter().write(shoppingQuerierResultsJSON);
+    response.getWriter().write("]");
   }
 
   /** 

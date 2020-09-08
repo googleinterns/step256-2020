@@ -44,8 +44,7 @@ async function fetchBlobstoreUrlAndShowForm() {
   }
 
   imageUploadUrl = await response.text();
-  const uploadForm = document.getElementById('upload-image-form');
-  uploadForm.classList.remove('hidden');
+  $('#upload-image-form').removeClass('hidden');
 }
 
 /**
@@ -65,6 +64,10 @@ async function onSubmitUploadImageForm() {
 
   // Before making the POST request, empty the shopping results container, which may include
   // previous results.
+  $('#shopping-query-display').empty();
+  if (!$('#shopping-query-display-container').hasClass('hidden')) {
+    $('#shopping-query-display-container').addClass('hidden');
+  }
   $('#shopping-results-wrapper').empty();
 
   // Close the form modal and display a prompt, alerting the user that the results are loading.
@@ -87,11 +90,19 @@ async function onSubmitUploadImageForm() {
     return Promise.reject(response);
   }
 
-  // The request returns a JSON with data about each product from the Google Shopping results page.
-  const products = await response.json();
+  // The request returns a JSON array with the shopping query used to search on Google Shopping and
+  // the data about each product from the Google Shopping results page.
+  const data = await response.json();
+  const shoppingQuery = data[0]; 
+  const products = data[1]; 
 
   // Empty the prompt container and add the {@code products} content into the page.
   $('#search-loading-prompt').empty();
+
+  // Show the user the shopping query built to search on Google Shopping.
+  $('#shopping-query-display-container').removeClass('hidden');
+  $('#shopping-query').text(shoppingQuery);
+
   appendShoppingResults(products);
 }
 
