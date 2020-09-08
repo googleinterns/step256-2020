@@ -82,27 +82,25 @@
         <div class="bg-model">
           <div class="model-content">
             <button class="close" onclick="closeFileUploadDialog()"> + </button>
-            <form id="upload-image-form" class="hidden" method="POST" enctype="multipart/form-data">
+            <form id="upload-image-form" class="hidden" action='#' onsubmit="return false" 
+                enctype="multipart/form-data">
               <h1>Upload image</h1>
-              
               <select id="photo-category" name="photo-category" required>
                 <option value="product">Product</option>
                 <option value="list">List</option>
                 <option value="barcode">Barcode</option>
               </select>
 
-              <input type="file" name="photo" required>
-
-              <button>Submit</button>
+              <input type="file" name="photo" id="input-photo" required>
+              
+              <button onclick="onSubmitUploadImageForm()">Search</button>
             </form>
           </div>
         </div>
 
       </div><!-- /.row -->
 
-      <p class="text-center">
-        <a href="shopping-results.html" class="btn btn-primary my-2">Get Results</a>
-      </p>
+      <div class="text-center" id="search-loading-prompt"></div>
 
   </main>
 
