@@ -70,8 +70,6 @@ async function onSubmitUploadImageForm() {
   // Close the form modal and display a prompt, alerting the user that the results are loading.
   closeFileUploadDialog();
   $('#search-loading-prompt').text('Shopping results loading, please wait!');
-  // const searchLoadingPrompt = document.getElementById('search-loading-prompt');
-  // searchLoadingPrompt.textContent = "Shopping results loading, please wait!";
 
   // Fetch {@code imageUploadUrl}.
   const response = await fetch(imageUploadUrl, {
@@ -94,7 +92,6 @@ async function onSubmitUploadImageForm() {
 
   // Empty the prompt container and add the {@code products} content into the page.
   $('#search-loading-prompt').empty();
-  // searchLoadingPrompt.textContent = "";
   appendShoppingResults(products);
 }
 
