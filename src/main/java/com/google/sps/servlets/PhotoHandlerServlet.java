@@ -71,20 +71,54 @@ public class PhotoHandlerServlet extends HttpServlet {
 
     // Get the image the user uploaded as bytes.
     byte[] uploadedImageBytes = getBlobBytes(uploadedImageBlobKey);
+    
+    // Call GoogleShoppingQuerier to return the extracted products data.
+    // First, build the shopping query input.
+    String shoppingQuery;
+    try {
+      shoppingQuery = getQuery(request.getParameter("photo-category"), uploadedImageBytes);
+    } catch(IllegalArgumentException exception) {
+      response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+      return;
+    }
+    ShoppingQueryInput shoppingQueryInput = 
+        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(21).build();
+
+    // Initialize the Google Shopping querier.
+    GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
 
     response.setContentType("application/json;");
-    List<Product> shoppingResults = new ArrayList<>();
 
-    // TO ADD: Based on the {@code photoCategory}, call methods from the photo detection classes, 
-    // passing {@code uploadedImageBytes} as argument. These methods detect the image content, build 
-    // the shopping query and call GoogleShoppingQuerier to return the extracted products data,
-    // stored into {@code shoppingResults}.
+    List<Product> shoppingQuerierResults = new ArrayList<>();
+    try {
+      shoppingQuerierResults = querier.query(shoppingQueryInput);
+    } catch(IllegalArgumentException | ShoppingQuerierConnectionException | IOException exception) {
+      response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+      return;
+    }
      
-    // Convert products List into a JSON string using Gson library and
-    // send the JSON as the response.
+    // Convert products List into a JSON string using Gson library and send the JSON as response.
     Gson gson = new Gson();
 
-    response.getWriter().println(gson.toJson(shoppingResults));
+    response.getWriter().println(gson.toJson(shoppingQuerierResults));
+  }
+
+  /** 
+   * Returns the shopping query by calling methods from the photo content detection classes, 
+   * based on the {@code photoCategory}, passing {@code uploadedImageBytes} as argument.
+   */
+  private String getQuery(String photoCategory, byte[] uploadedImageBytes) throws IllegalArgumentException {
+    switch (photoCategory) {
+      case "product":
+        return "Fountain pen";
+      case "shopping-list":
+        return "Fuzzy socks";
+      case "barcode":
+        return "Running shoes";
+      default:
+        throw new IllegalArgumentException(
+            "Photo category has to be either product, shopping-list or barcode.");
+    }
   }
 
   /**
