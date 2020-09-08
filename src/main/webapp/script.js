@@ -102,7 +102,7 @@ async function appendShoppingResults(products) {
   // Integrate the products into the web page.
   products.forEach(product => {
     // Create an HTML node for the item container.
-    let $productContainer = $('<div>', {class: 'col-md-4'});
+    let $productContainer = $('<div>', {class: 'col-md-3'});
 
     // Get the HTML content for the container.
     const productElementHTML = getProductElementHTML(product.title,

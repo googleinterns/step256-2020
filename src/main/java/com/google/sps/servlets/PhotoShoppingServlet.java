@@ -45,7 +45,7 @@ public class PhotoShoppingServlet extends HttpServlet {
     String shoppingQuery = getQuery(request.getParameter("photo-category"));
     // Build the shopping query input - set language and maxResultsNumber to hard-coded values for now.
     ShoppingQueryInput input = 
-        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(20).build();
+        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(24).build();
 
     // Initialize the Google Shopping querier.
     GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
