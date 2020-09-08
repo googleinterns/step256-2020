@@ -17,7 +17,7 @@ package com.google.sps.servlets;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 import com.google.gson.Gson;
-import com.google.sps.DetectText;
+import com.google.sps.DetectTextFromImage;
 import com.google.sps.GoogleShoppingQuerier;
 import com.google.sps.PhotoShoppingException;
 import com.google.sps.ShoppingQuerierConnectionException;
@@ -46,7 +46,7 @@ public class PhotoShoppingServlet extends HttpServlet {
     // Get the session, which contains user-specific data
     HttpSession session = request.getSession();
 
-    List<String> shoppingQuery = new ArrayList<>();
+    String shoppingQuery = "";
     try {
       shoppingQuery =
           getQuery(
@@ -55,29 +55,22 @@ public class PhotoShoppingServlet extends HttpServlet {
     } catch (PhotoShoppingException exception) {
       response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
     }
-    System.out.println("Shopping query: " + shoppingQuery);
 
     // Build the shopping query input - set language and maxResultsNumber to hard-coded values for
     // now.
-    List<ShoppingQueryInput> inputs = new ArrayList<>();
-    for (String query : shoppingQuery) {
-      inputs.add(new ShoppingQueryInput.Builder(query).language("en").maxResultsNumber(18).build());
-    }
+    ShoppingQueryInput input =
+        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(18).build();
 
     // Initialize the Google Shopping querier.
     GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
 
-    List<List<Product>> shoppingQuerierResults = new ArrayList<>();
-    List<Product> result = new ArrayList<>();
-    for (ShoppingQueryInput input : inputs) {
-      try {
-        result = querier.query(input);
-      } catch (IllegalArgumentException
-          | ShoppingQuerierConnectionException
-          | IOException exception) {
-        response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
-      }
-      shoppingQuerierResults.add(result);
+    List<Product> shoppingQuerierResults = new ArrayList<>();
+    try {
+      shoppingQuerierResults = querier.query(input);
+    } catch (IllegalArgumentException
+        | ShoppingQuerierConnectionException
+        | IOException exception) {
+      response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
     }
 
     // Convert products List into a JSON string using Gson library and
@@ -87,22 +80,18 @@ public class PhotoShoppingServlet extends HttpServlet {
     response.getWriter().println(gson.toJson(shoppingQuerierResults));
   }
 
-  private List<String> getQuery(String photoCategory, String shoppingImageKey)
+  private String getQuery(String photoCategory, String shoppingImageKey)
       throws IOException, PhotoShoppingException {
-    List<String> result = new ArrayList<>();
     switch (photoCategory) {
       case "product":
-        result.add("Fountain pen");
-        break;
+        return "Fountain pen";
       case "shopping-list":
-        DetectText detectText = new DetectText();
+        DetectTextFromImage detectText = new DetectTextFromImage();
         return detectText.imageToShoppingListExtractor(shoppingImageKey);
       case "barcode":
-        result.add("Cotton candy");
-        break;
+        return "Cotton candy";
       default:
-        result.add("Tooth Brush");
+        throw new PhotoShoppingException("Invalid Photo-Category");
     }
-    return result;
   }
 }

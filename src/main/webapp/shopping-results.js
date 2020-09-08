@@ -42,8 +42,7 @@ console.log(response);
   const products = await response.json();
 console.log(products);
   // Integrate the products into the webpage.
-  products.forEach(listproduct => {
-      listproduct.forEach(product => {
+  products.forEach(product => {
     // Create an HTML node for the item container.
     let $productContainer = $('<div>', {class: 'col-md-4'});
 
@@ -60,8 +59,6 @@ console.log(products);
     // Add the container to the results page, into the corresponding product wrapper.
     $('#shopping-results-wrapper').append($productContainer);
       });
-    $('#shopping-results-wrapper').append('<br />');
-  });
 }
 
 /**
