@@ -53,10 +53,10 @@ public class PhotoHandlerServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the BlobKey that points to the image uploaded by the user.
-    BlobKey blobKey = getBlobKey(request, "photo");
+    BlobKey uploadedImageBlobKey = getBlobKey(request, "photo");
 
     // Send an error if the user did not upload a file.
-    if (blobKey == null) {
+    if (uploadedImageBlobKey == null) {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Client must upload an image file.");
       return;
     }
@@ -70,49 +70,21 @@ public class PhotoHandlerServlet extends HttpServlet {
     String photoCategory = request.getParameter("photo-category");
 
     // Get the image the user uploaded as bytes.
-    byte[] imageBytes = getBlobBytes(blobKey);
+    byte[] uploadedImageBytes = getBlobBytes(uploadedImageBlobKey);
+
+    response.setContentType("application/json;");
+    List<Product> shoppingResults = new ArrayList<>();
 
     // TO ADD: Based on the {@code photoCategory}, call methods from the photo detection classes, 
-    // passing {@code imageBytes} as argument. These methods detect the image content, build 
-    // the shopping query and call GoogleShoppingQuerier to return the extracted products.
-
-    // Build the shopping query input - set {@code shoppingQuery}, {@code language} and 
-    // {@code maxResultsNumber} to hard-coded values for now.
-    // TO DO: Let the user choose {@code language} and {@code maxResultsNumber}.
-    String shoppingQuery = getQuery(request.getParameter("photo-category"));
-    ShoppingQueryInput input = 
-        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(21).build();
-
-    // Initialize the Google Shopping querier.
-    GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
-    
-    response.setContentType("application/json;");
-    
-    List<Product> shoppingQuerierResults = new ArrayList<>();
-    try {
-      shoppingQuerierResults = querier.query(input);
-    } catch(IllegalArgumentException | ShoppingQuerierConnectionException | IOException exception) {
-      response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
-    }
+    // passing {@code uploadedImageBytes} as argument. These methods detect the image content, build 
+    // the shopping query and call GoogleShoppingQuerier to return the extracted products data,
+    // stored into {@code shoppingResults}.
      
     // Convert products List into a JSON string using Gson library and
     // send the JSON as the response.
     Gson gson = new Gson();
 
-    response.getWriter().println(gson.toJson(shoppingQuerierResults));
-  }
-  
-  private String getQuery(String photoCategory) {
-    switch (photoCategory) {
-      case "product":
-        return "Fountain pen";
-      case "shopping-list":
-        return "Fuzzy socks";
-      case "barcode":
-        return "Running shoes";
-      default:
-        return "Notebook";
-    }
+    response.getWriter().println(gson.toJson(shoppingResults));
   }
 
   /**
