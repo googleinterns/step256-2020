@@ -17,5 +17,8 @@
 package com.google.sps.fake_apis;
 
 public class FakeTextDetectionApi {
-    
+    public BatchAnnotateImagesResponse generatefakeResponse() {
+        BatchAnnotateImagesResponse response = new BatchAnnotateImagesResponse ();
+        response.set(description, )
+    }
 }
