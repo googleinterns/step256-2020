@@ -71,7 +71,7 @@ async function onSubmitUploadImageForm() {
   closeFileUploadDialog();
   $('#search-loading-prompt').text('Shopping results loading, please wait!');
 
-  // Fetch {@code imageUploadUrl}.
+  //Make a POST request to {@code imageUploadUrl} to process the image uploading.
   const response = await fetch(imageUploadUrl, {
         method: 'POST',
         body: formData
