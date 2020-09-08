@@ -44,7 +44,8 @@ import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 /**
  * When the user submits the form for image uploading, Blobstore processes the file upload and forwards
- * the request to this servlet, which gets the product shopping results for the respective photo.
+ * the request to this servlet, which returns the product shopping results for the respective photo,
+ * in JSON format.
  */
 @WebServlet("/handle-photo")
 public class PhotoHandlerServlet extends HttpServlet {
@@ -75,8 +76,6 @@ public class PhotoHandlerServlet extends HttpServlet {
     // passing {@code imageBytes} as argument. These methods detect the image content, build 
     // the shopping query and call GoogleShoppingQuerier to return the extracted products.
 
-    
-    
     // Build the shopping query input - set {@code shoppingQuery}, {@code language} and 
     // {@code maxResultsNumber} to hard-coded values for now.
     // TO DO: Let the user choose {@code language} and {@code maxResultsNumber}.
