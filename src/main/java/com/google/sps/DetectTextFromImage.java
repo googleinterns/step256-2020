@@ -69,7 +69,7 @@ public class DetectTextFromImage {
   }
 
 /** 
- * This function is used to send request to cloudVisionAPI 
+ * {@code cloudVisionAPIQuerier(List<AnnotateImageRequest> requests)} used to send request to cloudVisionAPI 
  *  The cloudVisionAPI scans the image and returns back the text, its position and properties as the response.
  */
   private BatchAnnotateImagesResponse cloudVisionAPIQuerier(List<AnnotateImageRequest> requests) 
@@ -86,7 +86,8 @@ public class DetectTextFromImage {
   }
 
 /** 
- * {@code cloudVisionResponseParser} takes cloudVisionAPI's response and generates shopping list as Text, Position.
+ * {@code cloudVisionResponseParser(BatchAnnotateImagesResponse response)} takes cloudVisionAPI's response 
+ * and generates shopping list as Text, Position.
  * ToDo : This position will be used in sentence formation algorithm to separate individual queries from the shopping list.
  */
   private List<String> cloudVisionResponseParser(BatchAnnotateImagesResponse response)
@@ -106,7 +107,7 @@ public class DetectTextFromImage {
     return shoppingList;
   }
 
-  /** createShoppingListQuery function creates query from the text detected by cloudVision API. */
+  /** {@code createShoppingListQuery} function creates query from the text detected by cloudVision API. */
   // Keeping it public so that it could be tested from the unit tests
   public String createShoppingListQuery(List<String> shoppingList) throws PhotoShoppingException {
     // ToDo: Make an algorithm to create query sentences by separating out text returned by cloudVisionAPI 
@@ -142,10 +143,7 @@ public class DetectTextFromImage {
     return true;
   }
 
-  public String imageToShoppingListExtractor()
-      throws IOException, PhotoShoppingException {
-    // ImageSource shoppingImageSource = shoppingImageInitializer(shoppingImageKey);
-
+  public String imageToShoppingListExtractor() throws IOException, PhotoShoppingException {
     List<AnnotateImageRequest> requests = shoppingImageRequestGenerator();
 
     BatchAnnotateImagesResponse response = cloudVisionAPIQuerier(requests);

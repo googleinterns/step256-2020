@@ -42,28 +42,26 @@ public final class DetectTextFromImageTest {
 
   private List<String> nullShoppingList = new ArrayList<>();
   private List<String> validShoppingList = new ArrayList<>();
-
   private List<String> invalidShoppingList = new ArrayList<>();
+
   private DetectTextFromImage detectText;
 
   @Before
   public void setUp() {
-    // detectText = new DetectTextFromImage();
-
     validShoppingList.add("Text:Bag ");
     validShoppingList.add(
         "Position : vertices { x: 151 y: 94 } vertices { x: 187 y: 94 } vertices { x: 187 y: 115 } vertices { x: 151 y: 115 }");
     validShoppingList.add("Text:Bag");
     validShoppingList.add(
-        "Position :vertices { x: 152 y: 94 } vertices { x: 187 y: 96 } vertices { x: 186 y: 114 } vertices { x: 151 y: 112 }");
+        "Position : vertices { x: 152 y: 94 } vertices { x: 187 y: 96 } vertices { x: 186 y: 114 } vertices { x: 151 y: 112 }");
 
     invalidShoppingList.add("!%^&*+");
   }
 
   /**
-   * ************************************** 
-   * **** TESTS FOR shoppingImageInitializer
-   * **************************************
+   * ********************************************** 
+   * **** TESTS FOR DetectTextFromImage constructor
+   * **********************************************
    */
   @Test
   public void DetectTextFromImage_forNullImageKey() {
@@ -84,11 +82,12 @@ public final class DetectTextFromImageTest {
   }
 
   /**
-   * ****************************************** 
+   * ******************************************** 
    * **** TESTS FOR shoppingImageRequestGenerator
-   * ******************************************
+   * ********************************************
    */
-  @Test // Testing the shoppingImageRequestGenerator routine with valid Image source
+  // Testing the shoppingImageRequestGenerator routine with valid Image source
+  @Test
   public void shoppingImageRequestGenerator_forValidImageKey() {
     String expectedUri = IMAGE_BASE_URI + validImageKey;
     try {
@@ -96,13 +95,12 @@ public final class DetectTextFromImageTest {
         List<AnnotateImageRequest> actual_requests = detectText.shoppingImageRequestGenerator();
         Assert.assertEquals(expectedUri, actual_requests.get(0).getImage().getSource().getImageUri());
     } catch (PhotoShoppingException e) {
-      Assert.fail("Threw PhotoShoppingException for Invalid Key");
+        Assert.fail("Not expected: \nThrew PhotoShoppingException for Invalid Key");
     }
- 
   }
 
   /**
-   * ****************************************** *******
+   * **************************************************
    * **** ToDo : Write tests for 
    * cloudVisionResponseParser using FakeCloudVisionAPI
    * **************************************************
@@ -113,35 +111,38 @@ public final class DetectTextFromImageTest {
    * **** TESTS FOR createShoppingListQuery
    * **************************************
    */
-  @Test // Negative test with Null list string
+  // Negative test with Null list string
+  @Test
   public void createShoppingListQuery_forNullList() {
     Assertions.assertThrows(
         PhotoShoppingException.class,
         () -> {
-        DetectTextFromImage detectText = new DetectTextFromImage(validImageKey);
-        detectText.createShoppingListQuery(nullShoppingList);
+            DetectTextFromImage detectText = new DetectTextFromImage(validImageKey);
+            detectText.createShoppingListQuery(nullShoppingList);
         });
   }
 
-  @Test // Negative test with invalid list string
+  // Negative test with invalid list string
+  @Test
   public void createShoppingListQuery_forInvalidList() {
     Assertions.assertThrows(
         PhotoShoppingException.class,
         () -> {
-        DetectTextFromImage detectText = new DetectTextFromImage(validImageKey);
-        detectText.createShoppingListQuery(invalidShoppingList);
+            DetectTextFromImage detectText = new DetectTextFromImage(validImageKey);
+            detectText.createShoppingListQuery(invalidShoppingList);
         });
   }
 
-  @Test // Positive test with valid list string
+  // Positive test with valid list string
+  @Test
   public void createShoppingListQuery_forValidList() {
     String actual = "";
     try {
-      DetectTextFromImage detectText = new DetectTextFromImage(validImageKey);
-      actual = detectText.createShoppingListQuery(validShoppingList);
+        DetectTextFromImage detectText = new DetectTextFromImage(validImageKey);
+        actual = detectText.createShoppingListQuery(validShoppingList);
     } catch (PhotoShoppingException e) {
-      Assert.fail(
-          "Not expected: \nThrew PhotoShoppingException in createShoppingListQuery_forValidList");
+        Assert.fail(
+            "Not expected: \nThrew PhotoShoppingException in createShoppingListQuery_forValidList");
     }
     String expected = "Bag";
     Assert.assertEquals(expected, actual);
