@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // Add action when user clicks button for image uploading.
-$("#upload-photo-button").click(function() {
+$('#upload-photo-button').click(function() {
   fetchBlobstoreUrlAndShowForm(); 
   openFileUploadDialog();
 });
