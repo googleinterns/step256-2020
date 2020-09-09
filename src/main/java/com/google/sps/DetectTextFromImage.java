@@ -86,7 +86,7 @@ public class DetectTextFromImage {
       cloudVisionClient = ImageAnnotatorClient.create();
     } catch (IOException exception) {
       throw new PhotoShoppingException(
-          "Failed to create cloudVisionClient\n" + exception.getMessage());
+          "Failed to create cloudVisionClient\n" + exception.getMessage(), exception);
     }
     BatchAnnotateImagesResponse response = cloudVisionClient.batchAnnotateImages(requests);
     cloudVisionClient.close();
