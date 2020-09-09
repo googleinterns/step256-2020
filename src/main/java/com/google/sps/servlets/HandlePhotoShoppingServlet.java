@@ -47,7 +47,7 @@ import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
  * the request to this servlet, which returns the product shopping results for the respective photo,
  * in JSON format, along with the shopping query used to search.
  */
-@WebServlet("handle-photo-shopping")
+@WebServlet("/handle-photo-shopping")
 public class HandlePhotoShoppingServlet extends HttpServlet {
 
   @Override
