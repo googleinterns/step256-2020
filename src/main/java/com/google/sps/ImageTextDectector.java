@@ -38,35 +38,30 @@ public class ImageTextDectector {
 
   public ImageTextDectector() {}
 
-  public String imageToShoppingListExtractor(String shoppingImageKey)
+ public String imageToShoppingListExtractor(byte[] shoppingImageBytes)
       throws IOException, PhotoShoppingException {
-
-    ImageSource shoppingImageSource = shoppingImageInitializer(shoppingImageKey);
-
-    List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImageSource);
-
+    Image shoppingImage = shoppingImageInitializer(shoppingImageBytes);
+ 
+    List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImage);
+ 
     BatchAnnotateImagesResponse response = cloudVisionAPIQuerier(requests);
-
+ 
     List<EntityAnnotation> annotation = parseAnnotateImageResponse(response);
-
+ 
     return createShoppingListQuery(annotation);
   }
 
-  public ImageSource shoppingImageInitializer(String shoppingImageKey)
+
+ public Image shoppingImageInitializer(byte[] shoppingImageBytes)
       throws PhotoShoppingException {
-    if (!PhotoShoppingUtil.isValidImageKey(shoppingImageKey)) {
-      throw new PhotoShoppingException("Invalid blob key");
-    }
-    ImageSource shoppingImageSource =
-        ImageSource.newBuilder().setImageUri(Constants.IMAGE_BASE_URI + shoppingImageKey).build();
-    return shoppingImageSource;
+    return PhotoShoppingUtil.getImageFrombytes(shoppingImageBytes);
   }
+
 
   /** Generates the request query to be sent to CloudVisionAPI client. */
   // Keeping it public so that it could be tested from the unit tests
-  public List<AnnotateImageRequest> shoppingImageRequestGenerator(ImageSource shoppingImageSource) {
+  public List<AnnotateImageRequest> shoppingImageRequestGenerator(Image shoppingImage) {
     List<AnnotateImageRequest> requests = new ArrayList<>();
-    Image shoppingImage = Image.newBuilder().setSource(shoppingImageSource).build();
 
     AnnotateImageRequest request =
         AnnotateImageRequest.newBuilder()

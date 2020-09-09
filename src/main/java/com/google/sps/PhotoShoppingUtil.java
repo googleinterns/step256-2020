@@ -14,6 +14,9 @@
 
 package com.google.sps;
 
+import com.google.cloud.vision.v1.Image;
+import com.google.protobuf.ByteString;
+
 class PhotoShoppingUtil {
 
   private PhotoShoppingUtil() {}
@@ -27,14 +30,12 @@ class PhotoShoppingUtil {
     return query;
   }
 
-  protected static boolean isValidImageKey(String shoppingImageKey) {
-    // If the key contains space or escape charaters or if null then it is invalid.
-    if (shoppingImageKey.contains("[\n]")
-        | shoppingImageKey.equals("")
-        | shoppingImageKey.isEmpty()
-        | shoppingImageKey.contains(" ")) {
-      return false;
+  protected static Image getImageFrombytes(byte[] shoppingImageBytes) throws PhotoShoppingException{
+    if (shoppingImageBytes.length < 1) {
+        throw new PhotoShoppingException("Bytes array length less than 1.");
     }
-    return true;
+    ByteString imageByteString = ByteString.copyFrom(shoppingImageBytes);
+    Image shoppingImage = Image.newBuilder().setContent(imageByteString).build();
+    return shoppingImage;
   }
 }

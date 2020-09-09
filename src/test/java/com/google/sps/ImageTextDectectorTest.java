@@ -41,40 +41,40 @@ public final class ImageTextDectectorTest {
    * ***************************************
    */
   @Test
-  public void shoppingImageInitializer_forNullImageKey() {
-    String nullImageKey = "";
+  public void shoppingImageInitializer_forNullBytesArray() {
+    byte[] nullBytesArray = new byte[0];
     Assertions.assertThrows(
         PhotoShoppingException.class,
         () -> {
-          detectText.shoppingImageInitializer(nullImageKey);
+          detectText.shoppingImageInitializer(nullBytesArray);
         });
   }
 
-  @Test
-  public void shoppingImageInitializer_forInvalidImageKey() {
-    String invalidImageKey = "abc £$%  d\n\n\n";
-    Assertions.assertThrows(
-        PhotoShoppingException.class,
-        () -> {
-          detectText.shoppingImageInitializer(invalidImageKey);
-        });
-  }
+//   @Test
+//   public void shoppingImageInitializer_forInvalidImageKey() {
+//     String invalidImageKey = "abc £$%  d\n\n\n";
+//     Assertions.assertThrows(
+//         PhotoShoppingException.class,
+//         () -> {
+//           detectText.shoppingImageInitializer(invalidImageKey);
+//         });
+//   }
 
-  /**
-   * ********************************************
-   * **** TESTS FOR shoppingImageRequestGenerator
-   * ********************************************
-   */
-  // Testing the shoppingImageRequestGenerator routine with valid Image source
-  @Test
-  public void shoppingImageRequestGenerator_forValidImageKey() throws Exception {
-    // This key is copied from Cloud Datastore. Make sure it exists there before running the tests.
-    String validImageKey =
-        "AMIfv943BzZrlhyLIN_el9l15Zz2LUp4H3bRNwHj2yvPaDNuv0uZjsp8vSySw0u5pEp-sspSVv4U5fkCT6SY1vbTeObItcslXvPswVieK3rInnCc0nBkTDlfIgWqxlvYjFVPS1QQqCjiY7NlRNSHA3gRXtsv6hrj7_J3_c_DaCP4jhpbZid2bkKvOA1XD0geHOXbCjKHf0ZIbEU4wKqQgGcCxT0X4Ddi4o6Nk8rhN7CNbN27GD-iBfrIG2RwNXr24xLLlFg8Bw9xCUxrbaXO6tkJNHndSghb0x4KAZ-IEPYKHfuWtLfXSmgMV_D1hHZdqShTaUZIyJu-";
-    String expectedUri = Constants.IMAGE_BASE_URI + validImageKey;
-    ImageSource shoppingImageSource = detectText.shoppingImageInitializer(validImageKey);
-    List<AnnotateImageRequest> actual_requests =
-        detectText.shoppingImageRequestGenerator(shoppingImageSource);
-    Assert.assertEquals(expectedUri, actual_requests.get(0).getImage().getSource().getImageUri());
-  }
+//   /**
+//    * ********************************************
+//    * **** TESTS FOR shoppingImageRequestGenerator
+//    * ********************************************
+//    */
+//   // Testing the shoppingImageRequestGenerator routine with valid Image source
+//   @Test
+//   public void shoppingImageRequestGenerator_forValidImageKey() throws Exception {
+//     // This key is copied from Cloud Datastore. Make sure it exists there before running the tests.
+//     String validImageKey =
+//         "AMIfv943BzZrlhyLIN_el9l15Zz2LUp4H3bRNwHj2yvPaDNuv0uZjsp8vSySw0u5pEp-sspSVv4U5fkCT6SY1vbTeObItcslXvPswVieK3rInnCc0nBkTDlfIgWqxlvYjFVPS1QQqCjiY7NlRNSHA3gRXtsv6hrj7_J3_c_DaCP4jhpbZid2bkKvOA1XD0geHOXbCjKHf0ZIbEU4wKqQgGcCxT0X4Ddi4o6Nk8rhN7CNbN27GD-iBfrIG2RwNXr24xLLlFg8Bw9xCUxrbaXO6tkJNHndSghb0x4KAZ-IEPYKHfuWtLfXSmgMV_D1hHZdqShTaUZIyJu-";
+//     String expectedUri = Constants.IMAGE_BASE_URI + validImageKey;
+//     ImageSource shoppingImageSource = detectText.shoppingImageInitializer(validImageKey);
+//     List<AnnotateImageRequest> actual_requests =
+//         detectText.shoppingImageRequestGenerator(shoppingImageSource);
+//     Assert.assertEquals(expectedUri, actual_requests.get(0).getImage().getSource().getImageUri());
+//   }
 }
