@@ -19,6 +19,7 @@ public class PhotoShoppingException extends Exception {
   public PhotoShoppingException(String errorMessage, Exception exception) {
     super(errorMessage, exception);
   }
+
   public PhotoShoppingException(String errorMessage) {
       super(errorMessage);
   }

@@ -26,10 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class generates a shopping list based on image 1) It uses cloudVisionAPI to scan an image
- * containing shopping list items and detect text from it. 2) It then uses an algorithm to create
- * shopping sentences (queries) from the text and their position. 3) This list of queries is
- * returned to the Servlet from the method 'imageToShoppingListExtractor'.
+ * This class generates a shopping list based on image 
+ * 1) It uses cloudVisionAPI to scan an image
+ * containing shopping list items and detect text from it.
+ * 2) It then uses an algorithm to create shopping sentences 
+ * (queries) from the text and their position.
+ * 3) This list of queries is returned to the Servlet from the
+ * method 'imageToShoppingListExtractor'.
  */
 public class DetectTextFromImage {
 
@@ -94,9 +97,9 @@ public class DetectTextFromImage {
   }
 
   /**
-   * Takes cloudVisionAPI's response and generates shopping list as Text, Position. ToDo : This
-   * position will be used in sentence formation algorithm to separate individual queries from the
-   * shopping list.
+   * Takes cloudVisionAPI's response and returns a list of annotations. ToDo : The
+   * positions from annotation will be used in sentence formation algorithm to separate
+   * individual queries from the shopping list.
    */
   private List<EntityAnnotation> parseAnnotateImageResponse(BatchAnnotateImagesResponse response)
       throws PhotoShoppingException {
