@@ -62,8 +62,7 @@ async function onSubmitUploadImageForm() {
   formData.append('photo-category', photoCategory);
   formData.append('photo', selectedFile);
 
-  // Before making the POST request, empty the shopping results container, which may include
-  // previous results.
+  // Before making the POST request, empty or hide containers from previous photo requests.
   $('#shopping-query-display').empty();
   if (!$('#shopping-query-display-container').hasClass('hidden')) {
     $('#shopping-query-display-container').addClass('hidden');
