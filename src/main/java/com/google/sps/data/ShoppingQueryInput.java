@@ -29,7 +29,7 @@ public final class ShoppingQueryInput {
     
     // Optional parameters - initialized to default values
     private String language = "en";
-    private Integer maxResultsNumber = 10;
+    private Integer maxResultsNumber = 50;
 
     public Builder(String shoppingQuery) {
       this.shoppingQuery = shoppingQuery;
