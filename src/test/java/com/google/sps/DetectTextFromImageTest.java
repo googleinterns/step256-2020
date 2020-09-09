@@ -16,8 +16,6 @@ package com.google.sps;
 
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.ImageSource;
-import com.google.cloud.vision.v1.Feature;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,80 +28,61 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class DetectTextFromImageTest {
 
-  private final String IMAGE_BASE_URI =
-      "https://shop-by-photos-step-2020.ey.r.appspot.com/get-image-url?blob-key=";
-  private final Feature TEXT_DETECTION_FEATURE = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
-
-  private String nullImageKey = "";
-  private String invalidImageKey = "abc £$%  d\n\n\n";
-  // This key is copied from Cloud Datastore. Make sure it exists there before running the tests.
-  private String validImageKey =
-      "AMIfv943BzZrlhyLIN_el9l15Zz2LUp4H3bRNwHj2yvPaDNuv0uZjsp8vSySw0u5pEp-sspSVv4U5fkCT6SY1vbTeObItcslXvPswVieK3rInnCc0nBkTDlfIgWqxlvYjFVPS1QQqCjiY7NlRNSHA3gRXtsv6hrj7_J3_c_DaCP4jhpbZid2bkKvOA1XD0geHOXbCjKHf0ZIbEU4wKqQgGcCxT0X4Ddi4o6Nk8rhN7CNbN27GD-iBfrIG2RwNXr24xLLlFg8Bw9xCUxrbaXO6tkJNHndSghb0x4KAZ-IEPYKHfuWtLfXSmgMV_D1hHZdqShTaUZIyJu-";
-
-  private List<String> nullShoppingList = new ArrayList<>();
-  private List<String> validShoppingList = new ArrayList<>();
-  private List<String> invalidShoppingList = new ArrayList<>();
-
   private DetectTextFromImage detectText;
 
   @Before
   public void setUp() {
-    validShoppingList.add("Text:Bag ");
-    validShoppingList.add(
-        "Position : vertices { x: 151 y: 94 } vertices { x: 187 y: 94 } vertices { x: 187 y: 115 } vertices { x: 151 y: 115 }");
-    validShoppingList.add("Text:Bag");
-    validShoppingList.add(
-        "Position : vertices { x: 152 y: 94 } vertices { x: 187 y: 96 } vertices { x: 186 y: 114 } vertices { x: 151 y: 112 }");
-
-    invalidShoppingList.add("!%^&*+");
+    detectText = new DetectTextFromImage();
   }
 
   /**
-   * ********************************************** 
-   * **** TESTS FOR DetectTextFromImage constructor
-   * **********************************************
+   * ***************************************
+   * **** TESTS FOR shoppingImageInitializer
+   * ***************************************
    */
   @Test
-  public void DetectTextFromImage_forNullImageKey() {
+  public void shoppingImageInitializer_forNullImageKey() {
+    String nullImageKey = "";
     Assertions.assertThrows(
         PhotoShoppingException.class,
         () -> {
-            new DetectTextFromImage(nullImageKey);
+          detectText.shoppingImageInitializer(nullImageKey);
         });
   }
 
   @Test
-  public void DetectTextFromImage_forInvalidImageKey() {
+  public void shoppingImageInitializer_forInvalidImageKey() {
+    String invalidImageKey = "abc £$%  d\n\n\n";
     Assertions.assertThrows(
         PhotoShoppingException.class,
         () -> {
-            new DetectTextFromImage(invalidImageKey);
+          detectText.shoppingImageInitializer(invalidImageKey);
         });
   }
 
   /**
-   * ******************************************** 
+   * ********************************************
    * **** TESTS FOR shoppingImageRequestGenerator
    * ********************************************
    */
   // Testing the shoppingImageRequestGenerator routine with valid Image source
   @Test
-  public void shoppingImageRequestGenerator_forValidImageKey() {
-    String expectedUri = IMAGE_BASE_URI + validImageKey;
-    try {
-        DetectTextFromImage detectText = new DetectTextFromImage(validImageKey);
-        List<AnnotateImageRequest> actual_requests = detectText.shoppingImageRequestGenerator();
-        Assert.assertEquals(expectedUri, actual_requests.get(0).getImage().getSource().getImageUri());
-    } catch (PhotoShoppingException e) {
-        Assert.fail("Not expected: \nThrew PhotoShoppingException for Invalid Key");
-    }
+  public void shoppingImageRequestGenerator_forValidImageKey() throws Exception {
+    // This key is copied from Cloud Datastore. Make sure it exists there before running the tests.
+    String validImageKey =
+        "AMIfv943BzZrlhyLIN_el9l15Zz2LUp4H3bRNwHj2yvPaDNuv0uZjsp8vSySw0u5pEp-sspSVv4U5fkCT6SY1vbTeObItcslXvPswVieK3rInnCc0nBkTDlfIgWqxlvYjFVPS1QQqCjiY7NlRNSHA3gRXtsv6hrj7_J3_c_DaCP4jhpbZid2bkKvOA1XD0geHOXbCjKHf0ZIbEU4wKqQgGcCxT0X4Ddi4o6Nk8rhN7CNbN27GD-iBfrIG2RwNXr24xLLlFg8Bw9xCUxrbaXO6tkJNHndSghb0x4KAZ-IEPYKHfuWtLfXSmgMV_D1hHZdqShTaUZIyJu-";
+    String expectedUri = Constants.IMAGE_BASE_URI + validImageKey;
+    ImageSource shoppingImageSource = detectText.shoppingImageInitializer(validImageKey);
+    List<AnnotateImageRequest> actual_requests =
+        detectText.shoppingImageRequestGenerator(shoppingImageSource);
+    Assert.assertEquals(expectedUri, actual_requests.get(0).getImage().getSource().getImageUri());
   }
 
   /**
-   * **************************************************
-   * **** ToDo : Write tests for 
-   * cloudVisionResponseParser using FakeCloudVisionAPI
-   * **************************************************
+   * ***************************************************
+   * **** ToDo : Write tests for
+   * parseAnnotateImageResponse using FakeCloudVisionAPI
+   * ***************************************************
    */
 
   /**
@@ -111,40 +90,45 @@ public final class DetectTextFromImageTest {
    * **** TESTS FOR createShoppingListQuery
    * **************************************
    */
-  // Negative test with Null list string
-  @Test
-  public void createShoppingListQuery_forNullList() {
-    Assertions.assertThrows(
-        PhotoShoppingException.class,
-        () -> {
-            DetectTextFromImage detectText = new DetectTextFromImage(validImageKey);
-            detectText.createShoppingListQuery(nullShoppingList);
-        });
-  }
+  //   // Negative test with Null list string
+  //   @Test
+  //   public void createShoppingListQuery_forNullList() {
+  //     List<String> nullShoppingList = new ArrayList<>();
+  //     Assertions.assertThrows(
+  //         PhotoShoppingException.class,
+  //         () -> {
+  //             detectText.createShoppingListQuery(nullShoppingList);
+  //         });
+  //   }
 
-  // Negative test with invalid list string
-  @Test
-  public void createShoppingListQuery_forInvalidList() {
-    Assertions.assertThrows(
-        PhotoShoppingException.class,
-        () -> {
-            DetectTextFromImage detectText = new DetectTextFromImage(validImageKey);
-            detectText.createShoppingListQuery(invalidShoppingList);
-        });
-  }
+  //   // Negative test with invalid list string
+  //   @Test
+  //   public void createShoppingListQuery_forInvalidList() {
+  //     List<String> invalidShoppingList = new ArrayList<>();
+  //     invalidShoppingList.add("!%^&*+");
+  //     Assertions.assertThrows(
+  //         PhotoShoppingException.class,
+  //         () -> {
+  //             detectText.createShoppingListQuery(invalidShoppingList);
+  //         });
+  //   }
 
-  // Positive test with valid list string
-  @Test
-  public void createShoppingListQuery_forValidList() {
-    String actual = "";
-    try {
-        DetectTextFromImage detectText = new DetectTextFromImage(validImageKey);
-        actual = detectText.createShoppingListQuery(validShoppingList);
-    } catch (PhotoShoppingException e) {
-        Assert.fail(
-            "Not expected: \nThrew PhotoShoppingException in createShoppingListQuery_forValidList");
-    }
-    String expected = "Bag";
-    Assert.assertEquals(expected, actual);
-  }
+  //   // Positive test with valid list string
+  //   @Test
+  //   public void createShoppingListQuery_forValidList() throws Exception{
+  //     List<String> validShoppingList = new ArrayList<>();
+  //     validShoppingList.add("Text:Bag ");
+  //     validShoppingList.add(
+  //         "Position : vertices { x: 151 y: 94 } vertices { x: 187 y: 94 } vertices { x: 187 y:
+  // 115 } vertices { x: 151 y: 115 }");
+  //     validShoppingList.add("Text:Bag");
+  //     validShoppingList.add(
+  //         "Position : vertices { x: 152 y: 94 } vertices { x: 187 y: 96 } vertices { x: 186 y:
+  // 114 } vertices { x: 151 y: 112 }");
+
+  //     String actual = "";
+  //     actual = detectText.createShoppingListQuery(validShoppingList);
+  //     String expected = "Bag";
+  //     Assert.assertEquals(expected, actual);
+  //   }
 }
