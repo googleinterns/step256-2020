@@ -57,17 +57,17 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
 
     // Send an error if the user did not upload a file.
     if (uploadedImageBlobKey == null) {
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Client must upload an image file.");
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing input image file.");
       return;
     }
 
     // Get the photo category (i.e. product, shopping-list or barcode) entered by the user.
-    if (request.getParameter("photo-category").isEmpty()) {
+    String photoCategory = request.getParameter("photo-category");
+    if (photoCategory.isEmpty()) {
       response.sendError(
-          HttpServletResponse.SC_BAD_REQUEST, "Client must select a photo category when submitting the form.");
+          HttpServletResponse.SC_BAD_REQUEST, "Missing photo category.");
       return;
     }
-    String photoCategory = request.getParameter("photo-category");
 
     // Get the image the user uploaded as bytes.
     byte[] uploadedImageBytes = getBlobBytes(uploadedImageBlobKey);
@@ -102,11 +102,7 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     String shoppingQueryJSON = gson.toJson(shoppingQuery); 
     String shoppingQuerierResultsJSON = gson.toJson(shoppingQuerierResults); 
     response.setContentType("application/json;");
-    response.getWriter().write("[");
-    response.getWriter().write(shoppingQueryJSON);
-    response.getWriter().write(",");
-    response.getWriter().write(shoppingQuerierResultsJSON);
-    response.getWriter().write("]");
+    response.getWriter().write("[" + shoppingQueryJSON + "," + shoppingQuerierResultsJSON + "]");
   }
 
   /** 
