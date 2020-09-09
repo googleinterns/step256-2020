@@ -37,4 +37,9 @@ class PhotoShoppingUtil {
     }
     return true;
   }
+
+  protected static boolean getImageFrombytes(String shoppingImageKey) {
+  `    // Convert bytes to an Image object.
+    ByteString byteString = ByteString.copyFrom(imageBytes);
+    Image img = Image.newBuilder().setContent(byteString).build();`
 }
