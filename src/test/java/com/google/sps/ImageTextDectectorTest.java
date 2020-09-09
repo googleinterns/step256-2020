@@ -24,15 +24,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Test for DetectTextFromImage class. */
+/** Test for ImageTextDectector class. */
 @RunWith(JUnit4.class)
-public final class DetectTextFromImageTest {
+public final class ImageTextDectectorTest {
 
-  private DetectTextFromImage detectText;
+  private ImageTextDectector detectText;
 
   @Before
   public void setUp() {
-    detectText = new DetectTextFromImage();
+    detectText = new ImageTextDectector();
   }
 
   /**

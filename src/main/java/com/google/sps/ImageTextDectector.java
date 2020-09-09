@@ -34,9 +34,9 @@ import java.util.List;
  * 3) This list of queries is returned to the Servlet from the
  * method 'imageToShoppingListExtractor'.
  */
-public class DetectTextFromImage {
+public class ImageTextDectector {
 
-  public DetectTextFromImage() {}
+  public ImageTextDectector() {}
 
   public String imageToShoppingListExtractor(String shoppingImageKey)
       throws IOException, PhotoShoppingException {
