@@ -18,6 +18,6 @@ package com.google.sps;
  * Interface used for Cloud Vision API related functionality.
  */
 public interface CloudVisionAPI {
-  protected BatchAnnotateImagesResponse querier(List<AnnotateImageRequest> requests)
+  protected BatchAnnotateImagesResponse detect(List<AnnotateImageRequest> requests)
       throws PhotoDetectionException;
 }
