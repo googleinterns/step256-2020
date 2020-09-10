@@ -34,13 +34,12 @@ import org.junit.runners.JUnit4;
 public final class ProductPhotoDetectorTest {
 
   private static final byte[] IMAGE_BYTES = "Fake image".getBytes();
-  private ProductPhotoDetector productPhotoDetector;
-  private FakeProductDetectionAPI fakeProductDetectionAPI;
+
+  private FakeProductDetectionAPIImpl fakeProductDetection;
 
   @Before
   public void setUp() {
-    productPhotoDetector = new ProductPhotoDetector();
-    fakeProductDetectionAPI = new FakeProductDetectionAPI();
+    fakeProductDetection = new FakeProductDetectionAPIImpl();
   }
 
   @Test
@@ -54,11 +53,12 @@ public final class ProductPhotoDetectorTest {
     colors.add("Black");
 
     ProductDetectionData productDetectionData = new ProductDetectionData(labels, logos, colors);
-    fakeProductDetectionAPI.setReturnValue(productDetectionData);
+    fakeProductDetection.setReturnValue(productDetectionData);
+    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
 
     String expectedShoppingQuery = "Black Nike Shoe";
     String actualShoppingQuery = 
-        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES, fakeProductDetectionAPI);
+        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
 
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
@@ -67,10 +67,11 @@ public final class ProductPhotoDetectorTest {
   public void emptyDetectionData() throws Exception {
     ProductDetectionData productDetectionData = 
         new ProductDetectionData(new ArrayList(), new ArrayList(), new ArrayList());
-    fakeProductDetectionAPI.setReturnValue(productDetectionData);
+    fakeProductDetection.setReturnValue(productDetectionData);
+    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
 
     Assertions.assertThrows(PhotoDetectionException.class, () -> {
-        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES, fakeProductDetectionAPI);
+        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
     });
   }
 
@@ -83,11 +84,12 @@ public final class ProductPhotoDetectorTest {
     colors.add("Black");
 
     ProductDetectionData productDetectionData = new ProductDetectionData(labels, new ArrayList(), colors);
-    fakeProductDetectionAPI.setReturnValue(productDetectionData);
+    fakeProductDetection.setReturnValue(productDetectionData);
+    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
 
     String expectedShoppingQuery = "Black Shoe";
     String actualShoppingQuery = 
-        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES, fakeProductDetectionAPI);
+        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
 
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
@@ -100,10 +102,11 @@ public final class ProductPhotoDetectorTest {
     colors.add("Black");
 
     ProductDetectionData productDetectionData = new ProductDetectionData(new ArrayList(), logos, colors);
-    fakeProductDetectionAPI.setReturnValue(productDetectionData);
+    fakeProductDetection.setReturnValue(productDetectionData);
+    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
 
     Assertions.assertThrows(PhotoDetectionException.class, () -> {
-        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES, fakeProductDetectionAPI);
+        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
     });
   }
 
@@ -116,22 +119,24 @@ public final class ProductPhotoDetectorTest {
     logos.add("Nike");
 
     ProductDetectionData productDetectionData = new ProductDetectionData(labels, logos, new ArrayList());
-    fakeProductDetectionAPI.setReturnValue(productDetectionData);
+    fakeProductDetection.setReturnValue(productDetectionData);
+    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
 
     String expectedShoppingQuery = "Nike Shoe";
     String actualShoppingQuery = 
-        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES, fakeProductDetectionAPI);
+        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
 
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
 
   @Test
   public void photoDetectionExceptionThrown() throws Exception {
-    fakeProductDetectionAPI.setException(new PhotoDetectionException("error"));
+    fakeProductDetection.setException(new PhotoDetectionException("error"));
+    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
 
     // The exception should be re-thrown.
     Assertions.assertThrows(PhotoDetectionException.class, () -> {
-        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES, fakeProductDetectionAPI);
+        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
     });
   }
 
