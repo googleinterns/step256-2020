@@ -29,8 +29,8 @@ public class FakeProductDetectionAPIImpl implements ProductDetectionAPI {
   }
 
   /** Sets exception to be thrown. */
-  public void setException(PhotoDetectionException e) {
-    this.photoDetectionException = e;
+  public void setException(PhotoDetectionException photoDetectionException) {
+    this.photoDetectionException = photoDetectionException;
   }
 
   public ProductDetectionData detectProductPhotoContent(byte[] imageBytes) 

@@ -44,7 +44,6 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
 
   public ProductDetectionData detectProductPhotoContent(byte[] imageBytes) 
       throws PhotoDetectionException {
-
     // Build Image object by converting bytes array.
     ByteString byteString = ByteString.copyFrom(imageBytes);
     Image image = Image.newBuilder().setContent(byteString).build();
@@ -123,7 +122,6 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     for (EntityAnnotation annotation : res.getLogoAnnotationsList()) {
       logos.add(annotation.getDescription());
     }
-
     return logos;
   }
 
@@ -133,11 +131,12 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     DominantColorsAnnotation colors = res.getImagePropertiesAnnotation().getDominantColors();
     for (ColorInfo color : colors.getColorsList()) {
       ColorUtils colorUtils = new ColorUtils();
-      String mainColorName = colorUtils.getColorNameFromRGB((int)color.getColor().getRed(),
+      String colorName = colorUtils.getColorNameFromRGB((int)color.getColor().getRed(),
           (int)color.getColor().getGreen(),
           (int)color.getColor().getBlue());
-      if (mainColorName != ColorUtils.NO_MATCHED_COLOR_MESSAGE) {
-        colorNames.add(mainColorName);
+      
+      if (colorName != ColorUtils.NO_MATCHED_COLOR_MESSAGE) {
+        colorNames.add(colorName);
       }
     }
     return colorNames;
