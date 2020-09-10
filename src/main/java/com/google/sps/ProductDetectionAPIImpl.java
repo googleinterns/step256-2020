@@ -24,7 +24,6 @@ import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
-import com.google.cloud.vision.v1.ImageSource;
 
 import com.google.protobuf.ByteString;
 
@@ -51,6 +50,8 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     // Build the image annotation request.
     // {@code requestBuilder} holds the image and the features to detect from it.
     Builder requestBuilder = AnnotateImageRequest.newBuilder();
+    
+    requestBuilder.setImage(image);
 
     Feature labelDetectionFeature = 
         Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
@@ -63,8 +64,6 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     Feature imagePropertiesDetectionFeature =
         Feature.newBuilder().setType(Feature.Type.IMAGE_PROPERTIES).setMaxResults(5).build();
     requestBuilder.addFeatures(imagePropertiesDetectionFeature);
-
-    requestBuilder.setImage(image);
 
     List<AnnotateImageRequest> requests = new ArrayList<>();
     requests.add(requestBuilder.build());

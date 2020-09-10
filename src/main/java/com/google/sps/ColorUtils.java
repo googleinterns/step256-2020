@@ -86,7 +86,11 @@ public class ColorUtils {
    * To find the closest color, gets the color list, and then computes the distance between 
    * the query color and every color in the color list, based on their RGB values.
    */
-  public String getColorNameFromRGB(int r, int g, int b) {
+  public String getColorNameFromRGB(int r, int g, int b) throws IllegalArgumentException {
+    if (!(0 < r && r < 255) || !(0 < g && g < 255) || !(0 < b && b < 255)) {
+      throw new IllegalArgumentException("RGB values outside [0, 255] range.");
+    } 
+
     ArrayList<ColorName> colorList = initColorList();
     
     // Get the color name of the color with minimum RGB distance to the query color.
@@ -110,12 +114,12 @@ public class ColorUtils {
   }
   
   /**
-   * Subclass representing a known color with a color name and an RGB value, and handling the 
+   * Inner class representing a known color with a color name and an RGB value, and handling the 
    * computation of the distance to a query color.
    */
   public class ColorName {
-    public int r, g, b;
-    public String name;
+    private int r, g, b;
+    private String name;
     
     public ColorName(String name, int r, int g, int b) {
       this.r = r;
@@ -124,9 +128,12 @@ public class ColorUtils {
       this.name = name;
     }
     
+    /** 
+     * Returns the distance between two RGB color values, based on the three-dimensional distance formula.
+     */
     public int computeRGBDistance(int queryR, int queryG, int queryB) {
-      return (int) (((queryR - r) * (queryR - r) + (queryG - g) * (queryG - g) + 
-          (queryB - b) * (queryB - b)) / 3);
+      return (int) (Math.sqrt((queryR - r) * (queryR - r) + (queryG - g) * (queryG - g) + 
+          (queryB - b) * (queryB - b)));
     }
     
     public String getName() {

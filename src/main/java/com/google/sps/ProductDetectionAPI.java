@@ -17,7 +17,8 @@ package com.google.sps;
 import com.google.sps.data.ProductDetectionData;
 
 /**
- * Interface for ProductDetectionAPIImpl, respective FakeProductDetectionAPI, used for testing.
+ * Interface for ProductDetectionAPIImpl, used in production, respective FakeProductDetectionAPI, 
+ * used in testing.
  */
 public interface ProductDetectionAPI {
   public ProductDetectionData detectProductPhotoContent(byte[] imageBytes) throws PhotoDetectionException;
