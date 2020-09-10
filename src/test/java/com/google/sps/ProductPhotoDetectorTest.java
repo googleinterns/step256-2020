@@ -35,7 +35,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class ProductPhotoDetectorTest {
 
-  private static final byte[] IMAGE_BYTES = "Fake image".getBytes();
+  private static final byte[] IMAGE_BYTES = new byte[1];
 
   private FakeProductDetectionAPIImpl fakeProductDetection;
 
