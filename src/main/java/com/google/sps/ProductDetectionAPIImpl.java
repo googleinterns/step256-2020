@@ -38,13 +38,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Uses Cloud Vision API to detect product photo content.
  */
 public class ProductDetectionAPIImpl implements ProductDetectionAPI {
 
   public ProductDetectionData detectProductPhotoContent(byte[] imageBytes) 
       throws PhotoDetectionException {
-
     // Build Image object by converting bytes array.
     ByteString byteString = ByteString.copyFrom(imageBytes);
     Image image = Image.newBuilder().setContent(byteString).build();
@@ -112,7 +111,6 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     List<String> labels = new ArrayList(); 
         
     for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-      System.out.println(annotation.getDescription());
       labels.add(annotation.getDescription());
     }
     return labels;
@@ -122,10 +120,8 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     List<String> logos = new ArrayList(); 
 
     for (EntityAnnotation annotation : res.getLogoAnnotationsList()) {
-      System.out.println(annotation.getDescription());
       logos.add(annotation.getDescription());
     }
-
     return logos;
   }
 
@@ -134,19 +130,14 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     
     DominantColorsAnnotation colors = res.getImagePropertiesAnnotation().getDominantColors();
     for (ColorInfo color : colors.getColorsList()) {
-      System.out.format(
-          "fraction: %f%nr: %f, g: %f, b: %f%n",
-          color.getPixelFraction(),
-          color.getColor().getRed(),
-          color.getColor().getGreen(),
-          color.getColor().getBlue());
-      
       ColorUtils colorUtils = new ColorUtils();
-      String mainColorName = colorUtils.getColorNameFromRgb((int)color.getColor().getRed(),
+      String colorName = colorUtils.getColorNameFromRGB((int)color.getColor().getRed(),
           (int)color.getColor().getGreen(),
           (int)color.getColor().getBlue());
-      System.out.println(mainColorName);
-      colorNames.add(mainColorName);
+      
+      if (colorName != ColorUtils.NO_MATCHED_COLOR_MESSAGE) {
+        colorNames.add(colorName);
+      }
     }
     return colorNames;
   }

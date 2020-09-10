@@ -17,9 +17,9 @@ package com.google.sps;
 import com.google.sps.data.ProductDetectionData;
 
 /**
- * Mocks ProductDetectionAPIImpl.
+ * Mocks ProductDetectionAPIImpl by setting return values and exceptions.
  */
-public class FakeProductDetectionAPI implements ProductDetectionAPI {
+public class FakeProductDetectionAPIImpl implements ProductDetectionAPI {
   private ProductDetectionData productDetectionData;
   private PhotoDetectionException photoDetectionException;
 
@@ -29,8 +29,8 @@ public class FakeProductDetectionAPI implements ProductDetectionAPI {
   }
 
   /** Sets exception to be thrown. */
-  public void setException(PhotoDetectionException e) {
-    this.photoDetectionException = e;
+  public void setException(PhotoDetectionException photoDetectionException) {
+    this.photoDetectionException = photoDetectionException;
   }
 
   public ProductDetectionData detectProductPhotoContent(byte[] imageBytes) 
