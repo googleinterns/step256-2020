@@ -81,7 +81,7 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     String shoppingQuery;
     try {
       shoppingQuery = getQuery(request.getParameter("photo-category"), uploadedImageBytes);
-    } catch(IllegalArgumentException | PhotoDetectionException exception) {
+    } catch (IllegalArgumentException | PhotoDetectionException exception) {
       response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
       return;
     }
@@ -124,7 +124,7 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         String shoppingQuery;
         try {
           shoppingQuery = productPhotoDetector.buildShoppingQuery(uploadedImageBytes, productDetectionAPI);
-        } catch(PhotoDetectionException exception) {
+        } catch (PhotoDetectionException exception) {
           throw exception;
         }
         return shoppingQuery;

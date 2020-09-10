@@ -133,10 +133,12 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     DominantColorsAnnotation colors = res.getImagePropertiesAnnotation().getDominantColors();
     for (ColorInfo color : colors.getColorsList()) {
       ColorUtils colorUtils = new ColorUtils();
-      String mainColorName = colorUtils.getColorNameFromRgb((int)color.getColor().getRed(),
+      String mainColorName = colorUtils.getColorNameFromRGB((int)color.getColor().getRed(),
           (int)color.getColor().getGreen(),
           (int)color.getColor().getBlue());
-      colorNames.add(mainColorName);
+      if (mainColorName != "No matched color name.") {
+        colorNames.add(mainColorName);
+      }
     }
     return colorNames;
   }
