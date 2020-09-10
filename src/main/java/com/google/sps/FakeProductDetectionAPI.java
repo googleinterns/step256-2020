@@ -17,7 +17,7 @@ package com.google.sps;
 import com.google.sps.data.ProductDetectionData;
 
 /**
- * Mocks ProductDetectionAPIImpl.
+ * Mocks ProductDetectionAPIImpl by setting return values and exceptions.
  */
 public class FakeProductDetectionAPI implements ProductDetectionAPI {
   private ProductDetectionData productDetectionData;

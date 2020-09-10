@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Uses Cloud Vision API to detect product photo content.
  */
 public class ProductDetectionAPIImpl implements ProductDetectionAPI {
 

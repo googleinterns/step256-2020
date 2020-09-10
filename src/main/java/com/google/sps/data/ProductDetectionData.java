@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Contains detection results for a product image.
  */
 public class ProductDetectionData {
   private List<String> labels;
@@ -26,7 +26,6 @@ public class ProductDetectionData {
   private List<String> colors;
 
   public ProductDetectionData(List<String> labels, List<String> logos, List<String> colors) {
-    // shallow copy
     this.labels = new ArrayList<String>(labels);
     this.logos = new ArrayList<String>(logos);
     this.colors = new ArrayList<String>(colors);
