@@ -20,7 +20,13 @@ import com.google.sps.data.ProductDetectionData;
  * Builds query to search on Google Shopping, using the data from the image detection. 
  */
 public class ProductPhotoDetector {
-  public String buildShoppingQuery(byte[] imageBytes, ProductDetectionAPI productDetectionAPI) 
+  ProductDetectionAPI productDetectionAPI;
+
+  public ProductPhotoDetector(ProductDetectionAPI productDetectionAPI) {
+    this.productDetectionAPI = productDetectionAPI;
+  }
+
+  public String buildShoppingQuery(byte[] imageBytes) 
       throws PhotoDetectionException {
 
     ProductDetectionData results = productDetectionAPI.detectProductPhotoContent(imageBytes);

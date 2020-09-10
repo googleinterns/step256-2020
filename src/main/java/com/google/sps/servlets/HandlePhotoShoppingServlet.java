@@ -118,12 +118,12 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
       throws IllegalArgumentException, PhotoDetectionException {
     switch (photoCategory) {
       case "product":
-        ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector();
         ProductDetectionAPI productDetectionAPI = new ProductDetectionAPIImpl();
+        ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(productDetectionAPI);
 
         String shoppingQuery;
         try {
-          shoppingQuery = productPhotoDetector.buildShoppingQuery(uploadedImageBytes, productDetectionAPI);
+          shoppingQuery = productPhotoDetector.buildShoppingQuery(uploadedImageBytes);
         } catch (PhotoDetectionException exception) {
           throw exception;
         }
