@@ -22,6 +22,10 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
 import com.google.gson.Gson;
 
+import com.google.sps.ProductDetectionAPI;
+import com.google.sps.ProductDetectionAPIImpl;
+import com.google.sps.PhotoDetectionException;
+import com.google.sps.ProductPhotoDetector;
 import com.google.sps.GoogleShoppingQuerier;
 import com.google.sps.ShoppingQuerierConnectionException;
 import com.google.sps.data.Product;
@@ -77,10 +81,11 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     String shoppingQuery;
     try {
       shoppingQuery = getQuery(request.getParameter("photo-category"), uploadedImageBytes);
-    } catch(IllegalArgumentException exception) {
+    } catch(IllegalArgumentException | PhotoDetectionException exception) {
       response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
       return;
     }
+
     ShoppingQueryInput shoppingQueryInput = 
         new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(24).build();
 
@@ -109,10 +114,20 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
    * Returns the shopping query by calling methods from the photo content detection classes, 
    * based on the {@code photoCategory}, passing {@code uploadedImageBytes} as argument.
    */
-  private String getQuery(String photoCategory, byte[] uploadedImageBytes) throws IllegalArgumentException {
+  private String getQuery(String photoCategory, byte[] uploadedImageBytes)
+      throws IllegalArgumentException, PhotoDetectionException {
     switch (photoCategory) {
       case "product":
-        return "Fountain pen";
+        ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector();
+        ProductDetectionAPI productDetectionAPI = new ProductDetectionAPIImpl();
+
+        String shoppingQuery;
+        try {
+          shoppingQuery = productPhotoDetector.buildShoppingQuery(uploadedImageBytes, productDetectionAPI);
+        } catch(PhotoDetectionException exception) {
+          throw exception;
+        }
+        return shoppingQuery;
       case "shopping-list":
         return "Fuzzy socks";
       case "barcode":
