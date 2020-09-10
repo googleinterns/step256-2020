@@ -18,9 +18,6 @@ import com.google.cloud.vision.v1.Image;
 import com.google.protobuf.ByteString;
 
 class PhotoShoppingUtil {
-
-  private PhotoShoppingUtil() {}
-
   protected static String formatQuery(String query) {
     query =
         query
@@ -30,9 +27,9 @@ class PhotoShoppingUtil {
     return query;
   }
 
-  protected static Image getImageFrombytes(byte[] shoppingImageBytes) throws PhotoShoppingException{
-    if (shoppingImageBytes.length < 1) {
-        throw new PhotoShoppingException("Bytes array length less than 1.");
+  protected static Image getImageFromBytes(byte[] shoppingImageBytes) throws PhotoDetectionException{
+    if (shoppingImageBytes.length == 0) {
+        throw new PhotoDetectionException("Bytes array is empty.");
     }
     ByteString imageByteString = ByteString.copyFrom(shoppingImageBytes);
     Image shoppingImage = Image.newBuilder().setContent(imageByteString).build();

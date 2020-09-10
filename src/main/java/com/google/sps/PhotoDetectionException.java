@@ -15,12 +15,12 @@
 package com.google.sps;
 
 /** Custom exception class for DetectText class. */
-public class PhotoShoppingException extends Exception { 
-  public PhotoShoppingException(String errorMessage, Exception exception) {
+public class PhotoDetectionException extends Exception { 
+  public PhotoDetectionException(String errorMessage, Exception exception) {
     super(errorMessage, exception);
   }
 
-  public PhotoShoppingException(String errorMessage) {
+  public PhotoDetectionException(String errorMessage) {
       super(errorMessage);
   }
 }

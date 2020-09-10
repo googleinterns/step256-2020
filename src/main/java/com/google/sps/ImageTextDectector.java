@@ -38,27 +38,19 @@ public class ImageTextDectector {
   public ImageTextDectector() {}
 
   public String imageToShoppingListExtractor(byte[] shoppingImageBytes)
-       throws IOException, PhotoShoppingException {
-    Image shoppingImage = shoppingImageInitializer(shoppingImageBytes);
+       throws IOException, PhotoDetectionException {
+    Image shoppingImage = PhotoShoppingUtil.getImageFromBytes(shoppingImageBytes);
  
     List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImage);
  
-    BatchAnnotateImagesResponse response = cloudVisionAPIQuerier(requests);
+    BatchAnnotateImagesResponse response = cloudVisionQuerier(requests);
  
     List<EntityAnnotation> annotation = parseAnnotateImageResponse(response);
  
     return createShoppingListQuery(annotation);
   }
 
-
-  private Image shoppingImageInitializer(byte[] shoppingImageBytes)
-       throws PhotoShoppingException {
-    return PhotoShoppingUtil.getImageFrombytes(shoppingImageBytes);
-  }
-
-
   /** Generates the request query to be sent to CloudVisionAPI client. */
-  // Keeping it public so that it could be tested from the unit tests
   private List<AnnotateImageRequest> shoppingImageRequestGenerator(Image shoppingImage) {
     List<AnnotateImageRequest> requests = new ArrayList<>();
 
@@ -76,13 +68,13 @@ public class ImageTextDectector {
    * Sends request to cloudVisionAPI. The Cloud Vision API scans the image and returns back the
    * text, its position and properties as the response.
    */
-  private BatchAnnotateImagesResponse cloudVisionAPIQuerier(List<AnnotateImageRequest> requests)
-      throws PhotoShoppingException {
+  private BatchAnnotateImagesResponse cloudVisionQuerier(List<AnnotateImageRequest> requests)
+      throws PhotoDetectionException {
     ImageAnnotatorClient cloudVisionClient;
     try {
       cloudVisionClient = ImageAnnotatorClient.create();
     } catch (IOException exception) {
-      throw new PhotoShoppingException(
+      throw new PhotoDetectionException(
           "Failed to create cloudVisionClient\n" + exception.getMessage(), exception);
     }
     BatchAnnotateImagesResponse response = cloudVisionClient.batchAnnotateImages(requests);
@@ -96,13 +88,13 @@ public class ImageTextDectector {
    * individual queries from the shopping list.
    */
   private List<EntityAnnotation> parseAnnotateImageResponse(BatchAnnotateImagesResponse response)
-      throws PhotoShoppingException {
+      throws PhotoDetectionException {
     List<String> shoppingList = new ArrayList<>();
     List<AnnotateImageResponse> responses = response.getResponsesList();
     List<EntityAnnotation> annotation = new ArrayList<>();
     for (AnnotateImageResponse identifiedText : responses) {
       if (identifiedText.hasError()) {
-        throw new PhotoShoppingException(
+        throw new PhotoDetectionException(
             "An error occurred while identifying the text from the image\n"
                 + identifiedText.getError().getMessage());
       }
@@ -112,14 +104,12 @@ public class ImageTextDectector {
   }
 
   /** Creates query from the text detected by cloudVision API. */
-  // Keeping it public so that it could be tested from the unit tests
   private String createShoppingListQuery(List<EntityAnnotation> annotation)
-      throws PhotoShoppingException {
+      throws PhotoDetectionException {
     // ToDo: Make an algorithm to create query sentences by separating out text returned by
-    // cloudVisionAPI
-    // to group shoppping items based on their position (y axis).
+    // cloudVisionAPI; to group shoppping items based on their position (y axis).
     if (annotation.size() < 1) {
-      throw new PhotoShoppingException("Shopping List doesn't contain any text");
+      throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
     // split only first :. Ignore other : values.
     String queryItem = annotation.get(0).getDescription();
