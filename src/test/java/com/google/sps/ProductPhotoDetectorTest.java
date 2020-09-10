@@ -45,7 +45,8 @@ public final class ProductPhotoDetectorTest {
   }
 
   /** Sets product detection results and initializes ProductPhotoDetector instance. */
-  private ProductPhotoDetector initProductPhotoDetector(List<String> labels, List<String> logos, List<String> colors) {
+  private ProductPhotoDetector initProductPhotoDetector(List<String> labels, List<String> logos, 
+      List<String> colors) {
     ProductDetectionData productDetectionData = new ProductDetectionData(labels, logos, colors);
     fakeProductDetection.setReturnValue(productDetectionData);
 
@@ -56,8 +57,8 @@ public final class ProductPhotoDetectorTest {
   @Test
   public void completeDetectionData() throws Exception {
     List<String> labels = Collections.unmodifiableList(Arrays.asList("Shoe", "Sneaker"));
-    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike"));
-    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black"));
+    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike", "Brand"));
+    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black", "Grey"));
 
     ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
@@ -85,7 +86,7 @@ public final class ProductPhotoDetectorTest {
   public void emptyLogosList() throws Exception {
     List<String> labels = Collections.unmodifiableList(Arrays.asList("Shoe", "Sneaker"));
     List<String> logos = Collections.emptyList();  
-    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black"));
+    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black", "Grey"));
 
     ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
@@ -99,8 +100,8 @@ public final class ProductPhotoDetectorTest {
   @Test
   public void emptyLabelsList() throws Exception {
     List<String> labels = Collections.emptyList();
-    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike"));
-    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black"));
+    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike", "Brand"));
+    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black", "Grey"));
 
     ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
@@ -112,7 +113,7 @@ public final class ProductPhotoDetectorTest {
   @Test
   public void emptyColorsList() throws Exception {
     List<String> labels = Collections.unmodifiableList(Arrays.asList("Shoe", "Sneaker"));
-    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike"));
+    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike", "Brand"));
     List<String> colors = Collections.emptyList();
 
     ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
@@ -126,7 +127,7 @@ public final class ProductPhotoDetectorTest {
 
   @Test
   public void photoDetectionExceptionThrown() throws Exception {
-    fakeProductDetection.setException(new PhotoDetectionException("error"));
+    fakeProductDetection.setException(new PhotoDetectionException("Fake error."));
     ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
 
     // The exception should be re-thrown.
