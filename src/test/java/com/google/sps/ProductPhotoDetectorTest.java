@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /** 
- * Tests the behaviour of ProductPhotoDetector, namely the shopping query returned or the 
+ * Tests the behaviour of ProductPhotoDetector, namely the shopping query returned and the 
  * exceptions thrown.
  */
 @RunWith(JUnit4.class)
@@ -57,7 +57,6 @@ public final class ProductPhotoDetectorTest {
     fakeProductDetectionAPI.setReturnValue(productDetectionData);
 
     String expectedShoppingQuery = "Black Nike Shoe";
-
     String actualShoppingQuery = 
         productPhotoDetector.buildShoppingQuery(IMAGE_BYTES, fakeProductDetectionAPI);
 
@@ -87,7 +86,6 @@ public final class ProductPhotoDetectorTest {
     fakeProductDetectionAPI.setReturnValue(productDetectionData);
 
     String expectedShoppingQuery = "Black Shoe";
-
     String actualShoppingQuery = 
         productPhotoDetector.buildShoppingQuery(IMAGE_BYTES, fakeProductDetectionAPI);
 
@@ -100,8 +98,8 @@ public final class ProductPhotoDetectorTest {
     logos.add("Nike");
     List<String> colors = new ArrayList();
     colors.add("Black");
-    ProductDetectionData productDetectionData = 
-        new ProductDetectionData(new ArrayList(), logos, colors);
+
+    ProductDetectionData productDetectionData = new ProductDetectionData(new ArrayList(), logos, colors);
     fakeProductDetectionAPI.setReturnValue(productDetectionData);
 
     Assertions.assertThrows(PhotoDetectionException.class, () -> {
@@ -121,7 +119,6 @@ public final class ProductPhotoDetectorTest {
     fakeProductDetectionAPI.setReturnValue(productDetectionData);
 
     String expectedShoppingQuery = "Nike Shoe";
-
     String actualShoppingQuery = 
         productPhotoDetector.buildShoppingQuery(IMAGE_BYTES, fakeProductDetectionAPI);
 
