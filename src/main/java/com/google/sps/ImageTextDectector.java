@@ -20,7 +20,6 @@ import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
 import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
-import com.google.cloud.vision.v1.ImageSource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +37,8 @@ public class ImageTextDectector {
 
   public ImageTextDectector() {}
 
- public String imageToShoppingListExtractor(byte[] shoppingImageBytes)
-      throws IOException, PhotoShoppingException {
+  public String imageToShoppingListExtractor(byte[] shoppingImageBytes)
+       throws IOException, PhotoShoppingException {
     Image shoppingImage = shoppingImageInitializer(shoppingImageBytes);
  
     List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImage);
@@ -52,15 +51,15 @@ public class ImageTextDectector {
   }
 
 
- public Image shoppingImageInitializer(byte[] shoppingImageBytes)
-      throws PhotoShoppingException {
+  private Image shoppingImageInitializer(byte[] shoppingImageBytes)
+       throws PhotoShoppingException {
     return PhotoShoppingUtil.getImageFrombytes(shoppingImageBytes);
   }
 
 
   /** Generates the request query to be sent to CloudVisionAPI client. */
   // Keeping it public so that it could be tested from the unit tests
-  public List<AnnotateImageRequest> shoppingImageRequestGenerator(Image shoppingImage) {
+  private List<AnnotateImageRequest> shoppingImageRequestGenerator(Image shoppingImage) {
     List<AnnotateImageRequest> requests = new ArrayList<>();
 
     AnnotateImageRequest request =
@@ -114,7 +113,7 @@ public class ImageTextDectector {
 
   /** Creates query from the text detected by cloudVision API. */
   // Keeping it public so that it could be tested from the unit tests
-  public String createShoppingListQuery(List<EntityAnnotation> annotation)
+  private String createShoppingListQuery(List<EntityAnnotation> annotation)
       throws PhotoShoppingException {
     // ToDo: Make an algorithm to create query sentences by separating out text returned by
     // cloudVisionAPI
