@@ -117,7 +117,17 @@ public class ImageTextDectector {
     String sentence = "";
     List<String> shoppingQueries = new ArrayList<>();
     for(EntityAnnotation annotation : annotations) {
-
+         if(yAxisRef == 0) {
+           yAxisRef = annotation.getBoundingPoly().getVertices(0).getY();
+        }
+        if(checkForSameLineWord(annotation.getBoundingPoly().getVertices(0).getY(), yAxisRef)) {
+            sentence += annotation.getDescription() + " ";
+        } else {
+            sentence = PhotoShoppingUtil.formatQuery(sentence);
+            shoppingQueries.add(sentence);
+            yAxisRef = 0;
+            sentence = annotation.getDescription() + " ";
+        }
     }
     return shoppingQueries;
   }
