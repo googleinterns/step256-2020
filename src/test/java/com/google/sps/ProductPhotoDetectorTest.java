@@ -17,6 +17,8 @@ package com.google.sps;
 import com.google.sps.data.ProductDetectionData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -42,19 +44,22 @@ public final class ProductPhotoDetectorTest {
     fakeProductDetection = new FakeProductDetectionAPIImpl();
   }
 
-  @Test
-  public void completeDetectionData() throws Exception {
-    List<String> labels = new ArrayList();
-    labels.add("Shoe");
-    labels.add("Sneaker");
-    List<String> logos = new ArrayList();
-    logos.add("Nike");
-    List<String> colors = new ArrayList();
-    colors.add("Black");
-
+  /** Sets product detection results and initializes ProductPhotoDetector instance. */
+  private ProductPhotoDetector initProductPhotoDetector(List<String> labels, List<String> logos, List<String> colors) {
     ProductDetectionData productDetectionData = new ProductDetectionData(labels, logos, colors);
     fakeProductDetection.setReturnValue(productDetectionData);
+
     ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
+    return productPhotoDetector;
+  }
+
+  @Test
+  public void completeDetectionData() throws Exception {
+    List<String> labels = Collections.unmodifiableList(Arrays.asList("Shoe", "Sneaker"));
+    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike"));
+    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black"));
+
+    ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
     String expectedShoppingQuery = "Black Nike Shoe";
     String actualShoppingQuery = 
@@ -65,10 +70,11 @@ public final class ProductPhotoDetectorTest {
 
   @Test
   public void emptyDetectionData() throws Exception {
-    ProductDetectionData productDetectionData = 
-        new ProductDetectionData(new ArrayList(), new ArrayList(), new ArrayList());
-    fakeProductDetection.setReturnValue(productDetectionData);
-    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
+    List<String> labels = Collections.emptyList();  
+    List<String> logos = Collections.emptyList();  
+    List<String> colors = Collections.emptyList();  
+
+    ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
     Assertions.assertThrows(PhotoDetectionException.class, () -> {
         productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
@@ -77,15 +83,11 @@ public final class ProductPhotoDetectorTest {
 
   @Test
   public void emptyLogosList() throws Exception {
-    List<String> labels = new ArrayList();
-    labels.add("Shoe");
-    labels.add("Sneaker");
-    List<String> colors = new ArrayList();
-    colors.add("Black");
+    List<String> labels = Collections.unmodifiableList(Arrays.asList("Shoe", "Sneaker"));
+    List<String> logos = Collections.emptyList();  
+    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black"));
 
-    ProductDetectionData productDetectionData = new ProductDetectionData(labels, new ArrayList(), colors);
-    fakeProductDetection.setReturnValue(productDetectionData);
-    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
+    ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
     String expectedShoppingQuery = "Black Shoe";
     String actualShoppingQuery = 
@@ -96,14 +98,11 @@ public final class ProductPhotoDetectorTest {
 
   @Test
   public void emptyLabelsList() throws Exception {
-    List<String> logos = new ArrayList();
-    logos.add("Nike");
-    List<String> colors = new ArrayList();
-    colors.add("Black");
+    List<String> labels = Collections.emptyList();
+    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike"));
+    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black"));
 
-    ProductDetectionData productDetectionData = new ProductDetectionData(new ArrayList(), logos, colors);
-    fakeProductDetection.setReturnValue(productDetectionData);
-    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
+    ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
     Assertions.assertThrows(PhotoDetectionException.class, () -> {
         productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
@@ -112,15 +111,11 @@ public final class ProductPhotoDetectorTest {
 
   @Test
   public void emptyColorsList() throws Exception {
-    List<String> labels = new ArrayList();
-    labels.add("Shoe");
-    labels.add("Sneaker");
-    List<String> logos = new ArrayList();
-    logos.add("Nike");
+    List<String> labels = Collections.unmodifiableList(Arrays.asList("Shoe", "Sneaker"));
+    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike"));
+    List<String> colors = Collections.emptyList();
 
-    ProductDetectionData productDetectionData = new ProductDetectionData(labels, logos, new ArrayList());
-    fakeProductDetection.setReturnValue(productDetectionData);
-    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
+    ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
     String expectedShoppingQuery = "Nike Shoe";
     String actualShoppingQuery = 
