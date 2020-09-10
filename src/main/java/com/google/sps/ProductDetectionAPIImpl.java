@@ -136,7 +136,7 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
       String mainColorName = colorUtils.getColorNameFromRGB((int)color.getColor().getRed(),
           (int)color.getColor().getGreen(),
           (int)color.getColor().getBlue());
-      if (mainColorName != "No matched color name.") {
+      if (mainColorName != ColorUtils.NO_MATCHED_COLOR_MESSAGE) {
         colorNames.add(mainColorName);
       }
     }

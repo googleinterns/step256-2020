@@ -21,6 +21,8 @@ import java.util.ArrayList;
  * Utility class for converting RGB color values to color name.
  */
 public class ColorUtils {
+  public static final String NO_MATCHED_COLOR_MESSAGE = "No matched color name.";
+
   /**
    * Compiles a list of known colors.
    */
@@ -103,7 +105,7 @@ public class ColorUtils {
     if (closestColorMatch != null) {
       return closestColorMatch.getName();
     } else {
-      return "No matched color name.";
+      return NO_MATCHED_COLOR_MESSAGE;
     }
   }
   
