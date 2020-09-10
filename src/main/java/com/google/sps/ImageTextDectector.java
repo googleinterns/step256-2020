@@ -43,7 +43,7 @@ public class ImageTextDectector {
  
     List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImage);
  
-    BatchAnnotateImagesResponse response = cloudVisionQuerier(requests);
+    BatchAnnotateImagesResponse response = detectTextFromImage(requests);
  
     List<EntityAnnotation> annotation = parseAnnotateImageResponse(response);
  
@@ -68,7 +68,7 @@ public class ImageTextDectector {
    * Sends request to cloudVisionAPI. The Cloud Vision API scans the image and returns back the
    * text, its position and properties as the response.
    */
-  private BatchAnnotateImagesResponse cloudVisionQuerier(List<AnnotateImageRequest> requests)
+  private BatchAnnotateImagesResponse detectTextFromImage(List<AnnotateImageRequest> requests)
       throws PhotoDetectionException {
     ImageAnnotatorClient cloudVisionClient;
     try {
