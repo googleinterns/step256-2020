@@ -22,4 +22,11 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class AlgorithmTest {
 
+  @Test
+  public void test_checkForSameLineWord() {
+      ImageTextDetector detector = new ImageTextDetector();
+      Boolean actual = detector.checkForSameLineWord(179, 180);
+      Boolean expected = true;
+      Assert.assertTrue(expected, actual);
+  }
 }
