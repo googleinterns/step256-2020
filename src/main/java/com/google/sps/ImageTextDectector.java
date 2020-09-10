@@ -131,4 +131,10 @@ public class ImageTextDectector {
     }
     return shoppingQueries;
   }
+  private boolean checkForSameLineWord(int lowerBoundary, int yAxisRef) {
+    if(yAxisRef-2 <= lowerBoundary && lowerBoundary <= yAxisRef+2) {
+        return true;
+    }
+    return false;
+  }
 }
