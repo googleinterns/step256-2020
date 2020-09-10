@@ -112,7 +112,6 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     List<String> labels = new ArrayList(); 
         
     for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-      System.out.println(annotation.getDescription());
       labels.add(annotation.getDescription());
     }
     return labels;
@@ -122,7 +121,6 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     List<String> logos = new ArrayList(); 
 
     for (EntityAnnotation annotation : res.getLogoAnnotationsList()) {
-      System.out.println(annotation.getDescription());
       logos.add(annotation.getDescription());
     }
 
@@ -134,18 +132,10 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     
     DominantColorsAnnotation colors = res.getImagePropertiesAnnotation().getDominantColors();
     for (ColorInfo color : colors.getColorsList()) {
-      System.out.format(
-          "fraction: %f%nr: %f, g: %f, b: %f%n",
-          color.getPixelFraction(),
-          color.getColor().getRed(),
-          color.getColor().getGreen(),
-          color.getColor().getBlue());
-      
       ColorUtils colorUtils = new ColorUtils();
       String mainColorName = colorUtils.getColorNameFromRgb((int)color.getColor().getRed(),
           (int)color.getColor().getGreen(),
           (int)color.getColor().getBlue());
-      System.out.println(mainColorName);
       colorNames.add(mainColorName);
     }
     return colorNames;
