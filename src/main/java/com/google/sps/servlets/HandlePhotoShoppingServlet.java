@@ -22,6 +22,8 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
 import com.google.gson.Gson;
 
+import com.google.sps.PhotoDetectionException;
+import com.google.sps.ImageTextDectector;
 import com.google.sps.GoogleShoppingQuerier;
 import com.google.sps.ShoppingQuerierConnectionException;
 import com.google.sps.data.Product;
