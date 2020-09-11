@@ -124,6 +124,8 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
           shoppingQuery = imageTextDectector.imageToShoppingListExtractor(uploadedImageBytes);
         } catch (PhotoDetectionException exception) {
           throw exception;
+        } catch (IOException e) {
+            throw new PhotoDetectionException("Error while getting shopping query.", e);
         }
         return shoppingQuery;
       case "barcode":
