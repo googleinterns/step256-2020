@@ -20,14 +20,14 @@ import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
 import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
-import com.google.sps.data.ShoppingListText;
+import com.google.sps.data.ShoppingListTextEntry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TextDetectionAPIImpl implements TextDetectionAPI {
-  public ShoppingListText detect(byte[] imageBytes) throws PhotoDetectionException {
-    Image shoppingImage = PhotoShoppingUtil.getImageFromBytes(shoppingImageBytes);
+  public List<ShoppingListTextEntry> detect(byte[] imageBytes) throws PhotoDetectionException {
+    Image shoppingImage = PhotoShoppingUtil.getImageFromBytes(imageBytes);
     
     List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImage);
 
@@ -73,15 +73,19 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
    * ToDo : The positions from annotation will be used in sentence formation algorithm to separate
    * individual queries from the shopping list.
    */
-  private List<ShoppingListText> parseAnnotateImageResponse(BatchAnnotateImagesResponse response)
+  private List<ShoppingListTextEntry> parseAnnotateImageResponse(BatchAnnotateImagesResponse response)
       throws PhotoDetectionException {
     List<AnnotateImageResponse> responses = response.getResponsesList();
+    List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
     for (AnnotateImageResponse identifiedText : responses) {
       if (identifiedText.hasError()) {
         throw new PhotoDetectionException(
             "An error occurred while identifying the text from the image\n"
                 + identifiedText.getError().getMessage());
       }
+      for (EntityAnnotation annotation : identifiedText.getTextAnnotationsList()) {
+          shoppingListText.add(ShoppingListTextEntry.create(annotation.getDescription(), annotation.getBoundingPoly().getVertices(0).getY()));
+        }
     }
     return shoppingListText;
   }

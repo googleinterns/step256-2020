@@ -20,7 +20,7 @@ import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
 import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
-import com.google.sps.data.ShoppingListText;
+import com.google.sps.data.ShoppingListTextEntry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,25 +36,29 @@ import java.util.List;
  */
 public class ImageTextDectector {
 
-  public ImageTextDectector() {}
+TextDetectionAPI textDetectionAPI;
+
+  public ImageTextDectector(TextDetectionAPI textDetectionAPI) {
+      this.textDetectionAPI = textDetectionAPI;
+  }
 
   public String imageToShoppingListExtractor(byte[] shoppingImageBytes)
        throws IOException, PhotoDetectionException {
 
-    List<EntityAnnotation> annotation = parseAnnotateImageResponse(response);
+    List<ShoppingListTextEntry> shoppingListText = textDetectionAPI.detect(shoppingImageBytes);
  
-    return createShoppingListQuery(annotation);
+    return createShoppingListQuery(shoppingListText);
   }
 
   /** Creates query from the text detected by cloudVision API. */
-  private String createShoppingListQuery(List<EntityAnnotation> annotation)
+  private String createShoppingListQuery(List<ShoppingListTextEntry> shoppingListText)
       throws PhotoDetectionException {
     // ToDo: Make an algorithm to create query sentences by separating out text returned by
     // cloudVisionAPI; to group shoppping items based on their position (y axis).
-    if (annotation.size() < 1) {
+    if (shoppingListText.size() < 1) {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
-    String queryItem = annotation.get(0).getDescription();
+    String queryItem = shoppingListText.get(0).getText();
     return PhotoShoppingUtil.formatQuery(queryItem);
   }
 }

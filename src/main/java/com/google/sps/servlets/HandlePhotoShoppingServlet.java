@@ -26,6 +26,7 @@ import com.google.sps.GoogleShoppingQuerier;
 import com.google.sps.ImageTextDectector;
 import com.google.sps.PhotoDetectionException;
 import com.google.sps.ShoppingQuerierConnectionException;
+import com.google.sps.TextDetectionAPIImpl;
 import com.google.sps.data.Product;
 import com.google.sps.data.ShoppingQueryInput;
 
@@ -118,7 +119,8 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
       case "product":
         return "Fountain pen";
       case "shopping-list":
-        ImageTextDectector imageTextDectector = new ImageTextDectector();
+        TextDetectionAPIImpl textDetectionAPI = new TextDetectionAPIImpl();
+        ImageTextDectector imageTextDectector = new ImageTextDectector(textDetectionAPI);
         String shoppingQuery;
         try {
           shoppingQuery = imageTextDectector.imageToShoppingListExtractor(uploadedImageBytes);
