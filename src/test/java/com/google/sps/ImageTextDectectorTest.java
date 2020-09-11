@@ -18,15 +18,16 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import com.google.sps.ImageTextDectector;
 
 @RunWith(JUnit4.class)
-public final class AlgorithmTest {
+public final class ImageTextDectectorTest {
 
   @Test
   public void test_checkForSameLineWord() {
-      ImageTextDetector detector = new ImageTextDetector();
+      ImageTextDectector detector = new ImageTextDectector();
       Boolean actual = detector.checkForSameLineWord(179, 180);
       Boolean expected = true;
-      Assert.assertTrue(expected, actual);
+      Assert.assertTrue(expected == actual);
   }
 }
