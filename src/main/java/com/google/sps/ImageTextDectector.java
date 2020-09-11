@@ -39,18 +39,11 @@ public class ImageTextDectector {
 
   public String imageToShoppingListExtractor(byte[] shoppingImageBytes)
        throws IOException, PhotoDetectionException {
- 
-  
+
     List<EntityAnnotation> annotation = parseAnnotateImageResponse(response);
  
     return createShoppingListQuery(annotation);
   }
-
-
-
-  
-
- 
 
   /** Creates query from the text detected by cloudVision API. */
   private String createShoppingListQuery(List<EntityAnnotation> annotation)
