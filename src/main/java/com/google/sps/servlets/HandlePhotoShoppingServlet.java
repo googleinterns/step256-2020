@@ -113,7 +113,7 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
    * based on the {@code photoCategory}, passing {@code uploadedImageBytes} as argument.
    */
   private String getQuery(String photoCategory, byte[] uploadedImageBytes)
-      throws IOException, PhotoDetectionException {    
+      throws IllegalArgumentException, IOException, PhotoDetectionException {    
     switch (photoCategory) {
       case "product":
         return "Fountain pen";
