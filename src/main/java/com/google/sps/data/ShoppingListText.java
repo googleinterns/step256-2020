@@ -12,12 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps;
+package com.google.sps.data;
 
-/**
- * Interface used for Cloud Vision API related functionality.
+import com.google.auto.value.AutoValue;
+
+/** 
+ * Class containing Google Shopping list's words and their y-axis position.
  */
-public interface CloudVisionAPI {
-  protected BatchAnnotateImagesResponse querier(List<AnnotateImageRequest> requests)
-      throws PhotoDetectionException;
+@AutoValue
+public abstract class ShoppingListText {
+
+  public static ShoppingListText create(String text, int lowerBoundary) {
+    return new AutoValue_ShoppingListText(text, lowerBoundary);
+  }
+
+  public abstract String getText();
+  public abstract int getLowerBoundary();
 }
