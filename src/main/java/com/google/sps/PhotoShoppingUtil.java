@@ -17,8 +17,8 @@ package com.google.sps;
 import com.google.cloud.vision.v1.Image;
 import com.google.protobuf.ByteString;
 
-class PhotoShoppingUtil {
-  protected static String formatQuery(String query) {
+public class PhotoShoppingUtil {
+  public static String formatQuery(String query) {
     query =
         query
             .replaceAll("\\s+", " ") // Remove duplicate spaces
@@ -27,9 +27,9 @@ class PhotoShoppingUtil {
     return query;
   }
 
-  protected static Image getImageFromBytes(byte[] shoppingImageBytes) throws PhotoDetectionException{
+  public static Image getImageFromBytes(byte[] shoppingImageBytes) throws PhotoDetectionException{
     if (shoppingImageBytes.length == 0) {
-        throw new PhotoDetectionException("Bytes array is empty.");
+      throw new PhotoDetectionException("Bytes array is empty.");
     }
     ByteString imageByteString = ByteString.copyFrom(shoppingImageBytes);
     Image shoppingImage = Image.newBuilder().setContent(imageByteString).build();

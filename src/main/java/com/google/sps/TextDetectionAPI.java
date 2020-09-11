@@ -12,21 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.data;
+package com.google.sps;
 
-import com.google.auto.value.AutoValue;
-
+import com.google.sps.data.ShoppingListTextEntry;
 /**
- * Class containing information about an uploaded image.
+ * Interface used for Cloud Vision API related functionality.
  */
-@AutoValue
-public abstract class Image {
-
-  public static Image create(long id, String blobKey, long timestamp) {
-    return new AutoValue_Image(id, blobKey, timestamp);
-  }  
-  
-  public abstract long id();
-  public abstract String blobKey();
-  public abstract long timestamp();
+public interface TextDetectionAPI {
+  public ShoppingListTextEntry detect(byte[] imageBytes) throws PhotoDetectionException;
 }

@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps;
+package com.google.sps.data;
 
-/** Custom exception class for DetectText class. */
-public class PhotoDetectionException extends Exception { 
-  public PhotoDetectionException(String errorMessage, Exception exception) {
-      super(errorMessage, exception);
+import com.google.auto.value.AutoValue;
+
+/** 
+ * Class containing Google Shopping list's words and their y-axis position.
+ */
+@AutoValue
+public abstract class ShoppingListTextEntry {
+
+  public static ShoppingListTextEntry create(String text, int lowerBoundary) {
+    return new AutoValue_ShoppingListTextEntry(text, lowerBoundary);
   }
 
-  public PhotoDetectionException(String errorMessage) {
-      super(errorMessage);
-  }
+  public abstract String getText();
+  public abstract int getLowerBoundary();
 }

@@ -17,6 +17,6 @@ package com.google.sps;
 import com.google.cloud.vision.v1.Feature;
 
 public class Constants {
-  protected static final Feature TEXT_DETECTION_FEATURE =
+  public static final Feature TEXT_DETECTION_FEATURE =
       Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
 }

@@ -91,7 +91,6 @@ public class ImageTextDectector {
    */
   private List<EntityAnnotation> parseAnnotateImageResponse(BatchAnnotateImagesResponse response)
       throws PhotoDetectionException {
-    List<String> shoppingList = new ArrayList<>();
     List<AnnotateImageResponse> responses = response.getResponsesList();
     List<EntityAnnotation> annotations = new ArrayList<>();
     for (AnnotateImageResponse identifiedText : responses) {
