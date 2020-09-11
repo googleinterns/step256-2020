@@ -17,7 +17,7 @@ package com.google.sps;
 /** Custom exception class for DetectText class. */
 public class PhotoDetectionException extends Exception { 
   public PhotoDetectionException(String errorMessage, Exception exception) {
-    super(errorMessage, exception);
+      super(errorMessage, exception);
   }
 
   public PhotoDetectionException(String errorMessage) {

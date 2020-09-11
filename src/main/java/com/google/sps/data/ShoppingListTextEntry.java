@@ -20,10 +20,10 @@ import com.google.auto.value.AutoValue;
  * Class containing Google Shopping list's words and their y-axis position.
  */
 @AutoValue
-public abstract class ShoppingListText {
+public abstract class ShoppingListTextEntry {
 
-  public static ShoppingListText create(String text, int lowerBoundary) {
-    return new AutoValue_ShoppingListText(text, lowerBoundary);
+  public static ShoppingListTextEntry create(String text, int lowerBoundary) {
+    return new AutoValue_ShoppingListTextEntry(text, lowerBoundary);
   }
 
   public abstract String getText();

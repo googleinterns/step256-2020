@@ -14,10 +14,10 @@
 
 package com.google.sps;
 
-import com.google.sps.data.ShoppingListText;
+import com.google.sps.data.ShoppingListTextEntry;
 /**
  * Interface used for Cloud Vision API related functionality.
  */
 public interface TextDetectionAPI {
-  public ShoppingListText detect(byte[] imageBytes) throws PhotoDetectionException;
+  public ShoppingListTextEntry detect(byte[] imageBytes) throws PhotoDetectionException;
 }

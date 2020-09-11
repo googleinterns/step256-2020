@@ -54,7 +54,6 @@ public class ImageTextDectector {
     if (annotation.size() < 1) {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
-    // split only first :. Ignore other : values.
     String queryItem = annotation.get(0).getDescription();
     return PhotoShoppingUtil.formatQuery(queryItem);
   }
