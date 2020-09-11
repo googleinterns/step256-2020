@@ -77,10 +77,11 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     String shoppingQuery;
     try {
       shoppingQuery = getQuery(request.getParameter("photo-category"), uploadedImageBytes);
-    } catch(IllegalArgumentException exception) {
+    } catch(IllegalArgumentException | PhotoDetectionException exception) {
       response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
       return;
     }
+
     ShoppingQueryInput shoppingQueryInput = 
         new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(24).build();
 
@@ -109,12 +110,20 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
    * Returns the shopping query by calling methods from the photo content detection classes, 
    * based on the {@code photoCategory}, passing {@code uploadedImageBytes} as argument.
    */
-  private String getQuery(String photoCategory, byte[] uploadedImageBytes) throws IllegalArgumentException {
+  private String getQuery(String photoCategory, byte[] uploadedImageBytes)
+      throws IOException, PhotoDetectionException {    
     switch (photoCategory) {
       case "product":
         return "Fountain pen";
       case "shopping-list":
-        return "Fuzzy socks";
+        ImageTextDectector imageTextDectector = new ImageTextDectector();
+        String shoppingQuery;
+        try {
+          shoppingQuery = imageTextDectector.imageToShoppingListExtractor(uploadedImageBytes);
+        } catch (PhotoDetectionException | IOException exception) {
+          throw exception;
+        }
+        return shoppingQuery;
       case "barcode":
         return "Running shoes";
       default:
