@@ -29,7 +29,7 @@ public class PhotoShoppingUtil {
 
   public static Image getImageFromBytes(byte[] shoppingImageBytes) throws PhotoDetectionException{
     if (shoppingImageBytes.length == 0) {
-        throw new PhotoDetectionException("Bytes array is empty.");
+      throw new PhotoDetectionException("Bytes array is empty.");
     }
     ByteString imageByteString = ByteString.copyFrom(shoppingImageBytes);
     Image shoppingImage = Image.newBuilder().setContent(imageByteString).build();
