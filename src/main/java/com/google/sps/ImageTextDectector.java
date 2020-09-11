@@ -20,6 +20,7 @@ import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
 import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
+import com.google.sps.data.ShoppingListText;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

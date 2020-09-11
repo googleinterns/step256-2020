@@ -14,10 +14,26 @@
 
 package com.google.sps;
 
-protected class TextDetectionAPIImpl implements TextDetectionAPI {
-  protected ShoppingListText detect(byte[] imageBytes) throws PhotoDetectionException {
-    Image shoppingImage = PhotoShoppingUtil.getImageFromBytes(shoppingImageBytes);
+import com.google.cloud.vision.v1.AnnotateImageRequest;
+import com.google.cloud.vision.v1.AnnotateImageResponse;
+import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
+import com.google.cloud.vision.v1.EntityAnnotation;
+import com.google.cloud.vision.v1.Image;
+import com.google.cloud.vision.v1.ImageAnnotatorClient;
+import com.google.sps.data.ShoppingListText;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+public class TextDetectionAPIImpl implements TextDetectionAPI {
+  public ShoppingListText detect(byte[] imageBytes) throws PhotoDetectionException {
+    Image shoppingImage = PhotoShoppingUtil.getImageFromBytes(shoppingImageBytes);
+    
+    List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImage);
+
+    BatchAnnotateImagesResponse response = detectTextFromImage(requests);
+
+    return parseAnnotateImageResponse(response);
   }
 
     /** Generates the request query to be sent to CloudVisionAPI client. */
@@ -53,23 +69,20 @@ protected class TextDetectionAPIImpl implements TextDetectionAPI {
   }
 
    /**
-   * Takes cloudVisionAPI's response and returns a list of annotations. ToDo : The
-   * positions from annotation will be used in sentence formation algorithm to separate
+   * Takes cloudVisionAPI's response and returns a list of text and their y-axis position.
+   * ToDo : The positions from annotation will be used in sentence formation algorithm to separate
    * individual queries from the shopping list.
    */
-  private List<EntityAnnotation> parseAnnotateImageResponse(BatchAnnotateImagesResponse response)
+  private List<ShoppingListText> parseAnnotateImageResponse(BatchAnnotateImagesResponse response)
       throws PhotoDetectionException {
-    List<String> shoppingList = new ArrayList<>();
     List<AnnotateImageResponse> responses = response.getResponsesList();
-    List<EntityAnnotation> annotation = new ArrayList<>();
     for (AnnotateImageResponse identifiedText : responses) {
       if (identifiedText.hasError()) {
         throw new PhotoDetectionException(
             "An error occurred while identifying the text from the image\n"
                 + identifiedText.getError().getMessage());
       }
-      annotation = identifiedText.getTextAnnotationsList();
     }
-    return annotation;
+    return shoppingListText;
   }
 }
