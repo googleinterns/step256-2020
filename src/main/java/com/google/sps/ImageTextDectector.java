@@ -89,7 +89,6 @@ public class ImageTextDectector {
    */
   private List<EntityAnnotation> parseAnnotateImageResponse(BatchAnnotateImagesResponse response)
       throws PhotoDetectionException {
-    List<String> shoppingList = new ArrayList<>();
     List<AnnotateImageResponse> responses = response.getResponsesList();
     List<EntityAnnotation> annotation = new ArrayList<>();
     for (AnnotateImageResponse identifiedText : responses) {
@@ -111,7 +110,6 @@ public class ImageTextDectector {
     if (annotation.size() < 1) {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
-    // split only first :. Ignore other : values.
     String queryItem = annotation.get(0).getDescription();
     return PhotoShoppingUtil.formatQuery(queryItem);
   }
