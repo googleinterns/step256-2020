@@ -22,7 +22,7 @@
   <link href="style.css" rel="stylesheet">
 </head>
 
-<body onload="fetchBlobstoreUrlAndShowForm();">
+<body>
   <header>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -75,34 +75,45 @@
         </div><!-- /.col-lg-4 -->
         
         <div class="col text-center">
-          <p><button class="btn btn-secondary" id="upload-photo" onclick="openFileUploadDialog()">Upload photo »</button></p>
+          <p><button class="btn btn-secondary" id="upload-photo-button">Upload photo »</button></p>
         </div>
 
-        <!-- UPLOAD DIV -->
+        <!-- Uplad Image Modal -->
         <div class="bg-model">
           <div class="model-content">
             <button class="close" onclick="closeFileUploadDialog()"> + </button>
-            <form id="upload-image-form" class="hidden" method="POST" enctype="multipart/form-data">
+            <form id="upload-image-form" class="hidden" action='#' onsubmit="return false" 
+                enctype="multipart/form-data">
               <h1>Upload image</h1>
-              <select id="image-options" name="photo-category" required>
+              <select id="photo-category" name="photo-category" required>
                 <option value="product">Product</option>
-                <option value="shopping-list">Shopping-List</option>
+                <option value="list">List</option>
                 <option value="barcode">Barcode</option>
               </select>
 
-              <input type="file" name="photo" required>
-              
-              <button>Submit</button>
+              <input type="file" name="photo" id="input-photo" required>
+
+              <button onclick="onSubmitUploadImageForm()">Search</button>
             </form>
           </div>
         </div>
 
       </div><!-- /.row -->
+    </div><!-- /.container -->
 
-      <p class="text-center">
-        <a href="shopping-results.html" class="btn btn-primary my-2">Get Results</a>
-      </p>
+    <!-- Prompt container to alert user that the results are loading -->
+    <div class="text-center" id="search-loading-prompt"></div>
 
+    <!-- Container to show the user the shopping query used to search on Google Shopping -->
+    <div class="text-center hidden" id="shopping-query-display-container">
+      Showing results for <strong><span id="shopping-query"></span></strong>.
+    </div>
+
+    <!-- Shopping results container -->
+    <div class="album py-5 px-5">
+      <div class="row mx-5" id="shopping-results-wrapper">
+      </div><!-- /.row -->
+    </div><!-- /.album -->
   </main>
 
   <!-- Sticky Footer -->
