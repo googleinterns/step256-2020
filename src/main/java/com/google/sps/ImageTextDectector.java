@@ -107,7 +107,7 @@ public class ImageTextDectector {
   /** Creates query from the text detected by cloudVision API. */
   private List<String> createShoppingListQuery(List<EntityAnnotation> annotations)
       throws PhotoDetectionException {
-    if (annotations.size() < 1) {
+    if (annotations.size() == 0) {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
     // Create query sentences by separating out text returned by
@@ -115,24 +115,46 @@ public class ImageTextDectector {
     int yAxisRef = 0;
     String sentence = "";
     List<String> shoppingQueries = new ArrayList<>();
-    for(EntityAnnotation annotation : annotations) {
-         if(yAxisRef == 0) {
-           yAxisRef = annotation.getBoundingPoly().getVertices(0).getY();
+System.out.println(annotations);
+    for(int i=1; i<annotations.size()-1; i++) {
+        EntityAnnotation annotation= annotations.get(i);
+System.out.println("Inside for: annotation: "+ annotations.get(i));
+        if(yAxisRef == 0) {
+        yAxisRef = annotation.getBoundingPoly().getVertices(0).getY();
         }
+System.out.println("LowerBoundary: "+ annotation.getBoundingPoly().getVertices(0).getY());
         if(checkForSameLineWord(annotation.getBoundingPoly().getVertices(0).getY(), yAxisRef)) {
             sentence += annotation.getDescription() + " ";
+System.out.println("Inside if\n sentence's current word:"+sentence);
         } else {
+System.out.println("Inside else");
             sentence = PhotoShoppingUtil.formatQuery(sentence);
             shoppingQueries.add(sentence);
             yAxisRef = 0;
             sentence = annotation.getDescription() + " ";
+System.out.println("New senetnce's first word= "+sentence);
         }
+    }
+System.out.println("Outside for");
+    if(checkForSameLineWord(annotations.get(annotations.size()-1).getBoundingPoly().getVertices(0).getY(), annotations.get(annotations.size()-2).getBoundingPoly().getVertices(0).getY())) {
+System.out.println("Inside if");
+        sentence+=annotations.get(annotations.size()-1).getDescription() + " ";
+System.out.println("sentence going to be added : "+ sentence);
+        shoppingQueries.add(sentence);
+    }
+    else {
+System.out.println("Inside else");
+System.out.println("sentence going to be added : "+ sentence);
+        shoppingQueries.add(sentence);
+        sentence = annotations.get(annotations.size()-1).getDescription() + " ";
+System.out.println("New sentence going to be added : "+ sentence);
+        shoppingQueries.add(sentence);
     }
     return shoppingQueries;
   }
 
   public boolean checkForSameLineWord(int lowerBoundary, int yAxisRef) {
-    if(yAxisRef-2 <= lowerBoundary && lowerBoundary <= yAxisRef+2) {
+    if(yAxisRef-5 <= lowerBoundary && lowerBoundary <= yAxisRef+5) {
         return true;
     }
     return false;
