@@ -102,6 +102,7 @@ async function onSubmitUploadImageForm() {
   $('#shopping-query-display-container').removeClass('hidden');
   shoppingQuery.forEach(query => {
     $('#shopping-query').append(query);
+    $('#shopping-query').append('<br>');
     console.log(query);
   });
     console.log(productsList);
