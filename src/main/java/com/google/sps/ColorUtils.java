@@ -14,6 +14,8 @@
 
 package com.google.sps;
 
+import com.google.auto.value.AutoValue;
+
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -21,63 +23,62 @@ import java.util.ArrayList;
  * Utility class for converting RGB color values to color name.
  */
 public class ColorUtils {
-  public static final String NO_MATCHED_COLOR_MESSAGE = "No matched color name.";
 
   /**
    * Compiles a list of known colors.
    */
   private ArrayList<ColorName> initColorList() {
     ArrayList<ColorName> colorList = new ArrayList<ColorName>();
-    colorList.add(new ColorName("Beige", 0xF5, 0xF5, 0xDC));
-    colorList.add(new ColorName("Black", 0x00, 0x00, 0x00));
-    colorList.add(new ColorName("Blue", 0x00, 0x00, 0xFF));
-    colorList.add(new ColorName("Coral", 0xFF, 0x7F, 0x50));
-    colorList.add(new ColorName("Cyan", 0x00, 0xFF, 0xFF));
-    colorList.add(new ColorName("Gray", 0xA9, 0xA9, 0xA9));
-    colorList.add(new ColorName("Dark Green", 0x00, 0x64, 0x00));
-    colorList.add(new ColorName("Khaki", 0xBD, 0xB7, 0x6B));      // Dark Khaki
-    colorList.add(new ColorName("Orange", 0xFF, 0x8C, 0x00));     // Dark Orange
-    colorList.add(new ColorName("Dark Red", 0x8B, 0x00, 0x00));
-    colorList.add(new ColorName("Turquoise", 0x00, 0xCE, 0xD1));  // Dark Turquoise
-    colorList.add(new ColorName("Violet", 0x94, 0x00, 0xD3));     // Dark Violet
-    colorList.add(new ColorName("Pink", 0xFF, 0x14, 0x93));       // DeepPink
-    colorList.add(new ColorName("Blue", 0x00, 0xBF, 0xFF));       // DeepSkyBlue
-    colorList.add(new ColorName("Green", 0x22, 0x8B, 0x22));      // ForestGreen
-    colorList.add(new ColorName("Fuchsia", 0xFF, 0x00, 0xFF));
-    colorList.add(new ColorName("Yellow", 0xFF, 0xD7, 0x00));     // Gold
-    colorList.add(new ColorName("Gray", 0x80, 0x80, 0x80));
-    colorList.add(new ColorName("Green", 0x00, 0x80, 0x00));
-    colorList.add(new ColorName("Pink", 0xFF, 0x69, 0xB4));       // HotPink
-    colorList.add(new ColorName("Indigo", 0x4B, 0x00, 0x82));
-    colorList.add(new ColorName("Khaki", 0xF0, 0xE6, 0x8C));
-    colorList.add(new ColorName("Lavender", 0xE6, 0xE6, 0xFA));
-    colorList.add(new ColorName("Light Blue", 0xAD, 0xD8, 0xE6));
-    colorList.add(new ColorName("Light Cyan", 0xE0, 0xFF, 0xFF));
-    colorList.add(new ColorName("Light Gray", 0xD3, 0xD3, 0xD3));
-    colorList.add(new ColorName("Light Green", 0x90, 0xEE, 0x90));
-    colorList.add(new ColorName("Light Pink", 0xFF, 0xB6, 0xC1));
-    colorList.add(new ColorName("LightYellow", 0xFF, 0xFF, 0xE0));
-    colorList.add(new ColorName("Lime", 0x00, 0xFF, 0x00));
-    colorList.add(new ColorName("Magenta", 0xFF, 0x00, 0xFF));
-    colorList.add(new ColorName("Maroon", 0x80, 0x00, 0x00));
-    colorList.add(new ColorName("Blue", 0x00, 0x00, 0xCD));       // MediumBlue
-    colorList.add(new ColorName("Purple", 0x93, 0x70, 0xDB));     // MediumPurple
-    colorList.add(new ColorName("Green", 0x00, 0xFA, 0x9A));      // MediumSpringGreen
-    colorList.add(new ColorName("Turquoise", 0x48, 0xD1, 0xCC));  // MediumTurquoise
-    colorList.add(new ColorName("Navy", 0x00, 0x00, 0x80));
-    colorList.add(new ColorName("Orange", 0xFF, 0xA5, 0x00));
-    colorList.add(new ColorName("Orange", 0xFF, 0x45, 0x00));     // OrangeRed
-    colorList.add(new ColorName("Pink", 0xFF, 0xC0, 0xCB));
-    colorList.add(new ColorName("Purple", 0x80, 0x00, 0x80));
-    colorList.add(new ColorName("Red", 0xFF, 0x00, 0x00));
-    colorList.add(new ColorName("Blue", 0x41, 0x69, 0xE1));       // RoyalBlue
-    colorList.add(new ColorName("Brown", 0x8B, 0x45, 0x13));      // SaddleBrown
-    colorList.add(new ColorName("Silver", 0xC0, 0xC0, 0xC0));
-    colorList.add(new ColorName("Blue", 0x87, 0xCE, 0xEB));       // SkyBlue
-    colorList.add(new ColorName("Turquoise", 0x40, 0xE0, 0xD0));
-    colorList.add(new ColorName("Violet", 0xEE, 0x82, 0xEE));
-    colorList.add(new ColorName("White", 0xFF, 0xFF, 0xFF));
-    colorList.add(new ColorName("Yellow", 0xFF, 0xFF, 0x00));
+    colorList.add(ColorName.create("Beige", 0xF5, 0xF5, 0xDC));
+    colorList.add(ColorName.create("Black", 0x00, 0x00, 0x00));
+    colorList.add(ColorName.create("Blue", 0x00, 0x00, 0xFF));
+    colorList.add(ColorName.create("Coral", 0xFF, 0x7F, 0x50));
+    colorList.add(ColorName.create("Cyan", 0x00, 0xFF, 0xFF));
+    colorList.add(ColorName.create("Gray", 0xA9, 0xA9, 0xA9));
+    colorList.add(ColorName.create("Dark Green", 0x00, 0x64, 0x00));
+    colorList.add(ColorName.create("Khaki", 0xBD, 0xB7, 0x6B));      // Dark Khaki
+    colorList.add(ColorName.create("Orange", 0xFF, 0x8C, 0x00));     // Dark Orange
+    colorList.add(ColorName.create("Dark Red", 0x8B, 0x00, 0x00));
+    colorList.add(ColorName.create("Turquoise", 0x00, 0xCE, 0xD1));  // Dark Turquoise
+    colorList.add(ColorName.create("Violet", 0x94, 0x00, 0xD3));     // Dark Violet
+    colorList.add(ColorName.create("Pink", 0xFF, 0x14, 0x93));       // DeepPink
+    colorList.add(ColorName.create("Blue", 0x00, 0xBF, 0xFF));       // DeepSkyBlue
+    colorList.add(ColorName.create("Green", 0x22, 0x8B, 0x22));      // ForestGreen
+    colorList.add(ColorName.create("Fuchsia", 0xFF, 0x00, 0xFF));
+    colorList.add(ColorName.create("Yellow", 0xFF, 0xD7, 0x00));     // Gold
+    colorList.add(ColorName.create("Gray", 0x80, 0x80, 0x80));
+    colorList.add(ColorName.create("Green", 0x00, 0x80, 0x00));
+    colorList.add(ColorName.create("Pink", 0xFF, 0x69, 0xB4));       // HotPink
+    colorList.add(ColorName.create("Indigo", 0x4B, 0x00, 0x82));
+    colorList.add(ColorName.create("Khaki", 0xF0, 0xE6, 0x8C));
+    colorList.add(ColorName.create("Lavender", 0xE6, 0xE6, 0xFA));
+    colorList.add(ColorName.create("Light Blue", 0xAD, 0xD8, 0xE6));
+    colorList.add(ColorName.create("Light Cyan", 0xE0, 0xFF, 0xFF));
+    colorList.add(ColorName.create("Light Gray", 0xD3, 0xD3, 0xD3));
+    colorList.add(ColorName.create("Light Green", 0x90, 0xEE, 0x90));
+    colorList.add(ColorName.create("Light Pink", 0xFF, 0xB6, 0xC1));
+    colorList.add(ColorName.create("LightYellow", 0xFF, 0xFF, 0xE0));
+    colorList.add(ColorName.create("Lime", 0x00, 0xFF, 0x00));
+    colorList.add(ColorName.create("Magenta", 0xFF, 0x00, 0xFF));
+    colorList.add(ColorName.create("Maroon", 0x80, 0x00, 0x00));
+    colorList.add(ColorName.create("Blue", 0x00, 0x00, 0xCD));       // MediumBlue
+    colorList.add(ColorName.create("Purple", 0x93, 0x70, 0xDB));     // MediumPurple
+    colorList.add(ColorName.create("Green", 0x00, 0xFA, 0x9A));      // MediumSpringGreen
+    colorList.add(ColorName.create("Turquoise", 0x48, 0xD1, 0xCC));  // MediumTurquoise
+    colorList.add(ColorName.create("Navy", 0x00, 0x00, 0x80));
+    colorList.add(ColorName.create("Orange", 0xFF, 0xA5, 0x00));
+    colorList.add(ColorName.create("Orange", 0xFF, 0x45, 0x00));     // OrangeRed
+    colorList.add(ColorName.create("Pink", 0xFF, 0xC0, 0xCB));
+    colorList.add(ColorName.create("Purple", 0x80, 0x00, 0x80));
+    colorList.add(ColorName.create("Red", 0xFF, 0x00, 0x00));
+    colorList.add(ColorName.create("Blue", 0x41, 0x69, 0xE1));       // RoyalBlue
+    colorList.add(ColorName.create("Brown", 0x8B, 0x45, 0x13));      // SaddleBrown
+    colorList.add(ColorName.create("Silver", 0xC0, 0xC0, 0xC0));
+    colorList.add(ColorName.create("Blue", 0x87, 0xCE, 0xEB));       // SkyBlue
+    colorList.add(ColorName.create("Turquoise", 0x40, 0xE0, 0xD0));
+    colorList.add(ColorName.create("Violet", 0xEE, 0x82, 0xEE));
+    colorList.add(ColorName.create("White", 0xFF, 0xFF, 0xFF));
+    colorList.add(ColorName.create("Yellow", 0xFF, 0xFF, 0x00));
     return colorList;
   }
   
@@ -106,38 +107,31 @@ public class ColorUtils {
       }
     }
     
-    if (closestColorMatch != null) {
-      return closestColorMatch.getName();
-    } else {
-      return NO_MATCHED_COLOR_MESSAGE;
-    }
+    return closestColorMatch.getName();
   }
   
   /**
-   * Inner class representing a known color with a color name and an RGB value, and handling the 
+   * Inner class defining a known color with a color name and an RGB value, and handling the 
    * computation of the distance to a query color.
    */
-  public class ColorName {
-    private int r, g, b;
-    private String name;
-    
-    public ColorName(String name, int r, int g, int b) {
-      this.r = r;
-      this.g = g;
-      this.b = b;
-      this.name = name;
+  @AutoValue
+  public static abstract class ColorName {
+
+    public static ColorName create(String name, int r, int g, int b) {
+      return new AutoValue_ColorUtils_ColorName(name, r, g, b);
     }
-    
+
+    public abstract String getName();
+    public abstract int getR();
+    public abstract int getG();
+    public abstract int getB();
+
     /** 
      * Returns the distance between two RGB color values, based on the three-dimensional distance formula.
      */
     public int computeRGBDistance(int queryR, int queryG, int queryB) {
-      return (int) (Math.sqrt((queryR - r) * (queryR - r) + (queryG - g) * (queryG - g) + 
-          (queryB - b) * (queryB - b)));
-    }
-    
-    public String getName() {
-      return name;
+      return (int) (Math.sqrt((queryR - getR()) * (queryR - getR()) + (queryG - getG()) * (queryG - getG()) + 
+          (queryB - getB()) * (queryB - getB())));
     }
   }
 }
