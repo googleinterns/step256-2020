@@ -115,6 +115,12 @@ async function onSubmitUploadImageForm() {
 async function appendShoppingResults(shoppingResults) {
   // Integrate the products into the web page.
   shoppingResults.forEach(result => {
+      let $query = result.getQuery();
+      $('#shopping-query').append($query);
+      $('#shopping-query').append('<br>');
+console.log(query);
+      let $products = result.getProducts();
+console.log($products);
       // Create an HTML node for the item container.
       let $listProductsContainer = $('<div>', {class: 'row'});
       $products.forEach(product => {
