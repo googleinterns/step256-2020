@@ -66,7 +66,7 @@ public final class ProductListExtractorTest {
   }
 
   @Test
-  public void noProductRatingProvided() throws Exception  {
+  public void noProductRatingProvided() throws Exception {
     List<Product> expectedProducts = new ArrayList<>();
     expectedProducts.add(Product.create("TWSBI Eco <b>Fountain Pen</b> - Clear - Extra-Fine", 
         "https://image-link-1.com", 
@@ -84,7 +84,26 @@ public final class ProductListExtractorTest {
   }
 
   @Test
-  public void NoProductData() throws Exception  {
+  public void emptyProductTitle() throws Exception {
+    // Add two product containers, one missing the product title, therefore should be ignored.
+    List<Product> expectedProducts = new ArrayList<>();
+    expectedProducts.add(Product.create("Faber-Castell Fountain Pen", 
+        "https://image-link-2.com", 
+        "<span class=\"HRLxBb\">$20.00</span> from Faber-Castell", 
+        "https://product-link-2.com", 
+        "Free shipping"));
+    
+    Document mockResultsDoc = 
+        Jsoup.parse(
+            new File("./src/main/webapp/mock-shopping-results/empty-product-title.html"), "UTF-8");
+
+    List<Product> actualProducts = productListExtractor.extract(mockResultsDoc);
+
+    Assert.assertEquals(expectedProducts, actualProducts);
+  }
+
+  @Test
+  public void NoProductData() throws Exception {
     List<Product> expectedProducts = new ArrayList<>();
     
     Document mockResultsDoc = 
