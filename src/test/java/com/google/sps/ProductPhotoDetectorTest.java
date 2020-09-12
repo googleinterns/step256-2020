@@ -16,10 +16,7 @@ package com.google.sps;
 
 import com.google.sps.data.ProductDetectionData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.google.common.collect.ImmutableList;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -45,9 +42,9 @@ public final class ProductPhotoDetectorTest {
   }
 
   /** Sets product detection results and initializes ProductPhotoDetector instance. */
-  private ProductPhotoDetector initProductPhotoDetector(List<String> labels, List<String> logos, 
-      List<String> colors) {
-    ProductDetectionData productDetectionData = new ProductDetectionData(labels, logos, colors);
+  private ProductPhotoDetector initProductPhotoDetector(ImmutableList<String> labels, 
+      ImmutableList<String> logos, ImmutableList<String> colors) {
+    ProductDetectionData productDetectionData = ProductDetectionData.create(labels, logos, colors);
     fakeProductDetection.setReturnValue(productDetectionData);
 
     ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
@@ -56,9 +53,9 @@ public final class ProductPhotoDetectorTest {
 
   @Test
   public void completeDetectionData() throws Exception {
-    List<String> labels = Collections.unmodifiableList(Arrays.asList("Shoe", "Sneaker"));
-    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike", "Brand"));
-    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black", "Grey"));
+    ImmutableList<String> labels = ImmutableList.of("Shoe", "Sneaker");
+    ImmutableList<String> logos = ImmutableList.of("Nike", "Brand");
+    ImmutableList<String> colors = ImmutableList.of("Black", "Grey");
 
     ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
@@ -71,9 +68,9 @@ public final class ProductPhotoDetectorTest {
 
   @Test
   public void emptyDetectionData() throws Exception {
-    List<String> labels = Collections.emptyList();  
-    List<String> logos = Collections.emptyList();  
-    List<String> colors = Collections.emptyList();  
+    ImmutableList<String> labels = ImmutableList.of();
+    ImmutableList<String> logos = ImmutableList.of();
+    ImmutableList<String> colors = ImmutableList.of();
 
     ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
@@ -84,9 +81,9 @@ public final class ProductPhotoDetectorTest {
 
   @Test
   public void emptyLogosList() throws Exception {
-    List<String> labels = Collections.unmodifiableList(Arrays.asList("Shoe", "Sneaker"));
-    List<String> logos = Collections.emptyList();  
-    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black", "Grey"));
+    ImmutableList<String> labels = ImmutableList.of("Shoe", "Sneaker");
+    ImmutableList<String> logos = ImmutableList.of();
+    ImmutableList<String> colors = ImmutableList.of("Black", "Grey");
 
     ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
@@ -99,9 +96,9 @@ public final class ProductPhotoDetectorTest {
 
   @Test
   public void emptyLabelsList() throws Exception {
-    List<String> labels = Collections.emptyList();
-    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike", "Brand"));
-    List<String> colors = Collections.unmodifiableList(Arrays.asList("Black", "Grey"));
+    ImmutableList<String> labels = ImmutableList.of();
+    ImmutableList<String> logos = ImmutableList.of("Nike", "Brand");
+    ImmutableList<String> colors = ImmutableList.of("Black", "Grey");
 
     ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
@@ -112,9 +109,9 @@ public final class ProductPhotoDetectorTest {
 
   @Test
   public void emptyColorsList() throws Exception {
-    List<String> labels = Collections.unmodifiableList(Arrays.asList("Shoe", "Sneaker"));
-    List<String> logos = Collections.unmodifiableList(Arrays.asList("Nike", "Brand"));
-    List<String> colors = Collections.emptyList();
+    ImmutableList<String> labels = ImmutableList.of("Shoe", "Sneaker");
+    ImmutableList<String> logos = ImmutableList.of("Nike", "Brand");
+    ImmutableList<String> colors = ImmutableList.of();
 
     ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
