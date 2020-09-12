@@ -52,7 +52,7 @@ public class ProductListExtractor {
         continue;
       }
 
-    	// Get the title as HTML instead of text, in order to keep the <b> tags.
+      // Get the title as HTML instead of text, in order to keep the <b> tags.
       String productTitle = currentProduct.select(".rgHvZc > a").html();
       // Skip ".u30d4" container if it does not contain a title.
       if (productTitle.isEmpty()) {

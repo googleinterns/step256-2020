@@ -24,7 +24,8 @@ import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
-import com.google.cloud.vision.v1.ImageSource;
+
+import com.google.common.collect.ImmutableList;
 
 import com.google.protobuf.ByteString;
 
@@ -51,6 +52,8 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     // Build the image annotation request.
     // {@code requestBuilder} holds the image and the features to detect from it.
     Builder requestBuilder = AnnotateImageRequest.newBuilder();
+    
+    requestBuilder.setImage(image);
 
     Feature labelDetectionFeature = 
         Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
@@ -63,8 +66,6 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     Feature imagePropertiesDetectionFeature =
         Feature.newBuilder().setType(Feature.Type.IMAGE_PROPERTIES).setMaxResults(5).build();
     requestBuilder.addFeatures(imagePropertiesDetectionFeature);
-
-    requestBuilder.setImage(image);
 
     List<AnnotateImageRequest> requests = new ArrayList<>();
     requests.add(requestBuilder.build());
@@ -82,23 +83,18 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     // Perform detection on the image file.
     BatchAnnotateImagesResponse response = imageAnnotatorClient.batchAnnotateImages(requests);
     
-    List<AnnotateImageResponse> responses = response.getResponsesList();
+    // Get only the first response as there is only one request.
+    AnnotateImageResponse annotateImageResponse = response.getResponsesList().get(0);
 
-    List<String> labels = new ArrayList();
-    List<String> logos = new ArrayList();
-    List<String> colors = new ArrayList();
-
-    for (AnnotateImageResponse res : responses) {
-      if (res.hasError()) {
-        throw new PhotoDetectionException(res.getError().getMessage());
-      }
-
-      labels.addAll(getLabels(res));
-      logos.addAll(getLogos(res));
-      colors.addAll(getColors(res));
+    if (annotateImageResponse.hasError()) {
+      throw new PhotoDetectionException(annotateImageResponse.getError().getMessage());
     }
 
-    ProductDetectionData productDetectionData = new ProductDetectionData(labels, logos, colors);
+    ImmutableList<String> labels = getLabels(annotateImageResponse);
+    ImmutableList<String> logos = getLogos(annotateImageResponse);
+    ImmutableList<String> colors = getColors(annotateImageResponse);
+
+    ProductDetectionData productDetectionData = ProductDetectionData.create(labels, logos, colors);
 
     // All requests have been completed, so call the "close" method on the client 
     // to safely clean up any remaining background resources.
@@ -107,38 +103,33 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     return productDetectionData;
   }
 
-  private List<String> getLabels(AnnotateImageResponse res) {
-    List<String> labels = new ArrayList(); 
-        
-    for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-      labels.add(annotation.getDescription());
-    }
-    return labels;
+  private ImmutableList<String> getLabels(AnnotateImageResponse annotateImageResponse) {
+    return annotateImageResponse.getLabelAnnotationsList()
+        .stream()
+        .map(annotation -> annotation.getDescription())
+        .collect(ImmutableList.toImmutableList());
   }
 
-  private List<String> getLogos(AnnotateImageResponse res) {
-    List<String> logos = new ArrayList(); 
-
-    for (EntityAnnotation annotation : res.getLogoAnnotationsList()) {
-      logos.add(annotation.getDescription());
-    }
-    return logos;
+  private ImmutableList<String> getLogos(AnnotateImageResponse annotateImageResponse) {
+    return annotateImageResponse.getLogoAnnotationsList()
+        .stream()
+        .map(annotation -> annotation.getDescription())
+        .collect(ImmutableList.toImmutableList());
   }
 
-  private List<String> getColors(AnnotateImageResponse res) {
+  private ImmutableList<String> getColors(AnnotateImageResponse res) {
     List<String> colorNames = new ArrayList(); 
     
     DominantColorsAnnotation colors = res.getImagePropertiesAnnotation().getDominantColors();
     for (ColorInfo color : colors.getColorsList()) {
-      ColorUtils colorUtils = new ColorUtils();
-      String colorName = colorUtils.getColorNameFromRGB((int)color.getColor().getRed(),
+      String colorName = ColorUtils.getColorNameFromRGB(
+          (int)color.getColor().getRed(),
           (int)color.getColor().getGreen(),
           (int)color.getColor().getBlue());
       
-      if (colorName != ColorUtils.NO_MATCHED_COLOR_MESSAGE) {
-        colorNames.add(colorName);
-      }
+      colorNames.add(colorName);
     }
-    return colorNames;
+    
+    return ImmutableList.copyOf(colorNames);
   }
 }

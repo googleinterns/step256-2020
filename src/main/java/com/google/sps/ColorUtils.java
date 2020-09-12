@@ -14,87 +14,88 @@
 
 package com.google.sps;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
+
 import java.awt.Color;
-import java.util.ArrayList;
 
 /**
  * Utility class for converting RGB color values to color name.
  */
 public class ColorUtils {
-  public static final String NO_MATCHED_COLOR_MESSAGE = "No matched color name.";
-
-  /**
-   * Compiles a list of known colors.
-   */
-  private ArrayList<ColorName> initColorList() {
-    ArrayList<ColorName> colorList = new ArrayList<ColorName>();
-    colorList.add(new ColorName("Beige", 0xF5, 0xF5, 0xDC));
-    colorList.add(new ColorName("Black", 0x00, 0x00, 0x00));
-    colorList.add(new ColorName("Blue", 0x00, 0x00, 0xFF));
-    colorList.add(new ColorName("Coral", 0xFF, 0x7F, 0x50));
-    colorList.add(new ColorName("Cyan", 0x00, 0xFF, 0xFF));
-    colorList.add(new ColorName("Gray", 0xA9, 0xA9, 0xA9));
-    colorList.add(new ColorName("Dark Green", 0x00, 0x64, 0x00));
-    colorList.add(new ColorName("Khaki", 0xBD, 0xB7, 0x6B));      // Dark Khaki
-    colorList.add(new ColorName("Orange", 0xFF, 0x8C, 0x00));     // Dark Orange
-    colorList.add(new ColorName("Dark Red", 0x8B, 0x00, 0x00));
-    colorList.add(new ColorName("Turquoise", 0x00, 0xCE, 0xD1));  // Dark Turquoise
-    colorList.add(new ColorName("Violet", 0x94, 0x00, 0xD3));     // Dark Violet
-    colorList.add(new ColorName("Pink", 0xFF, 0x14, 0x93));       // DeepPink
-    colorList.add(new ColorName("Blue", 0x00, 0xBF, 0xFF));       // DeepSkyBlue
-    colorList.add(new ColorName("Green", 0x22, 0x8B, 0x22));      // ForestGreen
-    colorList.add(new ColorName("Fuchsia", 0xFF, 0x00, 0xFF));
-    colorList.add(new ColorName("Yellow", 0xFF, 0xD7, 0x00));     // Gold
-    colorList.add(new ColorName("Gray", 0x80, 0x80, 0x80));
-    colorList.add(new ColorName("Green", 0x00, 0x80, 0x00));
-    colorList.add(new ColorName("Pink", 0xFF, 0x69, 0xB4));       // HotPink
-    colorList.add(new ColorName("Indigo", 0x4B, 0x00, 0x82));
-    colorList.add(new ColorName("Khaki", 0xF0, 0xE6, 0x8C));
-    colorList.add(new ColorName("Lavender", 0xE6, 0xE6, 0xFA));
-    colorList.add(new ColorName("Light Blue", 0xAD, 0xD8, 0xE6));
-    colorList.add(new ColorName("Light Cyan", 0xE0, 0xFF, 0xFF));
-    colorList.add(new ColorName("Light Gray", 0xD3, 0xD3, 0xD3));
-    colorList.add(new ColorName("Light Green", 0x90, 0xEE, 0x90));
-    colorList.add(new ColorName("Light Pink", 0xFF, 0xB6, 0xC1));
-    colorList.add(new ColorName("LightYellow", 0xFF, 0xFF, 0xE0));
-    colorList.add(new ColorName("Lime", 0x00, 0xFF, 0x00));
-    colorList.add(new ColorName("Magenta", 0xFF, 0x00, 0xFF));
-    colorList.add(new ColorName("Maroon", 0x80, 0x00, 0x00));
-    colorList.add(new ColorName("Blue", 0x00, 0x00, 0xCD));       // MediumBlue
-    colorList.add(new ColorName("Purple", 0x93, 0x70, 0xDB));     // MediumPurple
-    colorList.add(new ColorName("Green", 0x00, 0xFA, 0x9A));      // MediumSpringGreen
-    colorList.add(new ColorName("Turquoise", 0x48, 0xD1, 0xCC));  // MediumTurquoise
-    colorList.add(new ColorName("Navy", 0x00, 0x00, 0x80));
-    colorList.add(new ColorName("Orange", 0xFF, 0xA5, 0x00));
-    colorList.add(new ColorName("Orange", 0xFF, 0x45, 0x00));     // OrangeRed
-    colorList.add(new ColorName("Pink", 0xFF, 0xC0, 0xCB));
-    colorList.add(new ColorName("Purple", 0x80, 0x00, 0x80));
-    colorList.add(new ColorName("Red", 0xFF, 0x00, 0x00));
-    colorList.add(new ColorName("Blue", 0x41, 0x69, 0xE1));       // RoyalBlue
-    colorList.add(new ColorName("Brown", 0x8B, 0x45, 0x13));      // SaddleBrown
-    colorList.add(new ColorName("Silver", 0xC0, 0xC0, 0xC0));
-    colorList.add(new ColorName("Blue", 0x87, 0xCE, 0xEB));       // SkyBlue
-    colorList.add(new ColorName("Turquoise", 0x40, 0xE0, 0xD0));
-    colorList.add(new ColorName("Violet", 0xEE, 0x82, 0xEE));
-    colorList.add(new ColorName("White", 0xFF, 0xFF, 0xFF));
-    colorList.add(new ColorName("Yellow", 0xFF, 0xFF, 0x00));
-    return colorList;
-  }
+  // Prevent creating an instance of this class.
+  private ColorUtils() {} 
   
+  // Compile a list of known colors.
+  private static final ImmutableList<ColorName> COLOR_LIST =  
+      ImmutableList.of(
+          ColorName.create("Beige", 0xF5, 0xF5, 0xDC),
+          ColorName.create("Black", 0x00, 0x00, 0x00),
+          ColorName.create("Blue", 0x00, 0x00, 0xFF),
+          ColorName.create("Coral", 0xFF, 0x7F, 0x50),
+          ColorName.create("Cyan", 0x00, 0xFF, 0xFF),
+          ColorName.create("Gray", 0xA9, 0xA9, 0xA9),
+          ColorName.create("Dark Green", 0x00, 0x64, 0x00),
+          ColorName.create("Khaki", 0xBD, 0xB7, 0x6B),      // Dark Khaki
+          ColorName.create("Orange", 0xFF, 0x8C, 0x00),     // Dark Orange
+          ColorName.create("Dark Red", 0x8B, 0x00, 0x00),
+          ColorName.create("Turquoise", 0x00, 0xCE, 0xD1),  // Dark Turquoise
+          ColorName.create("Violet", 0x94, 0x00, 0xD3),     // Dark Violet
+          ColorName.create("Pink", 0xFF, 0x14, 0x93),       // DeepPink
+          ColorName.create("Blue", 0x00, 0xBF, 0xFF),       // DeepSkyBlue
+          ColorName.create("Green", 0x22, 0x8B, 0x22),      // ForestGreen
+          ColorName.create("Fuchsia", 0xFF, 0x00, 0xFF),
+          ColorName.create("Yellow", 0xFF, 0xD7, 0x00),     // Gold
+          ColorName.create("Gray", 0x80, 0x80, 0x80),
+          ColorName.create("Green", 0x00, 0x80, 0x00),
+          ColorName.create("Pink", 0xFF, 0x69, 0xB4),       // HotPink
+          ColorName.create("Indigo", 0x4B, 0x00, 0x82),
+          ColorName.create("Khaki", 0xF0, 0xE6, 0x8C),
+          ColorName.create("Lavender", 0xE6, 0xE6, 0xFA),
+          ColorName.create("Light Blue", 0xAD, 0xD8, 0xE6),
+          ColorName.create("Light Cyan", 0xE0, 0xFF, 0xFF),
+          ColorName.create("Light Gray", 0xD3, 0xD3, 0xD3),
+          ColorName.create("Light Green", 0x90, 0xEE, 0x90),
+          ColorName.create("Light Pink", 0xFF, 0xB6, 0xC1),
+          ColorName.create("LightYellow", 0xFF, 0xFF, 0xE0),
+          ColorName.create("Lime", 0x00, 0xFF, 0x00),
+          ColorName.create("Magenta", 0xFF, 0x00, 0xFF),
+          ColorName.create("Maroon", 0x80, 0x00, 0x00),
+          ColorName.create("Blue", 0x00, 0x00, 0xCD),       // MediumBlue
+          ColorName.create("Purple", 0x93, 0x70, 0xDB),     // MediumPurple
+          ColorName.create("Green", 0x00, 0xFA, 0x9A),      // MediumSpringGreen
+          ColorName.create("Turquoise", 0x48, 0xD1, 0xCC),  // MediumTurquoise
+          ColorName.create("Navy", 0x00, 0x00, 0x80),
+          ColorName.create("Orange", 0xFF, 0xA5, 0x00),
+          ColorName.create("Orange", 0xFF, 0x45, 0x00),     // OrangeRed
+          ColorName.create("Pink", 0xFF, 0xC0, 0xCB),
+          ColorName.create("Purple", 0x80, 0x00, 0x80),
+          ColorName.create("Red", 0xFF, 0x00, 0x00),
+          ColorName.create("Blue", 0x41, 0x69, 0xE1),       // RoyalBlue
+          ColorName.create("Brown", 0x8B, 0x45, 0x13),      // SaddleBrown
+          ColorName.create("Silver", 0xC0, 0xC0, 0xC0),
+          ColorName.create("Blue", 0x87, 0xCE, 0xEB),       // SkyBlue
+          ColorName.create("Turquoise", 0x40, 0xE0, 0xD0),
+          ColorName.create("Violet", 0xEE, 0x82, 0xEE),
+          ColorName.create("White", 0xFF, 0xFF, 0xFF),
+          ColorName.create("Yellow", 0xFF, 0xFF, 0x00));
+
   /**
    * Returns the color name of the closest color (to the query color provided as RGB).
    * To find the closest color, gets the color list, and then computes the distance between 
    * the query color and every color in the color list, based on their RGB values.
    */
-  public String getColorNameFromRGB(int r, int g, int b) {
-    ArrayList<ColorName> colorList = initColorList();
+  public static String getColorNameFromRGB(int r, int g, int b) throws IllegalArgumentException {
+    if (!(0 < r && r < 255) || !(0 < g && g < 255) || !(0 < b && b < 255)) {
+      throw new IllegalArgumentException("RGB values outside [0, 255] range.");
+    }
     
     // Get the color name of the color with minimum RGB distance to the query color.
     ColorName closestColorMatch = null;
 
-    int minRGBDistance = Integer.MAX_VALUE;
-    for (ColorName color : colorList) {
-      int currentRGBDistance = color.computeRGBDistance(r, g, b);
+    double minRGBDistance = Double.MAX_VALUE;
+    for (ColorName color : COLOR_LIST) {
+      double currentRGBDistance = color.computeRGBDistance(r, g, b);
 
       if (currentRGBDistance < minRGBDistance) {
         minRGBDistance = currentRGBDistance;
@@ -102,35 +103,31 @@ public class ColorUtils {
       }
     }
     
-    if (closestColorMatch != null) {
-      return closestColorMatch.getName();
-    } else {
-      return NO_MATCHED_COLOR_MESSAGE;
-    }
+    return closestColorMatch.getName();
   }
   
   /**
-   * Subclass representing a known color with a color name and an RGB value, and handling the 
+   * Inner class defining a known color with a color name and an RGB value, and handling the 
    * computation of the distance to a query color.
    */
-  public class ColorName {
-    public int r, g, b;
-    public String name;
-    
-    public ColorName(String name, int r, int g, int b) {
-      this.r = r;
-      this.g = g;
-      this.b = b;
-      this.name = name;
+  @AutoValue
+  public static abstract class ColorName {
+
+    public static ColorName create(String name, int r, int g, int b) {
+      return new AutoValue_ColorUtils_ColorName(name, r, g, b);
     }
-    
-    public int computeRGBDistance(int queryR, int queryG, int queryB) {
-      return (int) (((queryR - r) * (queryR - r) + (queryG - g) * (queryG - g) + 
-          (queryB - b) * (queryB - b)) / 3);
-    }
-    
-    public String getName() {
-      return name;
+
+    public abstract String getName();
+    public abstract int getR();
+    public abstract int getG();
+    public abstract int getB();
+
+    /** 
+     * Returns the distance between two RGB color values, based on the three-dimensional distance formula.
+     */
+    public double computeRGBDistance(int queryR, int queryG, int queryB) {
+      return Math.sqrt(
+          Math.pow(queryR - getR(), 2) + Math.pow(queryG - getG(), 2) + Math.pow(queryB - getB(), 2));
     }
   }
 }

@@ -14,11 +14,9 @@
 
 package com.google.sps;
 
-import com.google.sps.data.ProductDetectionData;
+import com.google.cloud.vision.v1.Feature;
 
-/**
- * API for detecting products from images.
- */
-public interface ProductDetectionAPI {
-  public ProductDetectionData detectProductPhotoContent(byte[] imageBytes) throws PhotoDetectionException;
+public class Constants {
+  public static final Feature TEXT_DETECTION_FEATURE =
+      Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
 }

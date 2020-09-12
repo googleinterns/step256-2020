@@ -15,20 +15,17 @@
 package com.google.sps.data;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList;
 
-/**
- * Contains detection results for a product image.
+/** 
+ * Class containing Google Shopping list's words and their y-axis position.
  */
 @AutoValue
-public abstract class ProductDetectionData {
+public abstract class ShoppingListTextEntry {
 
-  public static ProductDetectionData create(
-      ImmutableList<String> labels, ImmutableList<String> logos, ImmutableList<String> colors) {
-    return new AutoValue_ProductDetectionData(labels, logos, colors);
+  public static ShoppingListTextEntry create(String text, int lowerBoundary) {
+    return new AutoValue_ShoppingListTextEntry(text, lowerBoundary);
   }
 
-  public abstract ImmutableList<String> getLabels();
-  public abstract ImmutableList<String> getLogos();
-  public abstract ImmutableList<String> getColors();
+  public abstract String getText();
+  public abstract int getLowerBoundary();
 }
