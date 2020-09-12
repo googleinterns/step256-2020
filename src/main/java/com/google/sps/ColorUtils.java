@@ -15,7 +15,7 @@
 package com.google.sps;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList ;
+import com.google.common.collect.ImmutableList;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -92,9 +92,9 @@ public class ColorUtils {
     // Get the color name of the color with minimum RGB distance to the query color.
     ColorName closestColorMatch = null;
 
-    int minRGBDistance = Integer.MAX_VALUE;
+    double minRGBDistance = Double.MAX_VALUE;
     for (ColorName color : COLOR_LIST) {
-      int currentRGBDistance = color.computeRGBDistance(r, g, b);
+      double currentRGBDistance = color.computeRGBDistance(r, g, b);
 
       if (currentRGBDistance < minRGBDistance) {
         minRGBDistance = currentRGBDistance;
@@ -124,9 +124,9 @@ public class ColorUtils {
     /** 
      * Returns the distance between two RGB color values, based on the three-dimensional distance formula.
      */
-    public int computeRGBDistance(int queryR, int queryG, int queryB) {
-      return (int) (Math.sqrt((queryR - getR()) * (queryR - getR()) + (queryG - getG()) * (queryG - getG()) + 
-          (queryB - getB()) * (queryB - getB())));
+    public double computeRGBDistance(int queryR, int queryG, int queryB) {
+      return Math.sqrt(
+          Math.pow(queryR - getR(), 2) + Math.pow(queryG - getG(), 2) + Math.pow(queryB - getB(), 2));
     }
   }
 }
