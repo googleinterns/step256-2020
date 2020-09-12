@@ -35,6 +35,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Uses Cloud Vision API to detect product photo content.
@@ -106,22 +107,18 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
     return productDetectionData;
   }
 
-  private List<String> getLabels(AnnotateImageResponse res) {
-    List<String> labels = new ArrayList(); 
-        
-    for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-      labels.add(annotation.getDescription());
-    }
-    return labels;
+  private List<String> getLabels(AnnotateImageResponse annotateImageResponse) {
+    return annotateImageResponse.getLabelAnnotationsList()
+        .stream()
+        .map(annotation -> annotation.getDescription())
+        .collect(Collectors.toList());
   }
 
-  private List<String> getLogos(AnnotateImageResponse res) {
-    List<String> logos = new ArrayList(); 
-
-    for (EntityAnnotation annotation : res.getLogoAnnotationsList()) {
-      logos.add(annotation.getDescription());
-    }
-    return logos;
+  private List<String> getLogos(AnnotateImageResponse annotateImageResponse) {
+    return annotateImageResponse.getLogoAnnotationsList()
+        .stream()
+        .map(annotation -> annotation.getDescription())
+        .collect(Collectors.toList());
   }
 
   private List<String> getColors(AnnotateImageResponse res) {
@@ -134,9 +131,7 @@ public class ProductDetectionAPIImpl implements ProductDetectionAPI {
           (int)color.getColor().getGreen(),
           (int)color.getColor().getBlue());
       
-      if (colorName != ColorUtils.NO_MATCHED_COLOR_MESSAGE) {
-        colorNames.add(colorName);
-      }
+      colorNames.add(colorName);
     }
     return colorNames;
   }
