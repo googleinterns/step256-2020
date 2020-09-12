@@ -123,13 +123,13 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         ProductDetectionAPI productDetectionAPI = new ProductDetectionAPIImpl();
         ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(productDetectionAPI);
 
-        String shoppingQuery;
+        String productShoppingQuery;
         try {
-          shoppingQuery = productPhotoDetector.buildShoppingQuery(uploadedImageBytes);
+          productShoppingQuery = productPhotoDetector.buildShoppingQuery(uploadedImageBytes);
         } catch (PhotoDetectionException exception) {
           throw exception;
         }
-        return shoppingQuery;
+        return productShoppingQuery;
       case "shopping-list":
         ImageTextDectector imageTextDectector = new ImageTextDectector();
         String shoppingQuery;
