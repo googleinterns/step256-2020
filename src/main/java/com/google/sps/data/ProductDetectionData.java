@@ -14,32 +14,21 @@
 
 package com.google.sps.data;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Contains detection results for a product image.
  */
-public class ProductDetectionData {
-  private List<String> labels;
-  private List<String> logos;
-  private List<String> colors;
+@AutoValue
+public abstract class ProductDetectionData {
 
-  public ProductDetectionData(List<String> labels, List<String> logos, List<String> colors) {
-    this.labels = new ArrayList<String>(labels);
-    this.logos = new ArrayList<String>(logos);
-    this.colors = new ArrayList<String>(colors);
+  public static ProductDetectionData create(
+      ImmutableList<String> labels, ImmutableList<String> logos, ImmutableList<String> colors) {
+    return new AutoValue_ProductDetectionData(labels, logos, colors);
   }
 
-  public List<String> getLabels() {
-    return labels;
-  }
-
-  public List<String> getLogos() {
-    return logos;
-  }
-
-  public List<String> getColors() {
-    return colors;
-  }
+  public abstract ImmutableList<String> getLabels();
+  public abstract ImmutableList<String> getLogos();
+  public abstract ImmutableList<String> getColors();
 }
