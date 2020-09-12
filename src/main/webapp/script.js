@@ -106,6 +106,7 @@ async function onSubmitUploadImageForm() {
 //     console.log(query);
 //   });
 //     console.log(productsList);
+console.log(shoppingResults);
   appendShoppingResults(shoppingResults);
 }
 
@@ -115,14 +116,13 @@ async function onSubmitUploadImageForm() {
 async function appendShoppingResults(shoppingResults) {
   // Integrate the products into the web page.
   shoppingResults.forEach(result => {
-      let $query = result.getQuery();
-      $('#shopping-query').append($query);
-      $('#shopping-query').append('<br>');
-console.log(query);
-      let $products = result.getProducts();
+      let $query = "<div class = 'text-center query'>"+result['query']+"</div>";
+      $('#shopping-results-wrapper').append($query);
+console.log($query);
+      let $listProductsContainer = $('<div>', {class: 'row'});
+      let $products = result['products'];
 console.log($products);
       // Create an HTML node for the item container.
-      let $listProductsContainer = $('<div>', {class: 'row'});
       $products.forEach(product => {
           // Create an HTML node for the item container.
             let $productContainer = $('<div>', {class: 'col-md-3'});

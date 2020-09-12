@@ -144,3 +144,9 @@ input {
 .HRLxBb {
   font-weight: bold;
 }
+
+.query {
+  font-weight: bold;
+  margin: 3%;
+  padding: 3%;
+}
