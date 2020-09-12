@@ -18,7 +18,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 /**
  * Utility class for converting RGB color values to color name.
