@@ -14,15 +14,11 @@
 
 package com.google.sps;
 
-/** 
- * Custom exception class for photo detection classes.
- */
-public class PhotoDetectionException extends Exception { 
-  public PhotoDetectionException(String errorMessage) {
-    super(errorMessage);
-  }
+import com.google.sps.data.ProductDetectionData;
 
-  public PhotoDetectionException(String errorMessage, Throwable cause) {
-    super(errorMessage, cause);
-  }
+/**
+ * API for detecting products from images.
+ */
+public interface ProductDetectionAPI {
+  public ProductDetectionData detectProductPhotoContent(byte[] imageBytes) throws PhotoDetectionException;
 }

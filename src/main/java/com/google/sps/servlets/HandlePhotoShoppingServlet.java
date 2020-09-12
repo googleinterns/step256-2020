@@ -22,6 +22,10 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
 import com.google.gson.Gson;
 
+import com.google.sps.ProductDetectionAPI;
+import com.google.sps.ProductDetectionAPIImpl;
+import com.google.sps.PhotoDetectionException;
+import com.google.sps.ProductPhotoDetector;
 import com.google.sps.GoogleShoppingQuerier;
 import com.google.sps.ImageTextDectector;
 import com.google.sps.PhotoDetectionException;
@@ -79,7 +83,7 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     String shoppingQuery;
     try {
       shoppingQuery = getQuery(request.getParameter("photo-category"), uploadedImageBytes);
-    } catch(IllegalArgumentException | PhotoDetectionException exception) {
+    } catch (IllegalArgumentException | PhotoDetectionException exception) {
       response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
       return;
     }
@@ -113,10 +117,19 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
    * based on the {@code photoCategory}, passing {@code uploadedImageBytes} as argument.
    */
   private String getQuery(String photoCategory, byte[] uploadedImageBytes)
-      throws IllegalArgumentException, PhotoDetectionException { 
+      throws IllegalArgumentException, PhotoDetectionException {
     switch (photoCategory) {
       case "product":
-        return "Fountain pen";
+        ProductDetectionAPI productDetectionAPI = new ProductDetectionAPIImpl();
+        ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(productDetectionAPI);
+
+        String productShoppingQuery;
+        try {
+          productShoppingQuery = productPhotoDetector.buildShoppingQuery(uploadedImageBytes);
+        } catch (PhotoDetectionException exception) {
+          throw exception;
+        }
+        return productShoppingQuery;
       case "shopping-list":
         ImageTextDectector imageTextDectector = new ImageTextDectector();
         String shoppingQuery;
