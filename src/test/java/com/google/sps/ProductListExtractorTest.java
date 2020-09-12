@@ -67,6 +67,7 @@ public final class ProductListExtractorTest {
 
   @Test
   public void noProductRatingProvided() throws Exception {
+    // Have a product container missing rating data, which should not alternate the extraction.
     List<Product> expectedProducts = new ArrayList<>();
     expectedProducts.add(Product.create("TWSBI Eco <b>Fountain Pen</b> - Clear - Extra-Fine", 
         "https://image-link-1.com", 
@@ -85,7 +86,7 @@ public final class ProductListExtractorTest {
 
   @Test
   public void emptyProductTitle() throws Exception {
-    // Add two product containers, one missing the product title, therefore should be ignored.
+    // Add two product containers - one missing the product title, which should be ignored.
     List<Product> expectedProducts = new ArrayList<>();
     expectedProducts.add(Product.create("Faber-Castell Fountain Pen", 
         "https://image-link-2.com", 
@@ -104,6 +105,8 @@ public final class ProductListExtractorTest {
 
   @Test
   public void NoProductData() throws Exception {
+    // Have an empty doc with no data, therefore no product containers. The extractor should 
+    // return an empty array.
     List<Product> expectedProducts = new ArrayList<>();
     
     Document mockResultsDoc = 
