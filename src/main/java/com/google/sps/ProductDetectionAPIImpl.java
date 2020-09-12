@@ -26,6 +26,7 @@ import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
 
 import com.google.common.collect.ImmutableList;
+
 import com.google.protobuf.ByteString;
 
 import com.google.sps.data.ProductDetectionData;
@@ -36,7 +37,6 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Uses Cloud Vision API to detect product photo content.

@@ -26,17 +26,13 @@ public class ProductPhotoDetector {
     this.productDetectionAPI = productDetectionAPI;
   }
 
-  public String buildShoppingQuery(byte[] imageBytes) 
-      throws PhotoDetectionException {
+  public String buildShoppingQuery(byte[] imageBytes) throws PhotoDetectionException {
     ProductDetectionData results = productDetectionAPI.detectProductPhotoContent(imageBytes);
 
     // If labels list is empty, there is no specific product query to search on Google Shopping.
     if (results.getLabels().isEmpty()) {
       throw new PhotoDetectionException("Missing labels for image detection.");
     }
-
-    // TODO: Update label to search with, by handling the case when the chosen label does not define a product
-    // - e.g. "furniture" instead of "sofa".
 
     String firstLabelDetected = results.getLabels().get(0);
     String firstLogoDetected = !results.getLogos().isEmpty() ? results.getLogos().get(0) + " " : "";
