@@ -40,7 +40,7 @@ public class GoogleShoppingQuerier {
   //       Here, "tbs=vw:l" sets that the items are displayed as list and not as grid.
   // "safe" defines the level of filtering for adult content;
   private final String GOOGLE_SEARCH_BASE_URL =
-      "https://www.google.com/search?tbm=shop&tbs=vw:l&safe=active";
+      "https://www.google.com/search?tbm=shop&tbs=vw:l&safe=active&cr=countryGB";
 
   /** 
    * Scrapes Google Shopping based on the input and returns the results.
