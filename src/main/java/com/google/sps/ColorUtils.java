@@ -24,7 +24,9 @@ import java.util.ArrayList;
  * Utility class for converting RGB color values to color name.
  */
 public class ColorUtils {
-
+  // Prevent creating an instance of this class.
+  private ColorUtils() {} 
+  
   // Compile a list of known colors.
   private static final ImmutableList<ColorName> COLOR_LIST =  
       ImmutableList.of(
@@ -84,7 +86,7 @@ public class ColorUtils {
    * To find the closest color, gets the color list, and then computes the distance between 
    * the query color and every color in the color list, based on their RGB values.
    */
-  public String getColorNameFromRGB(int r, int g, int b) throws IllegalArgumentException {
+  public static String getColorNameFromRGB(int r, int g, int b) throws IllegalArgumentException {
     if (!(0 < r && r < 255) || !(0 < g && g < 255) || !(0 < b && b < 255)) {
       throw new IllegalArgumentException("RGB values outside [0, 255] range.");
     }
