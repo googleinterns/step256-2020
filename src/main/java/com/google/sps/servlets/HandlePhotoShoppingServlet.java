@@ -27,6 +27,8 @@ import com.google.sps.ProductDetectionAPIImpl;
 import com.google.sps.PhotoDetectionException;
 import com.google.sps.ProductPhotoDetector;
 import com.google.sps.GoogleShoppingQuerier;
+import com.google.sps.ImageTextDectector;
+import com.google.sps.PhotoDetectionException;
 import com.google.sps.ShoppingQuerierConnectionException;
 import com.google.sps.data.Product;
 import com.google.sps.data.ShoppingQueryInput;
@@ -129,7 +131,16 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         }
         return shoppingQuery;
       case "shopping-list":
-        return "Fuzzy socks";
+        ImageTextDectector imageTextDectector = new ImageTextDectector();
+        String shoppingQuery;
+        try {
+          shoppingQuery = imageTextDectector.imageToShoppingListExtractor(uploadedImageBytes);
+        } catch (PhotoDetectionException exception) {
+          throw exception;
+        } catch (IOException e) {
+            throw new PhotoDetectionException("Error while getting shopping query.", e);
+        }
+        return shoppingQuery;
       case "barcode":
         return "Running shoes";
       default:
