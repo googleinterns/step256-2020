@@ -30,7 +30,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** */
+/**  
+ * Tests {@link ProductListExtractor#extract(Document)}, based on mock shopping results files,
+ * checking that products data is successfully extracted.
+ */
 @RunWith(JUnit4.class)
 public final class ProductListExtractorTest {
   private ProductListExtractor productListExtractor;
