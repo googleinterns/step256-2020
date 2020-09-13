@@ -7,6 +7,10 @@ body {
   padding-bottom: 3rem; /* Padding below the footer */
 }
 
+.hidden {
+  display: none;
+}
+
 .feature-display h2 {
   font-weight: 400;
   margin-top: 1.5rem;
@@ -36,24 +40,7 @@ body {
   padding:30px;
 }
 
-/* Sticky footer */
-.footer {
-  background-color: #f5f5f5;
-  bottom: 0;
-  position: absolute;
-  width: 100%;
-}
-
-.hidden {
-  display: none;
-}
-
-/* Product price */
-.HRLxBb {
-  font-weight: bold;
-}
-
-#hplogo {
+#google-logo {
   background: url(https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png) no-repeat;
   background-size: 272px 92px;
   height: 92px;
@@ -82,9 +69,9 @@ body {
 }
 
 .searchbar {
-  border: none;
-  height: 45px;
+  border: none;  
   font-size: 16px;  
+  height: 45px;
   outline: none;
   width: 500px;
 }
@@ -109,9 +96,14 @@ body {
   padding: 9px 19px;
 }
 
+/* Product price */
+.HRLxBb {
+  font-weight: bold;
+}
+
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
-  #hplogo {
+  #google-logo {
     background: url(https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_160x56dp.png) no-repeat;
     background-size: 160px 56px;
     height: 56px;
@@ -133,4 +125,12 @@ body {
   .searchbar {
     width: 235px;
   }
+}
+
+/* Sticky footer */
+.footer {
+  background-color: #f5f5f5;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
 }
