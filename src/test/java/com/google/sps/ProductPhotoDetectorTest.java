@@ -26,8 +26,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /** 
- * Tests the behaviour of ProductPhotoDetector, namely the shopping query returned and the 
- * exceptions thrown.
+ * Tests the behaviour of {@link ProductPhotoDetector#buildShoppingQuery(byte[])}.
  */
 @RunWith(JUnit4.class)
 public final class ProductPhotoDetectorTest {
@@ -132,7 +131,4 @@ public final class ProductPhotoDetectorTest {
         productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
     });
   }
-
-  // TODO: Add tests when first label detected does not define a product - e.g. "furniture" instead
-  // of "sofa" (after adding the solution for this problem in ProductPhotoDetector's buildShoppingQuery).
 }
