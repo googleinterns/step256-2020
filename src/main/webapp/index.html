@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Shopping with photos">
   <meta name="author" content="Saakshi Saxena and Raluca Tudor">
   <meta name="generator" content="Jekyll v4.1.1">
@@ -24,7 +24,6 @@
 
 <body>
   <main role="main">
-    
     <center>
       <div title="Google" id="hplogo" align="left">
         <div class="logo-subtext">
@@ -34,13 +33,11 @@
 
       <div class="bar">
         <input class="searchbar" type="text" title="Search">
-        <a href="#"> 
-          <img class="camera" 
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Google_Camera_Icon.svg/768px-Google_Camera_Icon.svg.png" 
-              title="Search by Camera"
-              data-toggle="modal" data-target="#upload-image-modal"
-              id="upload-photo-button">
-        </a>
+        <img class="camera" 
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Google_Camera_Icon.svg/768px-Google_Camera_Icon.svg.png" 
+            title="Search by Camera"
+            data-toggle="modal" data-target="#upload-image-modal"
+            id="upload-photo-button">
       </div>
     </center>
 
@@ -57,23 +54,23 @@
             
           <!-- Modal body -->
           <div class="modal-body">
-            <div id="upload-image-form" class="hidden">
+            <form id="upload-image-form" class="hidden" action='#' onsubmit="return false">
               <select id="photo-category" name="photo-category" required>
                 <option value="product">Product</option>
                 <option value="shopping-list">Shopping-List</option>
                 <option value="barcode">Barcode</option>
               </select>
 
-              <input type="file" name="photo" id="input-photo" required>
+              <input class="mt-2" type="file" name="photo" id="input-photo" required>
 
-              <button onclick="onSubmitUploadImageForm()">Search</button>
-            </div>
+              <button class="button mt-3" onclick="onSubmitUploadImageForm()">Search</button>
+            </form>
           </div><!-- /.modal-body -->
             
           <!-- Modal footer -->
           <div class="modal-footer">
             <p>
-              After submitting the form, please wait for the results page to load.
+              After submitting the form, please wait for the results to load.
             </p>
           </div><!-- /.modal-footer -->
             
@@ -82,10 +79,14 @@
     </div><!-- /.modal -->
 
     <!-- Prompt container to alert user that the results are loading -->
-    <div class="text-center mt-5" id="search-loading-prompt"></div>
+    <div class="text-center mt-4" id="search-loading-prompt"></div>
+
+    <div class="text-center mt-4">
+      <img src="./resources/loading.gif" alt="Loading..." class="hidden" id="loading-gif-prompt">
+    </div>
 
     <!-- Container to show the user the shopping query used to search on Google Shopping -->
-    <div class="text-center mt-5 hidden" id="shopping-query-display-container">
+    <div class="text-center mt-4 hidden" id="shopping-query-display-container">
       Showing results for <strong><span id="shopping-query"></span></strong>.
     </div>
 

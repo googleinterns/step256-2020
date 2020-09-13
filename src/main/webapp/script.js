@@ -54,9 +54,13 @@ async function onSubmitUploadImageForm() {
   }
   $('#shopping-results-wrapper').empty();
 
+  // Stop displaying the Google logo.
+  $('#hplogo').addClass('hidden');
+
   // Close the form modal and display a prompt, alerting the user that the results are loading.
   $('#upload-image-modal').modal('hide');
   $('#search-loading-prompt').text('Shopping results loading, please wait!');
+  $('#loading-gif-prompt').removeClass('hidden');
 
   // Make a POST request to {@code imageUploadUrl} to process the image uploading.
   const response = await fetch(imageUploadUrl, {
@@ -82,6 +86,7 @@ async function onSubmitUploadImageForm() {
 
   // Empty the prompt container and add the {@code products} content into the page.
   $('#search-loading-prompt').empty();
+  $('#loading-gif-prompt').addClass('hidden');
 
   // Show the user the shopping query built to search on Google Shopping.
   $('#shopping-query-display-container').removeClass('hidden');
