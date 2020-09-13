@@ -4,76 +4,9 @@ html {
 }
 
 body {
-  color: #5a5a5a;
+  /* color: #5a5a5a; */
   padding-bottom: 3rem; /* Padding below the footer */
-  padding-top: 3rem;
-}
-
-.bd-placeholder-img {  
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-  font-size: 1.125rem;
-  text-anchor: middle;
-  user-select: none; 
-}
-  
-.feature-display {
-  margin-top: 4rem;
-}
-
-.feature-display .col-lg-4 {
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.feature-display h2 {
-  font-weight: 400;
-  margin-top: 1.5rem;
-}
-
-.feature-display .col-lg-4 p {
-  margin-left: .75rem;
-  margin-right: .75rem;
-}
-
-.fa-image {
-  background:#DB4437;
-  border-radius: 50%;
-  color: white;
-  font-size: 75px;
-  padding:30px;
-}
-
-.fa-list {
-  background: #F4B400;
-  border-radius: 50%;
-  color: white;
-  font-size: 75px;
-  padding:30px;
-}
-
-.fa-barcode {
-  background:#0F9D58;
-  border-radius: 50%;
-  color: white;
-  font-size: 75px;
-  padding:30px;
-}
-
-.navbar-brand {
-  font-family: 'Patrick Hand SC', cursive;
-  font-size: 30px;
-}
-
-.nav-item {
-  font-size: 18px;
-}
-
-h1 {
-  font-family: 'Patrick Hand SC', cursive;
-  font-size: 55px;
-  margin-bottom: 5%;
+  /* padding-top: 3rem; */
 }
 
 /* Sticky footer */
@@ -84,58 +17,6 @@ h1 {
   width: 100%;
 }
 
-/* CSS for upload function */
-.bg-model {
-  align-items: center; /* Align vertically*/
-  background: cover;
-  background-attachment: fixed;
-  background-color: rgba(0, 0, 0, 0.9);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  color: white;
-  display: none;
-  font-size: 20px;
-  height:90%;
-  justify-content: center;
-  margin-bottom: 3%;
-  margin-top: 4%;
-  position: absolute ;
-  top:0;
-  left:0;
-  padding-bottom: 3rem; /* Padding below the footer */
-  padding-top: 3rem;
-  width: 100%;
-}
-
-.model-content {
-  height: 23%;
-  padding: 10%;
-  position: absolute;
-  top: 0;
-  text-align: center;
-  width: 80%;
-}
-
-input {
-  display:  block;
-  margin: 15px auto;
-  margin-bottom: 5%;
-  width: 50%;
-}
-
-.close {
-  color: white;
-  cursor: pointer;
-  font-size: 50px;
-  margin: 3%;
-  position: absolute;
-  right: 14px;
-  top: 0;
-  transform: rotate(45deg);
-}
-
-/* Upload images form is hidden by default. */
 .hidden {
   display: none;
 }
@@ -143,4 +24,51 @@ input {
 /* Product price */
 .HRLxBb {
   font-weight: bold;
+}
+
+#hplogo {
+  background: url(https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png) no-repeat;
+  background-size: 272px 92px;
+  height: 92px;
+  margin-top: 200px;
+  margin-bottom: 20px;
+  width: 272px;
+}
+
+.logo-subtext {
+  color: #4285f4;
+  font: 16px/16px roboto-regular, arial, sans-serif;
+  left: 215px;
+  position: relative;
+  top: 76px;
+  white-space: nowrap;
+}
+
+.bar{  
+  border: 1px solid #dcdcdc;  
+  border-radius: 30px;
+  margin: 0 auto;
+  width: 400px;
+}
+
+.bar:hover {
+  box-shadow: 1px 1px 8px 1px #dcdcdc;
+}
+
+.bar:focus-within {
+  box-shadow: 1px 1px 8px 1px #dcdcdc;
+  outline: none;
+}
+
+.searchbar {
+  border: none;
+  height: 45px;
+  font-size: 16px;  
+  outline: none;
+  width: 330px;
+}
+
+.camera {
+  height: 30px;
+  position: relative;
 }

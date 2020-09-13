@@ -23,68 +23,41 @@
 </head>
 
 <body>
-  <header>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="#">Shopping with photos</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact us</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </header>
-
   <main role="main">
-
-    <!-- Wrap the rest of the page in another container to center all the content. -->
-
-    <div class="container feature-display">
-      <h1 class="text-center mb-5">Shop with...</h1>
-      <div class="row">
-        <div class="col-lg-4">
-          <i class="fa fa-image"></i>
-          <h2>Product Photo</h2>
-          <p>
-            Choose an image with the product you are searching for, and we'll compile a shopping 
-            list of similar products for you.
-          </p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <i class="fa fa-list"></i>
-          <h2>Shopping List</h2>
-          <p>
-            The shopping list may be hand-written.
-          </p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <i class="fa fa-barcode"></i>
-          <h2>Barcode</h2>
-          <p>
-            Upload a barcode
-          </p>
-        </div><!-- /.col-lg-4 -->
-        
-        <div class="col text-center">
-          <p><button class="btn btn-secondary" id="upload-photo-button">Upload photo »</button></p>
+    
+    <center>
+      <div title="Google" id="hplogo" align="left">
+        <div class="logo-subtext">
+          <span>Shopping</span>
         </div>
+      </div>
 
-        <!-- Uplad Image Modal -->
-        <div class="bg-model">
-          <div class="model-content">
-            <button class="close" onclick="closeFileUploadDialog()"> + </button>
-            <form id="upload-image-form" class="hidden" action='#' onsubmit="return false" 
-                enctype="multipart/form-data">
-              <h1>Upload image</h1>
+      <div class="bar">
+        <input class="searchbar" type="text" title="Search">
+        <a href="#"> 
+          <img class="camera" 
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Google_Camera_Icon.svg/768px-Google_Camera_Icon.svg.png" 
+              title="Search by Camera"
+              data-toggle="modal" data-target="#upload-image-modal"
+              id="upload-photo-button">
+        </a>
+      </div>
+    </center>
+
+    <!-- Modal for image uploading -->
+    <div class="modal fade" id="upload-image-modal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Upload image</h4>
+            <button type="button" class="close" data-dismiss="modal">×</button>
+          </div><!-- /.modal-header -->
+            
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div id="upload-image-form" class="hidden">
               <select id="photo-category" name="photo-category" required>
                 <option value="product">Product</option>
                 <option value="shopping-list">Shopping-List</option>
@@ -94,25 +67,35 @@
               <input type="file" name="photo" id="input-photo" required>
 
               <button onclick="onSubmitUploadImageForm()">Search</button>
-            </form>
-          </div>
-        </div>
-
-      </div><!-- /.row -->
-    </div><!-- /.container -->
+            </div>
+          </div><!-- /.modal-body -->
+            
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <p>
+              After submitting the form, please wait for the results page to load.
+            </p>
+          </div><!-- /.modal-footer -->
+            
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <!-- Prompt container to alert user that the results are loading -->
-    <div class="text-center" id="search-loading-prompt"></div>
+    <div class="text-center mt-5" id="search-loading-prompt"></div>
 
     <!-- Container to show the user the shopping query used to search on Google Shopping -->
-    <div class="text-center hidden" id="shopping-query-display-container">
+    <div class="text-center mt-5 hidden" id="shopping-query-display-container">
       Showing results for <strong><span id="shopping-query"></span></strong>.
     </div>
 
     <!-- Shopping results container -->
-    <div class="album py-5 px-5">
-      <div class="row mx-5" id="shopping-results-wrapper">
-      </div><!-- /.row -->
+
+    <div class="album py-5">
+      <div class="container">
+        <div class="row" id="shopping-results-wrapper">
+        </div><!-- /.row -->
+      </div><!-- /.container -->
     </div><!-- /.album -->
   </main>
 
