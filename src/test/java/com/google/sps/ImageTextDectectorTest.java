@@ -52,13 +52,15 @@ public final class ImageTextDectectorTest {
     List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
     shoppingListText.add(ShoppingListTextEntry.create("Bag", 10));
 
-    initImageTextDectector(shoppingListText);
+    fakeTextDetectionAPIImpl.setReturnValue(shoppingListText);
+    fakeTextDetectionAPIImpl.setException(new PhotoDetectionException("byte array is empty"));    
+    imageTextDectector = new ImageTextDectector(fakeTextDetectionAPIImpl);
 
     Exception exception = Assertions.assertThrows(PhotoDetectionException.class, () -> {
         imageTextDectector.imageToShoppingListExtractor(NULL_IMAGE_BYTES);
     });
 
-    String expectedMessage = "Bytes array is empty.";
+    String expectedMessage = "byte array is empty";
     String actualMessage = exception.getMessage();
  
     Assertions.assertTrue(actualMessage.equals(expectedMessage));
@@ -79,7 +81,7 @@ public final class ImageTextDectectorTest {
  
     Assertions.assertTrue(actualMessage.equals(expectedMessage));
   }
-  
+
   @Test
   public void singleTextImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
