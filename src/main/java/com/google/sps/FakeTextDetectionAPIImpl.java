@@ -14,30 +14,30 @@
 
 package com.google.sps;
 
-import com.google.cloud.vision.v1.AnnotateImageRequest;
-import com.google.cloud.vision.v1.AnnotateImageResponse;
-import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
-import com.google.cloud.vision.v1.EntityAnnotation;
-import com.google.cloud.vision.v1.Image;
-import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.sps.data.ShoppingListTextEntry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FakeTextDetectionAPIImpl implements TextDetectionAPI {
-    
-  public List<ShoppingListTextEntry> detect(byte[] imageBytes) throws PhotoDetectionException {
-      List<ShoppingListTextEntry> results = new ArrayList<>();
-      if(imageBytes.length == 0) {
-          throw new PhotoDetectionException("Invalid imageBytes");
-      }
-      else if(imageBytes.length < 10) {
-          results.add(ShoppingListTextEntry.create("Grey boots for men", 100));
-      }
-      else if(imageBytes.length > 10) {
-          results.add(ShoppingListTextEntry.create("Blue shirt for women", 98));
-      }
-      return results;
+  private List<ShoppingListTextEntry> detectedData;
+  private PhotoDetectionException photoDetectionException;
+
+  /** Set textimage detection data to be returned. */
+  public void setReturnValue(List<ShoppingListTextEntry> detectedData) {
+    this.detectedData = detectedData;
+  }
+
+  /** Set exception to be thrown. */
+  public void setException(PhotoDetectionException photoDetectionException) {
+    this.photoDetectionException = photoDetectionException;
+  }
+
+  public List<ShoppingListTextEntry> detect(byte[] imageBytes) 
+      throws PhotoDetectionException {
+    if (photoDetectionException != null) {
+      throw this.photoDetectionException;
+    }
+    return this.detectedData;
   }
 }
