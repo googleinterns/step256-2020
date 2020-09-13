@@ -23,7 +23,7 @@ public class FakeTextDetectionAPIImpl implements TextDetectionAPI {
   private List<ShoppingListTextEntry> detectedData;
   private PhotoDetectionException photoDetectionException;
 
-  /** Set textimage detection data to be returned. */
+  /** Set detectedData to be returned. */
   public void setReturnValue(List<ShoppingListTextEntry> detectedData) {
     this.detectedData = detectedData;
   }
