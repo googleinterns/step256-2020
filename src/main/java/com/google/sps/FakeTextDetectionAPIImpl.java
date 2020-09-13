@@ -35,6 +35,9 @@ public class FakeTextDetectionAPIImpl implements TextDetectionAPI {
 
   public List<ShoppingListTextEntry> detect(byte[] imageBytes) 
       throws PhotoDetectionException {
+    if (imageBytes.length == 0) {
+      throw new PhotoDetectionException("Bytes array is empty.");
+    }
     if (photoDetectionException != null) {
       throw this.photoDetectionException;
     }

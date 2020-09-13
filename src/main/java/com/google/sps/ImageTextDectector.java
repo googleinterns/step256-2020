@@ -55,10 +55,13 @@ TextDetectionAPI textDetectionAPI;
       throws PhotoDetectionException {
     // ToDo: Make an algorithm to create query sentences by separating out text returned by
     // cloudVisionAPI; to group shoppping items based on their position (y axis).
-    if (shoppingListText.size() < 1) {
+    if (shoppingListText.size() == 0) {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
-    String queryItem = shoppingListText.get(0).getText();
+    String queryItem = "";
+    for(ShoppingListTextEntry singleWord : shoppingListText) {
+      queryItem += singleWord.getText()+" ";
+    }
     return PhotoShoppingUtil.formatQuery(queryItem);
   }
 }
