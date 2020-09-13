@@ -39,7 +39,66 @@
             data-toggle="modal" data-target="#upload-image-modal"
             id="upload-photo-button">
       </div>
+
+      <button class="button mt-4" data-toggle="modal" data-target="#features-info-modal">
+        Learn more about <em>Shopping with Photos</em>
+      </button>
     </center>
+
+    <!-- Modal for features info -->
+    <div class="modal fade" id="features-info-modal">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Shopping with Photos</h4>
+            <button type="button" class="close" data-dismiss="modal">×</button>
+          </div><!-- /.modal-header -->
+            
+          <!-- Modal body -->
+          <div class="modal-body">
+            <!-- <div class="container feature-display"> -->
+              <div class="row text-center feature-display">
+                <div class="col-lg-4">
+                  <i class="fa fa-image"></i>
+                  <h2>Product Photo</h2>
+                  <p>
+                    Upload an image with the product you are searching for, and we'll compile a shopping 
+                    list of similar products for you!
+                  </p>
+                </div><!-- /.col-lg-4 -->
+                <div class="col-lg-4">
+                  <i class="fa fa-list"></i>
+                  <h2>Shopping List</h2>
+                  <p>
+                    Need help with finding severeal products? Upload a photo with the shopping list,
+                    which may be hand-written, and we'll display options for each item!
+                  </p>
+                </div><!-- /.col-lg-4 -->
+                <div class="col-lg-4">
+                  <i class="fa fa-barcode"></i>
+                  <h2>Barcode</h2>
+                  <p>
+                    Upload a barcode image - we'll decode it and return the product with that specific
+                    barcode!
+                  </p>
+                </div><!-- /.col-lg-4 -->
+              </div><!-- /.row -->
+            <!-- </div> -->
+            <!-- /.container -->
+          </div><!-- /.modal-body -->
+            
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <p>
+              Happy shopping!
+            </p>
+          </div><!-- /.modal-footer -->
+            
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <!-- Modal for image uploading -->
     <div class="modal fade" id="upload-image-modal">

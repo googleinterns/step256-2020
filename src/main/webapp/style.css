@@ -4,9 +4,36 @@ html {
 }
 
 body {
-  /* color: #5a5a5a; */
   padding-bottom: 3rem; /* Padding below the footer */
-  /* padding-top: 3rem; */
+}
+
+.feature-display h2 {
+  font-weight: 400;
+  margin-top: 1.5rem;
+}
+
+.fa-image {
+  background:#DB4437;
+  border-radius: 50%;
+  color: white;
+  font-size: 75px;
+  padding:30px;
+}
+
+.fa-list {
+  background: #F4B400;
+  border-radius: 50%;
+  color: white;
+  font-size: 75px;
+  padding:30px;
+}
+
+.fa-barcode {
+  background:#0F9D58;
+  border-radius: 50%;
+  color: white;
+  font-size: 75px;
+  padding:30px;
 }
 
 /* Sticky footer */
@@ -54,11 +81,6 @@ body {
   box-shadow: 1px 1px 8px 1px #dcdcdc;
 }
 
-.bar:focus-within {
-  box-shadow: 1px 1px 8px 1px #dcdcdc;
-  outline: none;
-}
-
 .searchbar {
   border: none;
   height: 45px;
@@ -84,11 +106,6 @@ body {
 
 .button:hover {
   border: 1px solid #c8c8c8;
-  padding: 9px 19px;
-}
-
-.button:focus {
-  border: 1px solid #4885ed;
   padding: 9px 19px;
 }
 
