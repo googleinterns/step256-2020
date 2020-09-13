@@ -128,10 +128,8 @@ function getProductElementHTML(productTitle,
                                productLink,
                                productShippingPrice) {
   return `<div class="card mb-4 shadow-sm">
-            <div class="col-4">
-              <img src="${productImageLink}" class="mx-auto d-block">
-            </div>
             <div class="card-body">
+              <img src="${productImageLink}" style="float: left;" class="mr-2">
               <p class="card-text">${productTitle}</p>
               <p class="card-text">${productPriceAndSeller}</p>
               <div class="d-flex justify-content-between align-items-center">
