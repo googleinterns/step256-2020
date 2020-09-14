@@ -118,20 +118,4 @@ public final class ImageTextDectectorTest {
 
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
-
-  @Test
-  public void multiText_inMultipleLines_Image() throws Exception {
-    List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
-    shoppingListText.add(ShoppingListTextEntry.create("Blue", 10));
-    shoppingListText.add(ShoppingListTextEntry.create("Shoes", 11));
-    shoppingListText.add(ShoppingListTextEntry.create("Pink", 30));
-    shoppingListText.add(ShoppingListTextEntry.create("Socks", 34));
-
-    initImageTextDectector(shoppingListText);
-
-    String expectedShoppingQuery = "Blue Shoes Pink Socks";
-    String actualShoppingQuery = imageTextDectector.extractShoppingList(IMAGE_BYTES);
-
-    Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
-  }
 }
