@@ -20,8 +20,6 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
-import com.google.common.io.ByteSource;
-
 import com.google.gson.Gson;
 
 import com.google.sps.BarcodeImageDetector;
@@ -39,7 +37,6 @@ import com.google.sps.data.ShoppingQueryInput;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,17 +143,10 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         }
         return shoppingQuery;
       case "barcode":
-        InputStream uploadedImageInputStream;
-        try {
-          uploadedImageInputStream = ByteSource.wrap(uploadedImageBytes).openStream();
-        } catch (IOException exception) {
-          throw new PhotoDetectionException("Failed to convert byte array to InputStream.", exception);
-        }
-
         BarcodeImageDetector barcodeImageDetector = new BarcodeImageDetector();
         String barcodeQuery;
         try {
-          barcodeQuery = barcodeImageDetector.detect(uploadedImageInputStream);
+          barcodeQuery = barcodeImageDetector.detect(uploadedImageBytes);
         } catch (PhotoDetectionException exception) {
           throw exception;
         }

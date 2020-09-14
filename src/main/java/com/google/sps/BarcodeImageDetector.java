@@ -16,6 +16,8 @@ package com.google.sps;
 
 import com.google.auto.value.AutoValue;
 
+import com.google.common.io.ByteSource;
+
 // Import the ZXing barcode image processing library.
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
@@ -35,16 +37,23 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *
+ * For a barcode image, detects the code, using the Java Apache Camel 
+ * Barcode API based on the ZXing library, and returns it.
  */
 public class BarcodeImageDetector {
   
-  /** */
-  public String detect(InputStream inputStream) throws PhotoDetectionException {
+  public String detect(byte[] imageBytes) throws PhotoDetectionException {
+    // Convert byte array to InputStream.
+    InputStream imageInputStream;
+    try {
+      imageInputStream = ByteSource.wrap(imageBytes).openStream();
+    } catch (IOException exception) {
+      throw new PhotoDetectionException("Failed to convert byte array to InputStream.", exception);
+    }
     
     BufferedImage bufferedImage;
     try {
-      bufferedImage = ImageIO.read(inputStream);
+      bufferedImage = ImageIO.read(imageInputStream);
     } catch (IOException e) {
       throw new PhotoDetectionException("Failed to convert InputStream to BufferedImage.", e);
     }
