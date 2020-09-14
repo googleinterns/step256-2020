@@ -49,7 +49,7 @@ public class ImageTextDectector {
     }
     String queryItem = "";
     for(ShoppingListTextEntry singleWord : shoppingListText) {
-      queryItem += singleWord.getText()+" ";
+      queryItem += singleWord.getText() + " ";
     }
     return PhotoShoppingUtil.formatQuery(queryItem);
   }
