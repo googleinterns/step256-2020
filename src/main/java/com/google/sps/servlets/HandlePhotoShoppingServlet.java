@@ -102,12 +102,7 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     try {
       shoppingQuerierResults = querier.query(shoppingQueryInput);
     } catch(IllegalArgumentException | ShoppingQuerierConnectionException | IOException exception) {
-      // response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
-      response.setContentType("application/json;");
-          String shoppingQueryJSON = new Gson().toJson(exception.getMessage()); 
-    String shoppingQuerierResultsJSON = new Gson().toJson(""); 
-      response.getWriter().write("[" + shoppingQueryJSON + "," + shoppingQuerierResultsJSON + "]");
-      return;
+      response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
     }
      
     // Convert {@code shoppingQuery} and products List - {@code shoppingQuerierResults} - into JSON strings 
