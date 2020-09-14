@@ -20,8 +20,11 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
+import com.google.common.io.ByteSource;
+
 import com.google.gson.Gson;
 
+import com.google.sps.BarcodeImageDetector;
 import com.google.sps.ProductDetectionAPI;
 import com.google.sps.ProductDetectionAPIImpl;
 import com.google.sps.PhotoDetectionException;
@@ -36,6 +39,7 @@ import com.google.sps.data.ShoppingQueryInput;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +102,11 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     try {
       shoppingQuerierResults = querier.query(shoppingQueryInput);
     } catch(IllegalArgumentException | ShoppingQuerierConnectionException | IOException exception) {
-      response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+      // response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+      response.setContentType("application/json;");
+          String shoppingQueryJSON = new Gson().toJson(exception.getMessage()); 
+    String shoppingQuerierResultsJSON = new Gson().toJson(""); 
+      response.getWriter().write("[" + shoppingQueryJSON + "," + shoppingQuerierResultsJSON + "]");
       return;
     }
      
@@ -142,7 +150,21 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         }
         return shoppingQuery;
       case "barcode":
-        return "Running shoes";
+        InputStream uploadedImageInputStream;
+        try {
+          uploadedImageInputStream = ByteSource.wrap(uploadedImageBytes).openStream();
+        } catch (IOException exception) {
+          throw new PhotoDetectionException("Failed to convert byte array to InputStream.", exception);
+        }
+
+        BarcodeImageDetector barcodeImageDetector = new BarcodeImageDetector();
+        String barcodeQuery;
+        try {
+          barcodeQuery = barcodeImageDetector.detect(uploadedImageInputStream);
+        } catch (PhotoDetectionException exception) {
+          throw exception;
+        }
+        return barcodeQuery;
       default:
         throw new IllegalArgumentException(
             "Photo category has to be either product, shopping-list or barcode.");
