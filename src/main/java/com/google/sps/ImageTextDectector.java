@@ -14,39 +14,28 @@
 
 package com.google.sps;
 
-import com.google.cloud.vision.v1.AnnotateImageRequest;
-import com.google.cloud.vision.v1.AnnotateImageResponse;
-import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
-import com.google.cloud.vision.v1.EntityAnnotation;
-import com.google.cloud.vision.v1.Image;
-import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.sps.data.ShoppingListTextEntry;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class generates a shopping list based on image 
- * 1) It uses cloudVisionAPI to scan an image
- * containing shopping list items and detect text from it.
- * 2) It then uses an algorithm to create shopping sentences 
- * (queries) from the text and their position.
- * 3) This list of queries is returned to the Servlet from the
- * method 'imageToShoppingListExtractor'.
+ * This class generates a shopping list based on image 1) It uses cloudVisionAPI to scan an image
+ * containing shopping list items and detect text from it. 2) It then uses an algorithm to create
+ * shopping sentences (queries) from the text and their position. 3) This list of queries is
+ * returned to the Servlet from the method 'imageToShoppingListExtractor'.
  */
 public class ImageTextDectector {
 
-TextDetectionAPI textDetectionAPI;
+  TextDetectionAPI textDetectionAPI;
 
   public ImageTextDectector(TextDetectionAPI textDetectionAPI) {
-      this.textDetectionAPI = textDetectionAPI;
+    this.textDetectionAPI = textDetectionAPI;
   }
 
   public String imageToShoppingListExtractor(byte[] shoppingImageBytes)
-       throws IOException, PhotoDetectionException {
-
+      throws IOException, PhotoDetectionException {
     List<ShoppingListTextEntry> shoppingListText = textDetectionAPI.detect(shoppingImageBytes);
- 
+
     return createShoppingListQuery(shoppingListText);
   }
 
