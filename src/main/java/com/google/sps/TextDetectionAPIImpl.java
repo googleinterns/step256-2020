@@ -29,7 +29,7 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
   public List<ShoppingListTextEntry> detect(byte[] imageBytes) throws PhotoDetectionException {
     Image shoppingImage = PhotoShoppingUtil.getImageFromBytes(imageBytes);
 
-    List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImage);
+    List<AnnotateImageRequest> requests = generateShoppingImageRequest(shoppingImage);
 
     BatchAnnotateImagesResponse response = detectTextFromImage(requests);
 
@@ -37,7 +37,7 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
   }
 
   /** Generates the request query to be sent to CloudVisionAPI client. */
-  private List<AnnotateImageRequest> shoppingImageRequestGenerator(Image shoppingImage) {
+  private List<AnnotateImageRequest> generateShoppingImageRequest(Image shoppingImage) {
     List<AnnotateImageRequest> requests = new ArrayList<>();
 
     AnnotateImageRequest request =
