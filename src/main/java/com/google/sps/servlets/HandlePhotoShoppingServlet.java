@@ -120,7 +120,7 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         ImageTextDectector imageTextDectector = new ImageTextDectector(textDetectionAPI);
         String shoppingQuery;
         try {
-          shoppingQuery = imageTextDectector.imageToShoppingListExtractor(uploadedImageBytes);
+          shoppingQuery = imageTextDectector.extractShoppingList(uploadedImageBytes);
         } catch (PhotoDetectionException exception) {
           throw exception;
         } catch (IOException e) {

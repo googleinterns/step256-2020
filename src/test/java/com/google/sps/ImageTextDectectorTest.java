@@ -62,7 +62,7 @@ public final class ImageTextDectectorTest {
         Assertions.assertThrows(
             PhotoDetectionException.class,
             () -> {
-              imageTextDectector.imageToShoppingListExtractor(NULL_IMAGE_BYTES);
+              imageTextDectector.extractShoppingList(NULL_IMAGE_BYTES);
             });
 
     String expectedMessage = "byte array is empty";
@@ -81,7 +81,7 @@ public final class ImageTextDectectorTest {
         Assertions.assertThrows(
             PhotoDetectionException.class,
             () -> {
-              imageTextDectector.imageToShoppingListExtractor(IMAGE_BYTES);
+              imageTextDectector.extractShoppingList(IMAGE_BYTES);
             });
 
     String expectedMessage = "Shopping List doesn't contain any text";
@@ -98,7 +98,7 @@ public final class ImageTextDectectorTest {
     initImageTextDectector(shoppingListText);
 
     String expectedShoppingQuery = "Bag";
-    String actualShoppingQuery = imageTextDectector.imageToShoppingListExtractor(IMAGE_BYTES);
+    String actualShoppingQuery = imageTextDectector.extractShoppingList(IMAGE_BYTES);
 
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
@@ -114,7 +114,7 @@ public final class ImageTextDectectorTest {
     initImageTextDectector(shoppingListText);
 
     String expectedShoppingQuery = "Blue Shoes For Boys";
-    String actualShoppingQuery = imageTextDectector.imageToShoppingListExtractor(IMAGE_BYTES);
+    String actualShoppingQuery = imageTextDectector.extractShoppingList(IMAGE_BYTES);
 
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
@@ -130,7 +130,7 @@ public final class ImageTextDectectorTest {
     initImageTextDectector(shoppingListText);
 
     String expectedShoppingQuery = "Blue Shoes Pink Socks";
-    String actualShoppingQuery = imageTextDectector.imageToShoppingListExtractor(IMAGE_BYTES);
+    String actualShoppingQuery = imageTextDectector.extractShoppingList(IMAGE_BYTES);
 
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
