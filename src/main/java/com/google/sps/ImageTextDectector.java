@@ -44,7 +44,7 @@ public class ImageTextDectector {
       throws PhotoDetectionException {
     // ToDo: Make an algorithm to create query sentences by separating out text returned by
     // cloudVisionAPI; to group shoppping items based on their position (y axis).
-    if (shoppingListText.isEmpty()) {
+    if(shoppingListText.isEmpty()) {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
 
