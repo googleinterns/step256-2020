@@ -66,15 +66,20 @@ public class BarcodeImageDetector {
     // with black data on white backgrounds.
     BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(
         new BufferedImageLuminanceSource(bufferedImage)));
-    
-    // If needed, rotate the image.
-    if (bitmap.getWidth() < bitmap.getHeight()) {
-      if (bitmap.isRotateSupported()) {
-        bitmap = bitmap.rotateCounterClockwise();
-      }
-    }
 
-    return decode(bitmap);
+    String barcodeText;
+    try {
+      barcodeText = decode(bitmap);
+    } catch (PhotoDetectionException e) {
+      // Try to rotate the image and try decoding again.
+      if (bitmap.getWidth() < bitmap.getHeight()) {
+        if (bitmap.isRotateSupported()) {
+          bitmap = bitmap.rotateCounterClockwise();
+        }
+      }
+      return decode(bitmap);
+    }
+    return barcodeText;
   }
   
   private String decode(BinaryBitmap bitmap) throws PhotoDetectionException {
