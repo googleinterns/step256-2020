@@ -28,7 +28,7 @@ import java.util.List;
 public class TextDetectionAPIImpl implements TextDetectionAPI {
   public List<ShoppingListTextEntry> detect(byte[] imageBytes) throws PhotoDetectionException {
     Image shoppingImage = PhotoShoppingUtil.getImageFromBytes(imageBytes);
-    
+
     List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImage);
 
     BatchAnnotateImagesResponse response = detectTextFromImage(requests);
@@ -36,7 +36,7 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
     return parseAnnotateImageResponse(response);
   }
 
-    /** Generates the request query to be sent to CloudVisionAPI client. */
+  /** Generates the request query to be sent to CloudVisionAPI client. */
   private List<AnnotateImageRequest> shoppingImageRequestGenerator(Image shoppingImage) {
     List<AnnotateImageRequest> requests = new ArrayList<>();
 
@@ -68,13 +68,13 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
     return response;
   }
 
-   /**
+  /**
    * Takes cloudVisionAPI's response and returns a list of text and their y-axis position.
    * ToDo : The positions from annotation will be used in sentence formation algorithm to separate
    * individual queries from the shopping list.
    */
-  private List<ShoppingListTextEntry> parseAnnotateImageResponse(BatchAnnotateImagesResponse response)
-      throws PhotoDetectionException {
+  private List<ShoppingListTextEntry> parseAnnotateImageResponse(
+      BatchAnnotateImagesResponse response) throws PhotoDetectionException {
     List<AnnotateImageResponse> responses = response.getResponsesList();
     List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
     for (AnnotateImageResponse identifiedText : responses) {
@@ -83,9 +83,13 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
             "An error occurred while identifying the text from the image\n"
                 + identifiedText.getError().getMessage());
       }
+      // Future Scope: Determine sentence's height by subtracting lower boundary (lower y-axis position) and 
+      // upper boundary (upper y-axis position) to help in handwritten recognition when sentences height ration will vary
       for (EntityAnnotation annotation : identifiedText.getTextAnnotationsList()) {
-          shoppingListText.add(ShoppingListTextEntry.create(annotation.getDescription(), annotation.getBoundingPoly().getVertices(0).getY()));
-        }
+        shoppingListText.add(
+            ShoppingListTextEntry.create(
+                annotation.getDescription(), annotation.getBoundingPoly().getVertices(0).getY()));
+      }
     }
     return shoppingListText;
   }
