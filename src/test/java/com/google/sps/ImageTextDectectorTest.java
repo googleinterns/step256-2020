@@ -44,8 +44,8 @@ public final class ImageTextDectectorTest {
    * Set text detection result/exception, mocking Cloud Vision API, and initialize ImageTextDectector's
    * object.
    */
-  private void initImageTextDectector(List<ShoppingListTextEntry> shoppingListText) {
-    fakeTextDetectionAPIImpl.setReturnValue(shoppingListText);
+  private void initImageTextDectector(List<ShoppingListTextEntry> shoppingListTextEntries) {
+    fakeTextDetectionAPIImpl.setReturnValue(shoppingListTextEntries);
     imageTextDectector = new ImageTextDectector(fakeTextDetectionAPIImpl);
   }
 
@@ -65,16 +65,15 @@ public final class ImageTextDectectorTest {
 
     String expectedMessage = exceptionMessage;
     String actualMessage = exception.getMessage();
-
     Assertions.assertTrue(actualMessage.equals(expectedMessage));
   }
 
   /** Negative test for no text */
   @Test
   public void noText() throws Exception {
-    List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
+    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
 
-    initImageTextDectector(shoppingListText);
+    initImageTextDectector(shoppingListTextEntries);
 
     Exception exception =
         Assertions.assertThrows(
@@ -85,52 +84,48 @@ public final class ImageTextDectectorTest {
 
     String expectedMessage = "Shopping List doesn't contain any text";
     String actualMessage = exception.getMessage();
-
     Assertions.assertTrue(actualMessage.equals(expectedMessage));
   }
 
   @Test
   public void singleWordImage() throws Exception {
-    List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
-    shoppingListText.add(ShoppingListTextEntry.create("Bag", 10));
+    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Bag", 10));
 
-    initImageTextDectector(shoppingListText);
+    initImageTextDectector(shoppingListTextEntries);
 
     String expectedShoppingQuery = "Bag";
     String actualShoppingQuery = imageTextDectector.extractShoppingList(IMAGE_BYTES);
-
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
 
   @Test
   public void multiWord_inSingleLine_Image() throws Exception {
-    List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
-    shoppingListText.add(ShoppingListTextEntry.create("Blue", 10));
-    shoppingListText.add(ShoppingListTextEntry.create("Shoes", 11));
-    shoppingListText.add(ShoppingListTextEntry.create("For", 13));
-    shoppingListText.add(ShoppingListTextEntry.create("Boys", 8));
+    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 11));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("For", 13));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Boys", 8));
 
-    initImageTextDectector(shoppingListText);
+    initImageTextDectector(shoppingListTextEntries);
 
     String expectedShoppingQuery = "Blue Shoes For Boys";
     String actualShoppingQuery = imageTextDectector.extractShoppingList(IMAGE_BYTES);
-
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
 
   @Test
   public void multiWordWithSpecialChars_Image() throws Exception {
-    List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
-    shoppingListText.add(ShoppingListTextEntry.create("Blue", 10));
-    shoppingListText.add(ShoppingListTextEntry.create("Shoes", 11));
-    shoppingListText.add(ShoppingListTextEntry.create("\n", 13));
-    shoppingListText.add(ShoppingListTextEntry.create("+-^", 8));
+    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 11));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("\n", 13));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("+-^", 8));
 
-    initImageTextDectector(shoppingListText);
+    initImageTextDectector(shoppingListTextEntries);
 
     String expectedShoppingQuery = "Blue Shoes";
     String actualShoppingQuery = imageTextDectector.extractShoppingList(IMAGE_BYTES);
-
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
 
