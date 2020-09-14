@@ -37,6 +37,7 @@ public final class ProductPhotoDetectorTest {
   private static final byte[] IMAGE_BYTES = new byte[1];
 
   private FakeProductDetectionAPIImpl fakeProductDetection;
+  private ProductPhotoDetector productPhotoDetector;
 
   @Rule
   public ExpectedException exceptionRule = ExpectedException.none();
@@ -52,7 +53,7 @@ public final class ProductPhotoDetectorTest {
     ProductDetectionData productDetectionData = ProductDetectionData.create(labels, logos, colors);
     fakeProductDetection.setReturnValue(productDetectionData);
 
-    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
+    productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
     return productPhotoDetector;
   }
 
@@ -62,7 +63,7 @@ public final class ProductPhotoDetectorTest {
     ImmutableList<String> logos = ImmutableList.of("Nike", "Brand");
     ImmutableList<String> colors = ImmutableList.of("Black", "Grey");
 
-    ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
+    productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
     String expectedShoppingQuery = "Black Nike Shoe";
     String actualShoppingQuery = 
@@ -77,7 +78,7 @@ public final class ProductPhotoDetectorTest {
     ImmutableList<String> logos = ImmutableList.of();
     ImmutableList<String> colors = ImmutableList.of();
 
-    ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
+    productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
     Assertions.assertThrows(PhotoDetectionException.class, () -> {
         productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
@@ -90,7 +91,7 @@ public final class ProductPhotoDetectorTest {
     ImmutableList<String> logos = ImmutableList.of();
     ImmutableList<String> colors = ImmutableList.of("Black", "Grey");
 
-    ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
+    productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
     String expectedShoppingQuery = "Black Shoe";
     String actualShoppingQuery = 
@@ -105,7 +106,7 @@ public final class ProductPhotoDetectorTest {
     ImmutableList<String> logos = ImmutableList.of("Nike", "Brand");
     ImmutableList<String> colors = ImmutableList.of("Black", "Grey");
 
-    ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
+    productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
     exceptionRule.expect(PhotoDetectionException.class);
     exceptionRule.expectMessage("Missing labels for image detection.");
@@ -118,7 +119,7 @@ public final class ProductPhotoDetectorTest {
     ImmutableList<String> logos = ImmutableList.of("Nike", "Brand");
     ImmutableList<String> colors = ImmutableList.of();
 
-    ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
+    productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
     String expectedShoppingQuery = "Nike Shoe";
     String actualShoppingQuery = 
@@ -130,7 +131,7 @@ public final class ProductPhotoDetectorTest {
   @Test
   public void photoDetectionExceptionThrown() throws Exception {
     fakeProductDetection.setException(new PhotoDetectionException("Fake error."));
-    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
+    productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
 
     // The exception should be re-thrown.
     Assertions.assertThrows(PhotoDetectionException.class, () -> {
@@ -140,7 +141,7 @@ public final class ProductPhotoDetectorTest {
 
   @Test
   public void noImageBytesProvided() throws Exception {
-    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
+    productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
   
     exceptionRule.expect(PhotoDetectionException.class);
     exceptionRule.expectMessage("Empty byte array.");
