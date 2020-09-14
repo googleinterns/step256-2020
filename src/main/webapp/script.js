@@ -145,3 +145,83 @@ function getProductElementHTML(productTitle,
             </div>
           </div>`;
 }
+
+function openNav() {
+  document.getElementById("re-search-sidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById("re-search-sidenav").style.width = "0";
+}
+
+/**
+ * Makes a POST request to {@code imageUploadUrl}, gets the shopping results in JSON format,
+ * into {@code products}, and calls the method for integrating those results into the main 
+ * web page.
+ */
+
+async function onSubmitReSearchForm() {
+  let chosenLabels = [];
+
+  $('input:checkbox[name="checkbox"]:checked').each(function(){
+    chosenLabels.push($(this).val());
+  });
+  const reSearchShoppingQuery = chosenLabels.join(' ');
+  
+
+  let POSTData = {shoppingQuery: reSearchShoppingQuery};
+  console.log(POSTData);
+
+  // Before making the POST request, empty or hide containers from previous photo requests.
+  $('#shopping-query-display').empty();
+  if (!$('#shopping-query-display-container').hasClass('hidden')) {
+    $('#shopping-query-display-container').addClass('hidden');
+  }
+  $('#shopping-results-wrapper').empty();
+
+  // Close the form modal and display a prompt, alerting the user that the results are loading.
+  $('#upload-image-modal').modal('hide');
+  $('#search-loading-prompt').text('Shopping results loading, please wait!');
+  $('#loading-gif-prompt').removeClass('hidden');
+
+  const response = await fetch('/re-search', {
+        method: 'POST',
+        headers: {
+            "Content-type": "application/json"
+        },
+        // headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        // headers: {
+        //   'Accept': 'application/json',
+        //   'Content-Type': 'application/json'
+        // },
+        body: {"test": JSON.stringify(POSTData)}
+        // body: JSON.stringify(POSTData)
+      }).catch((error) => {
+        console.warn(error);
+        return new Response(JSON.stringify({
+          code: error.response.status,
+          message: 'Failed to fetch /re-search',
+        }));
+      });
+
+  if (!response.ok) {
+    return Promise.reject(response);
+  }
+
+  // The request returns a JSON array with the shopping query used to search on Google Shopping and
+  // the data about each product from the Google Shopping results page.
+  const data = await response.json();
+  // const shoppingQuery = data[0]; 
+  // const products = data[1]; 
+
+  // Empty the prompt container and add the {@code products} content into the page.
+  $('#search-loading-prompt').empty();
+  $('#loading-gif-prompt').addClass('hidden');
+
+  // Show the user the shopping query built to search on Google Shopping.
+  $('#shopping-query-display-container').removeClass('hidden');
+  // $('#shopping-query').text(shoppingQuery);
+  $('#shopping-query').text(data);
+
+  // appendShoppingResults(products);
+}

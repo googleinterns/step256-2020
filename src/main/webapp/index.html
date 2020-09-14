@@ -146,8 +146,22 @@
       Showing results for <strong><span id="shopping-query"></span></strong>.
     </div>
 
-    <!-- Shopping results container -->
+    <span style="font-size:20px; cursor:pointer" onclick="openNav()">☰ Re-search</span>
 
+    <!-- Sliding side navigation bar -->
+    <div id="re-search-sidenav" class="sidenav">
+      <a class="closebtn" onclick="closeNav()">×</a>
+      <div id="re-search-form">
+        <label><input type="checkbox" name="checkbox" value="shoe">Shoe</label><br>
+        <label><input type="checkbox" name="checkbox" value="pink">pink</label><br>
+        <label><input type="checkbox" name="checkbox" value="running">running</label><br>
+
+        <br>
+        <button class="button mt-3" onclick="onSubmitReSearchForm()">Re-search</button>
+      </div>
+    </div>
+
+    <!-- Shopping results container -->
     <div class="album py-5">
       <div class="container">
         <div class="row" id="shopping-results-wrapper">

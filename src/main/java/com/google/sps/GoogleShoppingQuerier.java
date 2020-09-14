@@ -50,9 +50,9 @@ public class GoogleShoppingQuerier {
     // Get the query to be searched and check for validity.
     String shoppingQuery = shoppingQueryInput.getShoppingQuery();
 
-    if (!isValidShoppingQuery(shoppingQuery)) {
-      throw new IllegalArgumentException("Invalid Shopping query.");
-    }
+    // if (!isValidShoppingQuery(shoppingQuery)) {
+    //   throw new IllegalArgumentException("Invalid Shopping query.");
+    // }
 
     // Clean the valid query input before building {@code searchURL}.
     shoppingQuery = polishShoppingQuery(shoppingQuery);
