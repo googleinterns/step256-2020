@@ -41,7 +41,7 @@ public final class ImageTextDectectorTest {
   }
 
   /**
-   * Set text detection results, mocking Cloud Vision API, and initialize ImageTextDectector's
+   * Set text detection result/exception, mocking Cloud Vision API, and initialize ImageTextDectector's
    * object.
    */
   private void initImageTextDectector(List<ShoppingListTextEntry> shoppingListText) {
@@ -49,13 +49,11 @@ public final class ImageTextDectectorTest {
     imageTextDectector = new ImageTextDectector(fakeTextDetectionAPIImpl);
   }
 
+  /** Negative test for empty image */
   @Test
   public void noBytesImage() throws Exception {
-    List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
-    shoppingListText.add(ShoppingListTextEntry.create("Bag", 10));
-
-    fakeTextDetectionAPIImpl.setReturnValue(shoppingListText);
-    fakeTextDetectionAPIImpl.setException(new PhotoDetectionException("byte array is empty"));
+    String exceptionMessage = "byte array is empty";
+    fakeTextDetectionAPIImpl.setException(new PhotoDetectionException(exceptionMessage));
     imageTextDectector = new ImageTextDectector(fakeTextDetectionAPIImpl);
 
     Exception exception =
@@ -65,12 +63,13 @@ public final class ImageTextDectectorTest {
               imageTextDectector.extractShoppingList(NULL_IMAGE_BYTES);
             });
 
-    String expectedMessage = "byte array is empty";
+    String expectedMessage = exceptionMessage;
     String actualMessage = exception.getMessage();
 
     Assertions.assertTrue(actualMessage.equals(expectedMessage));
   }
 
+  /** Negative test for no text */
   @Test
   public void noText() throws Exception {
     List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
@@ -91,7 +90,7 @@ public final class ImageTextDectectorTest {
   }
 
   @Test
-  public void singleTextImage() throws Exception {
+  public void singleWordImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
     shoppingListText.add(ShoppingListTextEntry.create("Bag", 10));
 
@@ -104,7 +103,7 @@ public final class ImageTextDectectorTest {
   }
 
   @Test
-  public void multiText_inSingleLine_Image() throws Exception {
+  public void multiWord_inSingleLine_Image() throws Exception {
     List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
     shoppingListText.add(ShoppingListTextEntry.create("Blue", 10));
     shoppingListText.add(ShoppingListTextEntry.create("Shoes", 11));
@@ -118,4 +117,22 @@ public final class ImageTextDectectorTest {
 
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
+
+  @Test
+  public void multiWordWithSpecialChars_Image() throws Exception {
+    List<ShoppingListTextEntry> shoppingListText = new ArrayList<>();
+    shoppingListText.add(ShoppingListTextEntry.create("Blue", 10));
+    shoppingListText.add(ShoppingListTextEntry.create("Shoes", 11));
+    shoppingListText.add(ShoppingListTextEntry.create("\n", 13));
+    shoppingListText.add(ShoppingListTextEntry.create("+-^", 8));
+
+    initImageTextDectector(shoppingListText);
+
+    String expectedShoppingQuery = "Blue Shoes";
+    String actualShoppingQuery = imageTextDectector.extractShoppingList(IMAGE_BYTES);
+
+    Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
+  }
+
+  // ToDo: Write tests for multiWord_inMultiLine_Image
 }
