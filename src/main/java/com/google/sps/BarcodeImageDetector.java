@@ -74,10 +74,10 @@ public class BarcodeImageDetector {
       }
     }
 
-    return decode(bitmap).getText();
+    return decode(bitmap);
   }
   
-  private BarcodeInfo decode(BinaryBitmap bitmap) throws PhotoDetectionException {
+  private String decode(BinaryBitmap bitmap) throws PhotoDetectionException {
     Reader reader = new MultiFormatReader();
     Result result;
     try {
@@ -93,17 +93,6 @@ public class BarcodeImageDetector {
       throw new PhotoDetectionException("Invalid format for potential barcode.", e);
     }
       
-    return BarcodeInfo.create(result.getText(), result.getBarcodeFormat().toString());
-  }
-  
-  @AutoValue
-  public static abstract class BarcodeInfo {
-    
-    public static BarcodeInfo create(String text, String format) {
-      return new AutoValue_BarcodeImageDetector_BarcodeInfo(text, format);
-    }
-
-    public abstract String getText();
-    public abstract String getFormat();
+    return result.getText();
   }
 }
