@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class ImageTextDectector {
 
-  private TextDetectionAPI textDetectionAPI;
+  TextDetectionAPI textDetectionAPI;
 
   public ImageTextDectector(TextDetectionAPI textDetectionAPI) {
     this.textDetectionAPI = textDetectionAPI;
