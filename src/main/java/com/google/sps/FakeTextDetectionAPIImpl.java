@@ -15,8 +15,6 @@
 package com.google.sps;
 
 import com.google.sps.data.ShoppingListTextEntry;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FakeTextDetectionAPIImpl implements TextDetectionAPI {
@@ -33,8 +31,7 @@ public class FakeTextDetectionAPIImpl implements TextDetectionAPI {
     this.photoDetectionException = photoDetectionException;
   }
 
-  public List<ShoppingListTextEntry> detect(byte[] imageBytes) 
-      throws PhotoDetectionException {
+  public List<ShoppingListTextEntry> detect(byte[] imageBytes) throws PhotoDetectionException {
     if (photoDetectionException != null) {
       throw this.photoDetectionException;
     }
