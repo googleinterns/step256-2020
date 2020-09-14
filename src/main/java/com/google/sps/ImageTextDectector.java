@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class ImageTextDectector {
 
-  TextDetectionAPI textDetectionAPI;
+  private TextDetectionAPI textDetectionAPI;
 
   public ImageTextDectector(TextDetectionAPI textDetectionAPI) {
     this.textDetectionAPI = textDetectionAPI;
@@ -34,7 +34,6 @@ public class ImageTextDectector {
 
   public String imageToShoppingListExtractor(byte[] shoppingImageBytes)
       throws IOException, PhotoDetectionException {
-
     List<ShoppingListTextEntry> shoppingListText = textDetectionAPI.detect(shoppingImageBytes);
 
     return createShoppingListQuery(shoppingListText);
@@ -48,6 +47,7 @@ public class ImageTextDectector {
     if (shoppingListText.size() == 0) {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
+
     String queryItem = "";
     for (ShoppingListTextEntry singleWord : shoppingListText) {
       queryItem += singleWord.getText() + " ";

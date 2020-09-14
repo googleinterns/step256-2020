@@ -69,8 +69,8 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
   }
 
   /**
-   * Takes cloudVisionAPI's response and returns a list of text and their y-axis position. ToDo :
-   * The positions from annotation will be used in sentence formation algorithm to separate
+   * Takes cloudVisionAPI's response and returns a list of text and their y-axis position.
+   * ToDo : The positions from annotation will be used in sentence formation algorithm to separate
    * individual queries from the shopping list.
    */
   private List<ShoppingListTextEntry> parseAnnotateImageResponse(
@@ -83,7 +83,8 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
             "An error occurred while identifying the text from the image\n"
                 + identifiedText.getError().getMessage());
       }
-      // Future Scope: Determining sentence's height will help in handwritten recognition.
+      // Future Scope: Determine sentence's height by subtracting lower boundary (lower y-axis position) and 
+      // upper boundary (upper y-axis position) to help in handwritten recognition when sentences height ration will vary
       for (EntityAnnotation annotation : identifiedText.getTextAnnotationsList()) {
         shoppingListText.add(
             ShoppingListTextEntry.create(
