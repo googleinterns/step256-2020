@@ -20,8 +20,10 @@ import com.google.common.collect.ImmutableList;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -31,9 +33,13 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class ProductPhotoDetectorTest {
 
+  private static final byte[] NULL_IMAGE_BYTES = new byte[0];
   private static final byte[] IMAGE_BYTES = new byte[1];
 
   private FakeProductDetectionAPIImpl fakeProductDetection;
+
+  @Rule
+  public ExpectedException exceptionRule = ExpectedException.none();
 
   @Before
   public void setUp() {
@@ -101,9 +107,9 @@ public final class ProductPhotoDetectorTest {
 
     ProductPhotoDetector productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
 
-    Assertions.assertThrows(PhotoDetectionException.class, () -> {
-        productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
-    });
+    exceptionRule.expect(PhotoDetectionException.class);
+    exceptionRule.expectMessage("Missing labels for image detection.");
+    productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
   }
 
   @Test
@@ -130,5 +136,14 @@ public final class ProductPhotoDetectorTest {
     Assertions.assertThrows(PhotoDetectionException.class, () -> {
         productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
     });
+  }
+
+  @Test
+  public void noImageBytesProvided() throws Exception {
+    ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
+  
+    exceptionRule.expect(PhotoDetectionException.class);
+    exceptionRule.expectMessage("Empty byte array.");
+    productPhotoDetector.buildShoppingQuery(NULL_IMAGE_BYTES);
   }
 }
