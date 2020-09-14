@@ -43,7 +43,8 @@ import java.io.InputStream;
 public class BarcodeImageDetector {
   
   public String detect(byte[] imageBytes) throws PhotoDetectionException {
-    // Convert byte array to InputStream.
+    // Convert byte array to InputStream by wrapping the byte array into the Guava ByteSource,
+    // which then allows getting the stream.
     InputStream imageInputStream;
     try {
       imageInputStream = ByteSource.wrap(imageBytes).openStream();
@@ -51,6 +52,7 @@ public class BarcodeImageDetector {
       throw new PhotoDetectionException("Failed to convert byte array to InputStream.", exception);
     }
     
+    // Get the BufferedImage as the result of decoding the InputStream.
     BufferedImage bufferedImage;
     try {
       bufferedImage = ImageIO.read(imageInputStream);
@@ -58,19 +60,23 @@ public class BarcodeImageDetector {
       throw new PhotoDetectionException("Failed to convert InputStream to BufferedImage.", e);
     }
 
+    // ZXing Reader objects accept a BinaryBitmap and attempt to decode it, therefore
+    // construct the BinaryBitmap object based on the {@code bufferedImage}.
+    // The ZXing HybridBinarizer class is designed for high frequency images of barcodes 
+    // with black data on white backgrounds.
     BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(
         new BufferedImageLuminanceSource(bufferedImage)));
     
-
+    // If needed, rotate the image.
     if (bitmap.getWidth() < bitmap.getHeight()) {
       if (bitmap.isRotateSupported()) {
         bitmap = bitmap.rotateCounterClockwise();
       }
     }
+
     return decode(bitmap).getText();
   }
   
-  /** */
   private BarcodeInfo decode(BinaryBitmap bitmap) throws PhotoDetectionException {
     Reader reader = new MultiFormatReader();
     Result result;
@@ -90,12 +96,9 @@ public class BarcodeImageDetector {
     return BarcodeInfo.create(result.getText(), result.getBarcodeFormat().toString());
   }
   
-  /**
-   * Nested class
-   */
   @AutoValue
   public static abstract class BarcodeInfo {
-
+    
     public static BarcodeInfo create(String text, String format) {
       return new AutoValue_BarcodeImageDetector_BarcodeInfo(text, format);
     }
