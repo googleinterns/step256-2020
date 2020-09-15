@@ -22,8 +22,8 @@ public class PhotoShoppingUtil {
     query =
         query
             .replaceAll("\\s+", " ") // Remove duplicate spaces
-            .trim() // Remove spaces from the beginning and end of string
-            .replaceAll("[-+=,\n._^\";:~#></|!*]", ""); // Remove special characters
+            .replaceAll("[-+=,\n._^\";:~#></|!*]", "") // Remove special characters
+            .trim(); // Remove spaces from the beginning and end of string
     return query;
   }
 
