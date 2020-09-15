@@ -107,13 +107,12 @@ public final class ProductListExtractorTest {
   public void NoProductData() throws Exception {
     // Have an empty doc with no data, therefore no product containers. The extractor should 
     // return an empty array.
-    List<Product> expectedProducts = new ArrayList<>();
     
     Document mockResultsDoc = 
         Jsoup.parse(new File("./src/main/webapp/mock-shopping-results/no-data.html"), "UTF-8");
 
     List<Product> actualProducts = productListExtractor.extract(mockResultsDoc);
 
-    Assert.assertEquals(expectedProducts, actualProducts);
+    Assert.assertTrue(actualProducts.isEmpty());
   }
 }
