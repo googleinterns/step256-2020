@@ -29,32 +29,29 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
   public List<ShoppingListTextEntry> detect(byte[] imageBytes) throws PhotoDetectionException {
     Image shoppingImage = PhotoShoppingUtil.getImageFromBytes(imageBytes);
 
-    List<AnnotateImageRequest> requests = generateShoppingImageRequest(shoppingImage);
+    AnnotateImageRequest request = generateShoppingImageRequest(shoppingImage);
 
-    BatchAnnotateImagesResponse response = detectTextFromImage(requests);
+    BatchAnnotateImagesResponse response = detectTextFromImage(request);
 
     return parseAnnotateImageResponse(response);
   }
 
   /** Generates the request query to be sent to CloudVisionAPI client. */
-  private List<AnnotateImageRequest> generateShoppingImageRequest(Image shoppingImage) {
-    List<AnnotateImageRequest> requests = new ArrayList<>();
-
+  private AnnotateImageRequest generateShoppingImageRequest(Image shoppingImage) {
     AnnotateImageRequest request =
         AnnotateImageRequest.newBuilder()
             .addFeatures(Constants.TEXT_DETECTION_FEATURE)
             .setImage(shoppingImage)
             .build();
 
-    requests.add(request);
-    return requests;
+    return request;
   }
 
   /**
    * Sends request to cloudVisionAPI. The Cloud Vision API scans the image and returns back the
    * text, its position and properties as the response.
    */
-  private BatchAnnotateImagesResponse detectTextFromImage(List<AnnotateImageRequest> requests)
+  private BatchAnnotateImagesResponse detectTextFromImage(AnnotateImageRequest request)
       throws PhotoDetectionException {
     ImageAnnotatorClient cloudVisionClient;
     try {
@@ -63,6 +60,8 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
       throw new PhotoDetectionException(
           "Failed to create cloudVisionClient\n" + exception.getMessage(), exception);
     }
+    List<AnnotateImageRequest> requests = new ArrayList<>();
+    requests.add(request);
     BatchAnnotateImagesResponse response = cloudVisionClient.batchAnnotateImages(requests);
     cloudVisionClient.close();
     return response;
