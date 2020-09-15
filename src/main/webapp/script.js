@@ -54,8 +54,8 @@ async function onSubmitUploadImageForm() {
   }
   $('#shopping-results-wrapper').empty();
 
-  // Stop displaying the Google logo.
-  $('#google-logo').addClass('hidden');
+  // Stop displaying the logo.
+  $('#logo').addClass('hidden');
 
   // Close the form modal and display a prompt, alerting the user that the results are loading.
   $('#upload-image-modal').modal('hide');
