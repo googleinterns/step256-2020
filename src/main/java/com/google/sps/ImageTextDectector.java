@@ -19,10 +19,12 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * This class generates a shopping list based on image 1) It uses cloudVisionAPI to scan an image
- * containing shopping list items and detect text from it. 2) It then uses an algorithm to create
- * shopping sentences (queries) from the text and their position. 3) This list of queries is
- * returned to the Servlet from the method 'extractShoppingList'.
+ * This class generates a shopping list based on image 
+ * 1) It uses cloudVisionAPI to scan an image containing shopping
+ * list items and detect text from it. 
+ * 2) It then uses an algorithm to create shopping sentences (queries)
+ * from the text and their position. 
+ * 3) This list of queries is returned to the Servlet from the method 'extractShoppingList'.
  */
 public class ImageTextDectector {
 
@@ -44,12 +46,12 @@ public class ImageTextDectector {
       throws PhotoDetectionException {
     // ToDo: Make an algorithm to create query sentences by separating out text returned by
     // cloudVisionAPI; to group shoppping items based on their position (y axis).
-    if(shoppingListText.isEmpty()) {
+    if (shoppingListText.isEmpty()) {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
 
     String queryItem = "";
-    for(ShoppingListTextEntry singleWord : shoppingListText) {
+    for (ShoppingListTextEntry singleWord : shoppingListText) {
       queryItem += singleWord.getText() + " ";
     }
 
