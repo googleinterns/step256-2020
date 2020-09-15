@@ -41,6 +41,7 @@ import java.io.InputStream;
  * Barcode API based on the ZXing library, and returns it.
  */
 public class BarcodeImageDetector {
+  public BarcodeImageDetector() {}
   
   public String detect(byte[] imageBytes) throws PhotoDetectionException {
     // Convert byte array to InputStream by wrapping the byte array into the Guava ByteSource,
@@ -67,19 +68,7 @@ public class BarcodeImageDetector {
     BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(
         new BufferedImageLuminanceSource(bufferedImage)));
 
-    String barcodeText;
-    try {
-      barcodeText = decode(bitmap);
-    } catch (PhotoDetectionException e) {
-      // Try to rotate the image and try decoding again.
-      if (bitmap.getWidth() < bitmap.getHeight()) {
-        if (bitmap.isRotateSupported()) {
-          bitmap = bitmap.rotateCounterClockwise();
-        }
-      }
-      return decode(bitmap);
-    }
-    return barcodeText;
+    return decode(bitmap);
   }
   
   private String decode(BinaryBitmap bitmap) throws PhotoDetectionException {
@@ -99,5 +88,14 @@ public class BarcodeImageDetector {
     }
       
     return result.getText();
+  }
+
+  private BinaryBitmap getRotatedBinaryBitmap(BinaryBitmap bitmap) {
+    if (bitmap.getWidth() < bitmap.getHeight()) {
+      if (bitmap.isRotateSupported()) {
+        bitmap = bitmap.rotateCounterClockwise();
+      }
+    }
+    return bitmap;
   }
 }
