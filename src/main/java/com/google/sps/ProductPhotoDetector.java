@@ -29,6 +29,10 @@ public class ProductPhotoDetector {
   public String buildShoppingQuery(byte[] imageBytes) throws PhotoDetectionException {
     ProductDetectionData results = productDetectionAPI.detectProductPhotoContent(imageBytes);
 
+    if (imageBytes.length == 0) {
+      throw new PhotoDetectionException("Empty byte array.");
+    }
+
     // If labels list is empty, there is no specific product query to search on Google Shopping.
     if (results.getLabels().isEmpty()) {
       throw new PhotoDetectionException("Missing labels for image detection.");
