@@ -38,7 +38,6 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
 
   /** Generates the request query to be sent to CloudVisionAPI client. */
   private AnnotateImageRequest generateShoppingImageRequest(Image shoppingImage) {
-
     AnnotateImageRequest request =
         AnnotateImageRequest.newBuilder()
             .addFeatures(Constants.TEXT_DETECTION_FEATURE)
@@ -54,8 +53,6 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
    */
   private BatchAnnotateImagesResponse detectTextFromImage(AnnotateImageRequest request)
       throws PhotoDetectionException {
-    List<AnnotateImageRequest> requests = new ArrayList<>();
-    requests.add(request);
     ImageAnnotatorClient cloudVisionClient;
     try {
       cloudVisionClient = ImageAnnotatorClient.create();
@@ -63,6 +60,8 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
       throw new PhotoDetectionException(
           "Failed to create cloudVisionClient\n" + exception.getMessage(), exception);
     }
+    List<AnnotateImageRequest> requests = new ArrayList<>();
+    requests.add(request);
     BatchAnnotateImagesResponse response = cloudVisionClient.batchAnnotateImages(requests);
     cloudVisionClient.close();
     return response;
