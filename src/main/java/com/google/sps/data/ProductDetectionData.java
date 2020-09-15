@@ -12,17 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps;
+package com.google.sps.data;
 
-/** 
- * Custom exception class for photo detection classes.
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
+
+/**
+ * Contains detection results for a product image.
  */
-public class PhotoDetectionException extends Exception { 
-  public PhotoDetectionException(String errorMessage) {
-    super(errorMessage);
+@AutoValue
+public abstract class ProductDetectionData {
+
+  public static ProductDetectionData create(
+      ImmutableList<String> labels, ImmutableList<String> logos, ImmutableList<String> colors) {
+    return new AutoValue_ProductDetectionData(labels, logos, colors);
   }
 
-  public PhotoDetectionException(String errorMessage, Throwable cause) {
-    super(errorMessage, cause);
-  }
+  public abstract ImmutableList<String> getLabels();
+  public abstract ImmutableList<String> getLogos();
+  public abstract ImmutableList<String> getColors();
 }

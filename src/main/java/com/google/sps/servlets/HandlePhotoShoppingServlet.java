@@ -22,6 +22,12 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.gson.Gson;
+
+import com.google.sps.BarcodeImageDetector;
+import com.google.sps.ProductDetectionAPI;
+import com.google.sps.ProductDetectionAPIImpl;
+import com.google.sps.PhotoDetectionException;
+import com.google.sps.ProductPhotoDetector;
 import com.google.sps.GoogleShoppingQuerier;
 import com.google.sps.ImageTextDectector;
 import com.google.sps.PhotoDetectionException;
@@ -114,10 +120,20 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
       throws IllegalArgumentException, PhotoDetectionException {
     switch (photoCategory) {
       case "product":
-        return "Fountain pen";
+        ProductDetectionAPI productDetectionAPI = new ProductDetectionAPIImpl();
+        ProductPhotoDetector productPhotoDetector = new ProductPhotoDetector(productDetectionAPI);
+
+        String productShoppingQuery;
+        try {
+          productShoppingQuery = productPhotoDetector.buildShoppingQuery(uploadedImageBytes);
+        } catch (PhotoDetectionException exception) {
+          throw exception;
+        }
+        return productShoppingQuery;
       case "shopping-list":
         TextDetectionAPIImpl textDetectionAPI = new TextDetectionAPIImpl();
         ImageTextDectector imageTextDectector = new ImageTextDectector(textDetectionAPI);
+
         String shoppingQuery;
         try {
           shoppingQuery = imageTextDectector.extractShoppingList(uploadedImageBytes);
@@ -128,7 +144,8 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         }
         return shoppingQuery;
       case "barcode":
-        return "Running shoes";
+        BarcodeImageDetector barcodeImageDetector = new BarcodeImageDetector();
+        return barcodeImageDetector.detect(uploadedImageBytes);
       default:
         throw new IllegalArgumentException(
             "Photo category has to be either product, shopping-list or barcode.");

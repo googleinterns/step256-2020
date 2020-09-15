@@ -99,8 +99,8 @@ public class GoogleShoppingQuerier {
    * Checks if the query to be serched is a valid one.
    */
   private boolean isValidShoppingQuery(String shoppingQuery) {
-    // Return false if the string does not contain at least one letter.
-    if (!shoppingQuery.matches(".*[a-zA-Z].*")) {
+    // Return false if the string does not contain at least one letter or digit.
+    if (!shoppingQuery.matches(".*[a-zA-Z1-9].*")) {
       return false;
     }
 
