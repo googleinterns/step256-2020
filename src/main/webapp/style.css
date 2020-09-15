@@ -98,18 +98,9 @@ body {
 
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
-  #google-logo {
-    background: url(https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_160x56dp.png) no-repeat;
-    background-size: 160px 56px;
-    height: 56px;
+  #logo {
+    height: 75px;
     margin-top: 100px;
-    width: 160px;
-  }
-
-  .logo-subtext {
-    font: 12px roboto-regular, arial, sans-serif;
-    left: 125px;
-    top: 45px;
   }
 
   .bar {
