@@ -48,13 +48,12 @@ public final class ProductPhotoDetectorTest {
   }
 
   /** Sets product detection results and initializes ProductPhotoDetector instance. */
-  private ProductPhotoDetector initProductPhotoDetector(ImmutableList<String> labels, 
+  private void initProductPhotoDetector(ImmutableList<String> labels, 
       ImmutableList<String> logos, ImmutableList<String> colors) {
     ProductDetectionData productDetectionData = ProductDetectionData.create(labels, logos, colors);
     fakeProductDetection.setReturnValue(productDetectionData);
 
     productPhotoDetector = new ProductPhotoDetector(fakeProductDetection);
-    return productPhotoDetector;
   }
 
   @Test
@@ -63,7 +62,7 @@ public final class ProductPhotoDetectorTest {
     ImmutableList<String> logos = ImmutableList.of("Nike", "Brand");
     ImmutableList<String> colors = ImmutableList.of("Black", "Grey");
 
-    productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
+    initProductPhotoDetector(labels, logos, colors);
 
     String expectedShoppingQuery = "Black Nike Shoe";
     String actualShoppingQuery = 
@@ -78,11 +77,15 @@ public final class ProductPhotoDetectorTest {
     ImmutableList<String> logos = ImmutableList.of();
     ImmutableList<String> colors = ImmutableList.of();
 
-    productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
+    initProductPhotoDetector(labels, logos, colors);
 
-    Assertions.assertThrows(PhotoDetectionException.class, () -> {
+    Exception exception = Assertions.assertThrows(PhotoDetectionException.class, () -> {
         productPhotoDetector.buildShoppingQuery(IMAGE_BYTES);
     });
+
+    String expectedMessage = "Missing labels for image detection.";
+    String actualMessage = exception.getMessage();
+    Assertions.assertTrue(actualMessage.equals(expectedMessage));
   }
 
   @Test
@@ -91,7 +94,7 @@ public final class ProductPhotoDetectorTest {
     ImmutableList<String> logos = ImmutableList.of();
     ImmutableList<String> colors = ImmutableList.of("Black", "Grey");
 
-    productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
+    initProductPhotoDetector(labels, logos, colors);
 
     String expectedShoppingQuery = "Black Shoe";
     String actualShoppingQuery = 
@@ -106,7 +109,7 @@ public final class ProductPhotoDetectorTest {
     ImmutableList<String> logos = ImmutableList.of("Nike", "Brand");
     ImmutableList<String> colors = ImmutableList.of("Black", "Grey");
 
-    productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
+    initProductPhotoDetector(labels, logos, colors);
 
     exceptionRule.expect(PhotoDetectionException.class);
     exceptionRule.expectMessage("Missing labels for image detection.");
@@ -119,7 +122,7 @@ public final class ProductPhotoDetectorTest {
     ImmutableList<String> logos = ImmutableList.of("Nike", "Brand");
     ImmutableList<String> colors = ImmutableList.of();
 
-    productPhotoDetector = initProductPhotoDetector(labels, logos, colors);
+    initProductPhotoDetector(labels, logos, colors);
 
     String expectedShoppingQuery = "Nike Shoe";
     String actualShoppingQuery = 
