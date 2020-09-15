@@ -14,103 +14,47 @@
 
 package com.google.sps;
 
-import com.google.cloud.vision.v1.AnnotateImageRequest;
-import com.google.cloud.vision.v1.AnnotateImageResponse;
-import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
-import com.google.cloud.vision.v1.EntityAnnotation;
-import com.google.cloud.vision.v1.Image;
-import com.google.cloud.vision.v1.ImageAnnotatorClient;
+import com.google.sps.data.ShoppingListTextEntry;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This class generates a shopping list based on image 
- * 1) It uses cloudVisionAPI to scan an image
- * containing shopping list items and detect text from it.
- * 2) It then uses an algorithm to create shopping sentences 
- * (queries) from the text and their position.
- * 3) This list of queries is returned to the Servlet from the
- * method 'imageToShoppingListExtractor'.
+ * 1) It uses cloudVisionAPI to scan an image containing shopping
+ * list items and detect text from it. 
+ * 2) It then uses an algorithm to create shopping sentences (queries)
+ * from the text and their position. 
+ * 3) This list of queries is returned to the Servlet from the method 'extractShoppingList'.
  */
 public class ImageTextDectector {
 
-  public ImageTextDectector() {}
+  TextDetectionAPI textDetectionAPI;
 
-  public String imageToShoppingListExtractor(byte[] shoppingImageBytes)
-       throws IOException, PhotoDetectionException {
-    Image shoppingImage = PhotoShoppingUtil.getImageFromBytes(shoppingImageBytes);
- 
-    List<AnnotateImageRequest> requests = shoppingImageRequestGenerator(shoppingImage);
- 
-    BatchAnnotateImagesResponse response = detectTextFromImage(requests);
- 
-    List<EntityAnnotation> annotation = parseAnnotateImageResponse(response);
- 
-    return createShoppingListQuery(annotation);
+  public ImageTextDectector(TextDetectionAPI textDetectionAPI) {
+    this.textDetectionAPI = textDetectionAPI;
   }
 
-  /** Generates the request query to be sent to CloudVisionAPI client. */
-  private List<AnnotateImageRequest> shoppingImageRequestGenerator(Image shoppingImage) {
-    List<AnnotateImageRequest> requests = new ArrayList<>();
+  public String extractShoppingList(byte[] shoppingImageBytes)
+      throws IOException, PhotoDetectionException {
+    List<ShoppingListTextEntry> shoppingListText = textDetectionAPI.detect(shoppingImageBytes);
 
-    AnnotateImageRequest request =
-        AnnotateImageRequest.newBuilder()
-            .addFeatures(Constants.TEXT_DETECTION_FEATURE)
-            .setImage(shoppingImage)
-            .build();
-
-    requests.add(request);
-    return requests;
-  }
-
-  /**
-   * Sends request to cloudVisionAPI. The Cloud Vision API scans the image and returns back the
-   * text, its position and properties as the response.
-   */
-  private BatchAnnotateImagesResponse detectTextFromImage(List<AnnotateImageRequest> requests)
-      throws PhotoDetectionException {
-    ImageAnnotatorClient cloudVisionClient;
-    try {
-      cloudVisionClient = ImageAnnotatorClient.create();
-    } catch (IOException exception) {
-      throw new PhotoDetectionException(
-          "Failed to create cloudVisionClient\n" + exception.getMessage(), exception);
-    }
-    BatchAnnotateImagesResponse response = cloudVisionClient.batchAnnotateImages(requests);
-    cloudVisionClient.close();
-    return response;
-  }
-
-  /**
-   * Takes cloudVisionAPI's response and returns a list of annotations. ToDo : The
-   * positions from annotation will be used in sentence formation algorithm to separate
-   * individual queries from the shopping list.
-   */
-  private List<EntityAnnotation> parseAnnotateImageResponse(BatchAnnotateImagesResponse response)
-      throws PhotoDetectionException {
-    List<AnnotateImageResponse> responses = response.getResponsesList();
-    List<EntityAnnotation> annotation = new ArrayList<>();
-    for (AnnotateImageResponse identifiedText : responses) {
-      if (identifiedText.hasError()) {
-        throw new PhotoDetectionException(
-            "An error occurred while identifying the text from the image\n"
-                + identifiedText.getError().getMessage());
-      }
-      annotation = identifiedText.getTextAnnotationsList();
-    }
-    return annotation;
+    return createShoppingListQuery(shoppingListText);
   }
 
   /** Creates query from the text detected by cloudVision API. */
-  private String createShoppingListQuery(List<EntityAnnotation> annotation)
+  private String createShoppingListQuery(List<ShoppingListTextEntry> shoppingListText)
       throws PhotoDetectionException {
     // ToDo: Make an algorithm to create query sentences by separating out text returned by
     // cloudVisionAPI; to group shoppping items based on their position (y axis).
-    if (annotation.size() < 1) {
+    if (shoppingListText.isEmpty()) {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
-    String queryItem = annotation.get(0).getDescription();
+
+    String queryItem = "";
+    for (ShoppingListTextEntry singleWord : shoppingListText) {
+      queryItem += singleWord.getText() + " ";
+    }
+
     return PhotoShoppingUtil.formatQuery(queryItem);
   }
 }

@@ -15,9 +15,11 @@
 package com.google.sps;
 
 import com.google.sps.data.ShoppingListTextEntry;
+import java.util.List;
+
 /**
  * Interface used for Cloud Vision API related functionality.
  */
 public interface TextDetectionAPI {
-  public ShoppingListTextEntry detect(byte[] imageBytes) throws PhotoDetectionException;
+  public List<ShoppingListTextEntry> detect(byte[] imageBytes) throws PhotoDetectionException;
 }

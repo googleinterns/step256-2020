@@ -14,12 +14,13 @@
 
 package com.google.sps.servlets;
 
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+
 import com.google.appengine.api.blobstore.BlobInfo;
 import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-
 import com.google.gson.Gson;
 
 import com.google.sps.BarcodeImageDetector;
@@ -31,28 +32,24 @@ import com.google.sps.GoogleShoppingQuerier;
 import com.google.sps.ImageTextDectector;
 import com.google.sps.PhotoDetectionException;
 import com.google.sps.ShoppingQuerierConnectionException;
+import com.google.sps.TextDetectionAPIImpl;
 import com.google.sps.data.Product;
 import com.google.sps.data.ShoppingQueryInput;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 /**
- * When the user submits the form for image uploading, Blobstore processes the file upload and forwards
- * the request to this servlet, which returns the product shopping results for the respective photo,
- * in JSON format, along with the shopping query used to search.
+ * When the user submits the form for image uploading, Blobstore processes the file upload and
+ * forwards the request to this servlet, which returns the product shopping results for the
+ * respective photo, in JSON format, along with the shopping query used to search.
  */
 @WebServlet("/handle-photo-shopping")
 public class HandlePhotoShoppingServlet extends HttpServlet {
@@ -71,14 +68,13 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     // Get the photo category (i.e. product, shopping-list or barcode) entered by the user.
     String photoCategory = request.getParameter("photo-category");
     if (photoCategory.isEmpty()) {
-      response.sendError(
-          HttpServletResponse.SC_BAD_REQUEST, "Missing photo category.");
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing photo category.");
       return;
     }
 
     // Get the image the user uploaded as bytes.
     byte[] uploadedImageBytes = getBlobBytes(uploadedImageBlobKey);
-    
+
     // Call GoogleShoppingQuerier to return the extracted products data.
     // First, build the shopping query input.
     String shoppingQuery;
@@ -89,7 +85,7 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
       return;
     }
 
-    ShoppingQueryInput shoppingQueryInput = 
+    ShoppingQueryInput shoppingQueryInput =
         new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(24).build();
 
     // Initialize the Google Shopping querier.
@@ -98,24 +94,27 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     List<Product> shoppingQuerierResults = new ArrayList<>();
     try {
       shoppingQuerierResults = querier.query(shoppingQueryInput);
-    } catch(IllegalArgumentException | ShoppingQuerierConnectionException | IOException exception) {
+    } catch (IllegalArgumentException
+        | ShoppingQuerierConnectionException
+        | IOException exception) {
       response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
       return;
     }
-     
-    // Convert {@code shoppingQuery} and products List - {@code shoppingQuerierResults} - into JSON strings 
+
+    // Convert {@code shoppingQuery} and products List - {@code shoppingQuerierResults} - into JSON
+    // strings
     // using Gson library and send a JSON array with both of the JSON strings as response.
     Gson gson = new Gson();
 
-    String shoppingQueryJSON = gson.toJson(shoppingQuery); 
-    String shoppingQuerierResultsJSON = gson.toJson(shoppingQuerierResults); 
+    String shoppingQueryJSON = gson.toJson(shoppingQuery);
+    String shoppingQuerierResultsJSON = gson.toJson(shoppingQuerierResults);
     response.setContentType("application/json;");
     response.getWriter().write("[" + shoppingQueryJSON + "," + shoppingQuerierResultsJSON + "]");
   }
 
-  /** 
-   * Returns the shopping query by calling methods from the photo content detection classes, 
-   * based on the {@code photoCategory}, passing {@code uploadedImageBytes} as argument.
+  /**
+   * Returns the shopping query by calling methods from the photo content detection classes, based
+   * on the {@code photoCategory}, passing {@code uploadedImageBytes} as argument.
    */
   private String getQuery(String photoCategory, byte[] uploadedImageBytes)
       throws IllegalArgumentException, PhotoDetectionException {
@@ -132,14 +131,16 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         }
         return productShoppingQuery;
       case "shopping-list":
-        ImageTextDectector imageTextDectector = new ImageTextDectector();
+        TextDetectionAPIImpl textDetectionAPI = new TextDetectionAPIImpl();
+        ImageTextDectector imageTextDectector = new ImageTextDectector(textDetectionAPI);
+
         String shoppingQuery;
         try {
-          shoppingQuery = imageTextDectector.imageToShoppingListExtractor(uploadedImageBytes);
+          shoppingQuery = imageTextDectector.extractShoppingList(uploadedImageBytes);
         } catch (PhotoDetectionException exception) {
           throw exception;
         } catch (IOException e) {
-            throw new PhotoDetectionException("Error while getting shopping query.", e);
+          throw new PhotoDetectionException("Error while getting shopping query.", e);
         }
         return shoppingQuery;
       case "barcode":
