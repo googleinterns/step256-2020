@@ -22,6 +22,7 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
 import com.google.gson.Gson;
 
+import com.google.sps.BarcodeImageDetector;
 import com.google.sps.ProductDetectionAPI;
 import com.google.sps.ProductDetectionAPIImpl;
 import com.google.sps.PhotoDetectionException;
@@ -142,7 +143,8 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         }
         return shoppingQuery;
       case "barcode":
-        return "Running shoes";
+        BarcodeImageDetector barcodeImageDetector = new BarcodeImageDetector();
+        return barcodeImageDetector.detect(uploadedImageBytes);
       default:
         throw new IllegalArgumentException(
             "Photo category has to be either product, shopping-list or barcode.");
