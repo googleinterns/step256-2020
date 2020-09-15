@@ -25,11 +25,7 @@
 <body>
   <main role="main">
     <center>
-      <div title="Google" id="google-logo" align="left">
-        <div class="logo-subtext">
-          <span>Shopping</span>
-        </div>
-      </div>
+      <img src="./resources/logo.png" alt="Shopping with Photos" id="logo">
 
       <div class="bar">
         <input class="searchbar" type="text" title="Search">
@@ -39,11 +35,45 @@
             data-toggle="modal" data-target="#upload-image-modal"
             id="upload-photo-button">
       </div>
-
-      <button class="button mt-4" data-toggle="modal" data-target="#features-info-modal">
-        Learn more about <em>Shopping with Photos</em>
-      </button>
     </center>
+
+    <!-- Modal for image uploading -->
+    <div class="modal fade" id="upload-image-modal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Upload image</h4>
+            <i class="fa fa-info" data-toggle="modal" data-target="#features-info-modal"></i>
+            <button type="button" class="close" data-dismiss="modal">×</button>
+          </div><!-- /.modal-header -->
+            
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="upload-image-form" class="hidden" action="#" onsubmit="return false">
+              <select id="photo-category" name="photo-category" required>
+                <option value="product">Product</option>
+                <option value="shopping-list">Shopping-List</option>
+                <option value="barcode">Barcode</option>
+              </select>
+
+              <input class="mt-2" type="file" name="photo" id="input-photo" required>
+
+              <button class="button mt-3" onclick="onSubmitUploadImageForm()">Search</button>
+            </form>
+          </div><!-- /.modal-body -->
+            
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <p>
+              After submitting the form, please wait for the results to load.
+            </p>
+          </div><!-- /.modal-footer -->
+            
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <!-- Modal for features info -->
     <div class="modal fade" id="features-info-modal">
@@ -71,8 +101,8 @@
                 <i class="fa fa-list"></i>
                 <h2>Shopping List</h2>
                 <p>
-                  Need help with finding severeal products? Upload a photo with the shopping list,
-                  which may be hand-written, and we'll display options for each item!
+                  Need help with finding severeal products? Upload a photo with the shopping list
+                  and we'll display options for each item!
                 </p>
               </div><!-- /.col-lg-4 -->
               <div class="col-lg-4">
@@ -89,44 +119,7 @@
           <!-- Modal footer -->
           <div class="modal-footer">
             <p>
-              Happy shopping!
-            </p>
-          </div><!-- /.modal-footer -->
-            
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <!-- Modal for image uploading -->
-    <div class="modal fade" id="upload-image-modal">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">Upload image</h4>
-            <button type="button" class="close" data-dismiss="modal">×</button>
-          </div><!-- /.modal-header -->
-            
-          <!-- Modal body -->
-          <div class="modal-body">
-            <form id="upload-image-form" class="hidden" action="#" onsubmit="return false">
-              <select id="photo-category" name="photo-category" required>
-                <option value="product">Product</option>
-                <option value="shopping-list">Shopping-List</option>
-                <option value="barcode">Barcode</option>
-              </select>
-
-              <input class="mt-2" type="file" name="photo" id="input-photo" required>
-
-              <button class="button mt-3" onclick="onSubmitUploadImageForm()">Search</button>
-            </form>
-          </div><!-- /.modal-body -->
-            
-          <!-- Modal footer -->
-          <div class="modal-footer">
-            <p>
-              After submitting the form, please wait for the results to load.
+              Happy shopping! :D
             </p>
           </div><!-- /.modal-footer -->
             
