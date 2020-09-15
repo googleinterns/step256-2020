@@ -18,7 +18,7 @@ import com.google.sps.data.ShoppingListTextEntry;
 import java.util.List;
 
 /**
-  * This is a fake class used in the unit tests to avoid triggering cloudVisionAPI calls.
+  * This is a fake implementation class used in the unit tests to avoid triggering cloudVisionAPI calls.
   * The test's setup should provide either of the two values
   * 1) Set the exception status
   * 2) Set the data value with expected response to be returned back.
@@ -26,6 +26,11 @@ import java.util.List;
 public class FakeTextDetectionAPIImpl implements TextDetectionAPI {
   private List<ShoppingListTextEntry> detectedData;
   private PhotoDetectionException photoDetectionException;
+  
+  public FakeTextDetectionAPIImpl() {
+      // Initialize detectedData to a default value
+      this.detectedData.add(ShoppingListTextEntry.create("Bag", 10));
+  }
 
   /** 
    * Set expected response in detectedData variable to be returned. 
