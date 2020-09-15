@@ -100,7 +100,7 @@ public final class ImageTextDectectorTest {
   }
 
   @Test
-  public void multiWord_inSingleLine_Image() throws Exception {
+  public void multiWordInSingleLineImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 11));
@@ -115,7 +115,7 @@ public final class ImageTextDectectorTest {
   }
 
   @Test
-  public void multiWordWithSpecialChars_Image() throws Exception {
+  public void multiWordWithSpecialCharsImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 11));
@@ -129,5 +129,5 @@ public final class ImageTextDectectorTest {
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
 
-  // ToDo: Write tests for multiWord_inMultiLine_Image
+  // ToDo: Write tests for multiWordInMultiLineImage
 }
