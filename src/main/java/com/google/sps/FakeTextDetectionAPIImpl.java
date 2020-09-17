@@ -15,6 +15,7 @@
 package com.google.sps;
 
 import com.google.sps.data.ShoppingListTextEntry;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public class FakeTextDetectionAPIImpl implements TextDetectionAPI {
   
   public FakeTextDetectionAPIImpl() {
       // Initialize detectedData to a default value
+      detectedData = new ArrayList<>();
       this.detectedData.add(ShoppingListTextEntry.create("Bag", 10));
   }
 
