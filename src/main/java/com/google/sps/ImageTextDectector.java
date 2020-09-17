@@ -57,46 +57,43 @@ public class ImageTextDectector {
   private List<String> algorithm(List<ShoppingListTextEntry> shoppingListText) {
     // Create query sentences by separating out text returned by
     // cloudVisionAPI; to group shoppping items based on their position (y axis).
-    int xAxisRef = 0;
-    int yAxisRef = 0;
-    int xAxisCurrent, yAxisCurrent;
+    int xAxisCurrent, yAxisCurrentLower, yAxisCurrentUpper;
     String sentence = "";
     List<String> shoppingQueries = new ArrayList<>();
-    xAxisRef = shoppingListText.get(0).getLowerXBoundary();
+    int yAxisPrevUpper = shoppingListText.get(0).getUpperYBoundary();
     for (ShoppingListTextEntry singleWord : shoppingListText) {
-        if(yAxisRef == 0) {
-            yAxisRef = singleWord.getLowerYBoundary();
-        }
         xAxisCurrent = singleWord.getLowerXBoundary();
-        yAxisCurrent = singleWord.getLowerYBoundary();
+        yAxisCurrentLower = singleWord.getLowerYBoundary();
+        yAxisCurrentUpper = singleWord.getUpperYBoundary();
 
-        if(checkForSameLineWord(xAxisCurrent, yAxisCurrent, xAxisRef, yAxisRef)) {
+        if(checkForSameLineWord(xAxisCurrent, yAxisCurrentLower,yAxisPrevUpper)) {
             sentence += singleWord.getText() + " ";
         } else {
             sentence = PhotoShoppingUtil.formatQuery(sentence);
-            shoppingQueries.add(sentence);
-            yAxisRef = 0;
+            if(!sentence.isEmpty()) {
+                shoppingQueries.add(sentence);
+            }
             sentence = singleWord.getText() + " ";
         }
-        xAxisRef = xAxisCurrent;
+
+        yAxisPrevUpper = yAxisCurrentUpper;
     }
     sentence = PhotoShoppingUtil.formatQuery(sentence);
-    shoppingQueries.add(sentence);  
+    if(!sentence.isEmpty()) {
+        shoppingQueries.add(sentence);
+    }
 
     return shoppingQueries;
   }
 
-    private boolean checkForSameLineWord(int lowerXCurrent, int lowerYCurrent, int xAxisRef, int yAxisRef) {
+    private boolean checkForSameLineWord(int lowerXCurrent, int lowerYCurrent, int prevUpperY) {
     /*
     ** If prevYUpper < currYLower -> Next sentence
     ** If prevXlower > currXlower -> Next sentence
     */
-    int NOISE_FACTOR = 5;
-    if(lowerXCurrent >= xAxisRef && 
-       yAxisRef - NOISE_FACTOR <= lowerYCurrent && 
-       lowerYCurrent <= yAxisRef + NOISE_FACTOR) {
-        return true;
+    if(lowerYCurrent > prevUpperY) {
+        return false;
     }
-    return false;
+    return true;
   }
 }
