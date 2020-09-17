@@ -88,7 +88,7 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
 
     int maxResultsNumber = 24;
     if(shoppingQueries.size()>1){
-        maxResultsNumber = 16;
+        maxResultsNumber = 15;
     }
     List<ShoppingQueryInput> shoppingQueryInputs = new ArrayList<>();
     for (String shoppingQuery : shoppingQueries) {

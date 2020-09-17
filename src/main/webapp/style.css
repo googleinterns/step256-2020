@@ -123,6 +123,7 @@ body {
 
 .query {
   font-weight: bold;
+  font-size: large;
   margin: 3%;
   padding: 3%;
 }

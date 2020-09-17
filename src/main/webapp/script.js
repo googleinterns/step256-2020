@@ -14,7 +14,7 @@
 
 // Add action when user clicks button for image uploading.
 $('#upload-photo-button').click(function() {
-  fetchBlobstoreUrlAndShowForm(); 
+  fetchBlobstoreUrlAndShowForm();
 });
 
 /**
@@ -34,7 +34,7 @@ async function fetchBlobstoreUrlAndShowForm() {
 
 /**
  * Makes a POST request to {@code imageUploadUrl}, gets the shopping results in JSON format,
- * into {@code products}, and calls the method for integrating those results into the main 
+ * into {@code products}, and calls the method for integrating those results into the main
  * web page.
  */
 async function onSubmitUploadImageForm() {
@@ -43,7 +43,7 @@ async function onSubmitUploadImageForm() {
   const selectedFile = document.getElementById('input-photo').files[0];
 
   // Construct the FormData object.
-  let formData = new FormData();
+  const formData = new FormData();
   formData.append('photo-category', photoCategory);
   formData.append('photo', selectedFile);
 
@@ -64,77 +64,75 @@ async function onSubmitUploadImageForm() {
 
   // Make a POST request to {@code imageUploadUrl} to process the image uploading.
   const response = await fetch(imageUploadUrl, {
-        method: 'POST',
-        body: formData
-      }).catch((error) => {
-        console.warn(error);
-        return new Response(JSON.stringify({
-          code: error.response.status,
-          message: `Failed to fetch ${imageUploadUrl}`,
-        }));
-      });
+    method: 'POST',
+    body: formData,
+  }).catch((error) => {
+    console.warn(error);
+    return new Response(JSON.stringify({
+      code: error.response.status,
+      message: `Failed to fetch ${imageUploadUrl}`,
+    }));
+  });
 
   if (!response.ok) {
     return Promise.reject(response);
   }
 
-  // The request returns a JSON array with the shopping query used to search on Google Shopping and
-  // the data about each product from the Google Shopping results page.
-const shoppingResults = await response.json();
+  // The request returns a JSON object with the all the shopping queries used to search on Google Shopping and
+  // the data about each product for each query from the Google Shopping results page.
+  const shoppingResults = await response.json();
 
-  // Empty the prompt container and add the {@code products} content into the page.
+  // Empty the prompt container and add the query and its resultant content into the page.
   $('#search-loading-prompt').empty();
   $('#loading-gif-prompt').addClass('hidden');
 
-  // Show the user the shopping query built to search on Google Shopping.
   $('#shopping-query-display-container').removeClass('hidden');
-//   $('#shopping-query').text(shoppingQuery);
 
   appendShoppingResults(shoppingResults);
 }
 
 /**
- * Integrates product results from Google Shopping into the web page. 
+ * Integrates product results from Google Shopping and their respective queries into the web page.
  */
 async function appendShoppingResults(shoppingResults) {
-shoppingResults.forEach(result => {
-let $query = "<div class = 'text-center query'>"+result['query']+"</div>";
-      $('#shopping-results-wrapper').append($query);
-console.log(result['query']);
-console.log($query);
-      let $listProductsContainer = $('<div>', {class: 'row'});
-      let $products = result['products'];
-console.log($products);
-  // Integrate the products into the web page.
-    $products.forEach(product => {
-        // Create an HTML node for the item container.
-        let $productContainer = $('<div>', {class: 'col-md-4'});
+  shoppingResults.forEach((result) => {
+    // Show the user the shopping query built to search on Google Shopping.
+    const $query = '<div class = \'text-center query\'>'+result['query']+'</div>';
+    $('#shopping-results-wrapper').append($query);
 
-        // Get the HTML content for the container.
-        const productElementHTML = getProductElementHTML(product.title,
-                                                        product.imageLink,
-                                                        product.priceAndSeller,
-                                                        product.link,
-                                                        product.shippingPrice);
+    const $listProductsContainer = $('<div>', {class: 'row'});
 
-        // Load the content using jQuery's append.
-        $productContainer.append(productElementHTML);
+    const $products = result['products'];
+    // Integrate the products into the web page.
+    $products.forEach((product) => {
+      // Create an HTML node for the item container.
+      const $productContainer = $('<div>', {class: 'col-md-4'});
 
-        // Add the container to the results page, into the corresponding product wrapper.
-        $listProductsContainer.append($productContainer);
+      // Get the HTML content for the container.
+      const productElementHTML = getProductElementHTML(product.title,
+          product.imageLink,
+          product.priceAndSeller,
+          product.link,
+          product.shippingPrice);
+
+      // Load the content using jQuery's append.
+      $productContainer.append(productElementHTML);
+
+      // Add the container to the results page, into the corresponding product wrapper.
+      $listProductsContainer.append($productContainer);
     });
     $('#shopping-results-wrapper').append($listProductsContainer);
-    });
+  });
 }
 
 /**
  * Returns the HTML content for a product container, based on the arguments.
  */
 function getProductElementHTML(productTitle,
-                               productImageLink,
-                               productPriceAndSeller,
-                               productLink,
-                               productShippingPrice) {
+    productImageLink,
+    productPriceAndSeller,
+    productLink,
+    productShippingPrice) {
   return `<div class="card mb-4 shadow-sm">
             <div class="card-body">
               <img src="${productImageLink}" style="float: left;" class="mr-2">
