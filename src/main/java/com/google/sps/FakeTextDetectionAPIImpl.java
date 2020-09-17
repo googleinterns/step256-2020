@@ -30,7 +30,7 @@ public class FakeTextDetectionAPIImpl implements TextDetectionAPI {
   
   public FakeTextDetectionAPIImpl() {
       // Initialize detectedData to a default value
-      detectedData= new ArrayList<>();
+      detectedData = new ArrayList<>();
       this.detectedData.add(ShoppingListTextEntry.create("Bag", 10));
   }
 
