@@ -29,9 +29,9 @@ public class FakeTextDetectionAPIImpl implements TextDetectionAPI {
   private PhotoDetectionException photoDetectionException;
   
   public FakeTextDetectionAPIImpl() {
-      // Initialize detectedData to a default value
-      detectedData = new ArrayList<>();
-      this.detectedData.add(ShoppingListTextEntry.create("Bag", 10, 10, 13));
+    // Initialize detectedData to a default value
+    detectedData = new ArrayList<>();
+    this.detectedData.add(ShoppingListTextEntry.create("Bag", 10, 10, 13));
   }
 
   /** 
