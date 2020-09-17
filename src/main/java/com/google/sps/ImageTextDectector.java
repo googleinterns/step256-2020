@@ -87,10 +87,14 @@ public class ImageTextDectector {
   }
 
     private boolean checkForSameLineWord(int lowerXCurrent, int lowerYCurrent, int xAxisRef, int yAxisRef) {
-
+    /*
+    ** If prevYUpper < currYLower -> Next sentence
+    ** If prevXlower > currXlower -> Next sentence
+    */
+    int NOISE_FACTOR = 5;
     if(lowerXCurrent >= xAxisRef && 
        yAxisRef - NOISE_FACTOR <= lowerYCurrent && 
-       lowerYBoundary <= yAxisRef + NOISE_FACTOR) {
+       lowerYCurrent <= yAxisRef + NOISE_FACTOR) {
         return true;
     }
     return false;

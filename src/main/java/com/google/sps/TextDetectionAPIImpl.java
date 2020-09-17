@@ -89,7 +89,7 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
       for (EntityAnnotation annotation : identifiedText.getTextAnnotationsList()) {
         shoppingListText.add(
             ShoppingListTextEntry.create(
-                annotation.getDescription(), annotation.getBoundingPoly().getVertices(0).getX(), annotation.getBoundingPoly().getVertices(0).getY()));
+                annotation.getDescription(), annotation.getBoundingPoly().getVertices(0).getX(), annotation.getBoundingPoly().getVertices(0).getY(), annotation.getBoundingPoly().getVertices(3).getY()));
       }
     }
     return shoppingListText;
