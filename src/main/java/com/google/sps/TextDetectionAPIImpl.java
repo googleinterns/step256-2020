@@ -16,10 +16,12 @@ package com.google.sps;
 
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
+import com.google.cloud.vision.v1.BoundingPoly;
 import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
 import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
+import com.google.cloud.vision.v1.Vertex;
 import com.google.sps.data.ShoppingListTextEntry;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,7 +89,7 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
       for (EntityAnnotation annotation : identifiedText.getTextAnnotationsList()) {
         shoppingListText.add(
             ShoppingListTextEntry.create(
-                annotation.getDescription(), annotation.getBoundingPoly().getVertices(0).getY()));
+                annotation.getDescription(), annotation.getBoundingPoly().getVertices(0).getX(), annotation.getBoundingPoly().getVertices(0).getY()));
       }
     }
     return shoppingListText;

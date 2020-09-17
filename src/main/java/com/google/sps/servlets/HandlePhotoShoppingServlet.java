@@ -77,28 +77,37 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
 
     // Call GoogleShoppingQuerier to return the extracted products data.
     // First, build the shopping query input.
-    String shoppingQuery;
+    List<String> shoppingQueries = new ArrayList<>();
     try {
-      shoppingQuery = getQuery(request.getParameter("photo-category"), uploadedImageBytes);
+      shoppingQueries = getQuery(request.getParameter("photo-category"), uploadedImageBytes);
     } catch (IllegalArgumentException | PhotoDetectionException exception) {
       response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
       return;
     }
 
-    ShoppingQueryInput shoppingQueryInput =
-        new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(24).build();
+    int maxResultsNumber = 24;
+    if(shoppingQueries.size()>1){
+        maxResultsNumber = 16;
+    }
+    List<ShoppingQueryInput> shoppingQueryInputs = new ArrayList<>();
+    for (String shoppingQuery : shoppingQueries) {
+        shoppingQueryInputs.add(new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(maxResultsNumber).build());
+    }
+    
 
     // Initialize the Google Shopping querier.
     GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
 
-    List<Product> shoppingQuerierResults = new ArrayList<>();
-    try {
-      shoppingQuerierResults = querier.query(shoppingQueryInput);
-    } catch (IllegalArgumentException
-        | ShoppingQuerierConnectionException
-        | IOException exception) {
-      response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
-      return;
+    List<List<Product>> shoppingQuerierResults = new ArrayList<>();
+    for(ShoppingQueryInput shoppingQueryInput : shoppingQueryInputs) {
+        try {
+        shoppingQuerierResults.add(querier.query(shoppingQueryInput));
+        } catch (IllegalArgumentException
+            | ShoppingQuerierConnectionException
+            | IOException exception) {
+        response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+        return;
+        }
     }
 
     // Convert {@code shoppingQuery} and products List - {@code shoppingQuerierResults} - into JSON
@@ -106,7 +115,7 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     // using Gson library and send a JSON array with both of the JSON strings as response.
     Gson gson = new Gson();
 
-    String shoppingQueryJSON = gson.toJson(shoppingQuery);
+    String shoppingQueryJSON = gson.toJson(shoppingQueries);
     String shoppingQuerierResultsJSON = gson.toJson(shoppingQuerierResults);
     response.setContentType("application/json;");
     response.getWriter().write("[" + shoppingQueryJSON + "," + shoppingQuerierResultsJSON + "]");
@@ -116,8 +125,9 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
    * Returns the shopping query by calling methods from the photo content detection classes, based
    * on the {@code photoCategory}, passing {@code uploadedImageBytes} as argument.
    */
-  private String getQuery(String photoCategory, byte[] uploadedImageBytes)
+  private List<String> getQuery(String photoCategory, byte[] uploadedImageBytes)
       throws IllegalArgumentException, PhotoDetectionException {
+    List<String> queryResults = new ArrayList<>();
     switch (photoCategory) {
       case "product":
         ProductDetectionAPI productDetectionAPI = new ProductDetectionAPIImpl();
@@ -129,23 +139,25 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         } catch (PhotoDetectionException exception) {
           throw exception;
         }
-        return productShoppingQuery;
+        queryResults.add(productShoppingQuery);
+        return queryResults;
       case "shopping-list":
         TextDetectionAPIImpl textDetectionAPI = new TextDetectionAPIImpl();
         ImageTextDectector imageTextDectector = new ImageTextDectector(textDetectionAPI);
 
-        String shoppingQuery;
+        List<String> shoppingQueries = new ArrayList<>();
         try {
-          shoppingQuery = imageTextDectector.extractShoppingList(uploadedImageBytes);
+          shoppingQueries = imageTextDectector.extractShoppingList(uploadedImageBytes);
         } catch (PhotoDetectionException exception) {
           throw exception;
         } catch (IOException e) {
           throw new PhotoDetectionException("Error while getting shopping query.", e);
         }
-        return shoppingQuery;
+        return shoppingQueries;
       case "barcode":
         BarcodeImageDetector barcodeImageDetector = new BarcodeImageDetector();
-        return barcodeImageDetector.detect(uploadedImageBytes);
+        queryResults.add(barcodeImageDetector.detect(uploadedImageBytes));
+        return queryResults;
       default:
         throw new IllegalArgumentException(
             "Photo category has to be either product, shopping-list or barcode.");

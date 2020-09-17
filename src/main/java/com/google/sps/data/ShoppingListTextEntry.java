@@ -22,10 +22,11 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class ShoppingListTextEntry {
 
-  public static ShoppingListTextEntry create(String text, int lowerBoundary) {
-    return new AutoValue_ShoppingListTextEntry(text, lowerBoundary);
+  public static ShoppingListTextEntry create(String text, int lowerXBoundary, int lowerYBoundary) {
+    return new AutoValue_ShoppingListTextEntry(text, lowerXBoundary, lowerYBoundary);
   }
 
   public abstract String getText();
-  public abstract int getLowerBoundary();
+  public abstract int getLowerXBoundary();
+  public abstract int getLowerYBoundary();
 }

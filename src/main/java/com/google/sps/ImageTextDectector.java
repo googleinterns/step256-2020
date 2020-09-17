@@ -16,6 +16,7 @@ package com.google.sps;
 
 import com.google.sps.data.ShoppingListTextEntry;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ public class ImageTextDectector {
     this.textDetectionAPI = textDetectionAPI;
   }
 
-  public String extractShoppingList(byte[] shoppingImageBytes)
+  public List<String> extractShoppingList(byte[] shoppingImageBytes)
       throws IOException, PhotoDetectionException {
     List<ShoppingListTextEntry> shoppingListText = textDetectionAPI.detect(shoppingImageBytes);
 
@@ -42,19 +43,56 @@ public class ImageTextDectector {
   }
 
   /** Creates query from the text detected by cloudVision API. */
-  private String createShoppingListQuery(List<ShoppingListTextEntry> shoppingListText)
+  private List<String> createShoppingListQuery(List<ShoppingListTextEntry> shoppingListText)
       throws PhotoDetectionException {
-    // ToDo: Make an algorithm to create query sentences by separating out text returned by
-    // cloudVisionAPI; to group shoppping items based on their position (y axis).
     if (shoppingListText.isEmpty()) {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
 
-    String queryItem = "";
-    for (ShoppingListTextEntry singleWord : shoppingListText) {
-      queryItem += singleWord.getText() + " ";
-    }
+    List<String> shoppingQueries = algorithm(shoppingListText);
+    return shoppingQueries;
+    //return PhotoShoppingUtil.formatQuery(queryItem);
+  }
 
-    return PhotoShoppingUtil.formatQuery(queryItem);
+  private List<String> algorithm(List<ShoppingListTextEntry> shoppingListText) {
+    // Create query sentences by separating out text returned by
+    // cloudVisionAPI; to group shoppping items based on their position (y axis).
+    int xAxisRef = 0;
+    int yAxisRef = 0;
+    int xAxisCurrent, yAxisCurrent;
+    String sentence = "";
+    List<String> shoppingQueries = new ArrayList<>();
+    xAxisRef = shoppingListText.get(0).getLowerXBoundary();
+    for (ShoppingListTextEntry singleWord : shoppingListText) {
+        if(yAxisRef == 0) {
+            yAxisRef = singleWord.getLowerYBoundary();
+        }
+        xAxisCurrent = singleWord.getLowerXBoundary();
+        yAxisCurrent = singleWord.getLowerYBoundary();
+
+        if(checkForSameLineWord(xAxisCurrent, yAxisCurrent, xAxisRef, yAxisRef)) {
+            sentence += singleWord.getText() + " ";
+        } else {
+            sentence = PhotoShoppingUtil.formatQuery(sentence);
+            shoppingQueries.add(sentence);
+            yAxisRef = 0;
+            sentence = singleWord.getText() + " ";
+        }
+        xAxisRef = xAxisCurrent;
+    }
+    sentence = PhotoShoppingUtil.formatQuery(sentence);
+    shoppingQueries.add(sentence);  
+
+    return shoppingQueries;
+  }
+
+    private boolean checkForSameLineWord(int lowerXCurrent, int lowerYCurrent, int xAxisRef, int yAxisRef) {
+
+    if(lowerXCurrent >= xAxisRef && 
+       yAxisRef - NOISE_FACTOR <= lowerYCurrent && 
+       lowerYBoundary <= yAxisRef + NOISE_FACTOR) {
+        return true;
+    }
+    return false;
   }
 }
