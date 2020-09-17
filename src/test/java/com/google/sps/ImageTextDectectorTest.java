@@ -41,8 +41,8 @@ public final class ImageTextDectectorTest {
   }
 
   /**
-   * Set text detection result/exception, mocking Cloud Vision API, and initialize ImageTextDectector's
-   * object.
+   * Set text detection result/exception, mocking Cloud Vision API, and initialize
+   * ImageTextDectector's object.
    */
   private void initImageTextDectector(List<ShoppingListTextEntry> shoppingListTextEntries) {
     fakeTextDetectionAPIImpl.setReturnValue(shoppingListTextEntries);
@@ -71,7 +71,7 @@ public final class ImageTextDectectorTest {
   /** Negative test for no text */
   @Test
   public void noText() throws Exception {
-    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
+    List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
 
     initImageTextDectector(shoppingListTextEntries);
 
@@ -89,7 +89,7 @@ public final class ImageTextDectectorTest {
 
   @Test
   public void singleWordImage() throws Exception {
-    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
+    List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Bag", 10, 10, 13));
 
     initImageTextDectector(shoppingListTextEntries);
@@ -102,7 +102,7 @@ public final class ImageTextDectectorTest {
 
   @Test
   public void multiWordsInSingleLineImage() throws Exception {
-    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
+    List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10, 10, 13));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 15, 11, 14));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("For", 20, 9, 12));
@@ -118,7 +118,7 @@ public final class ImageTextDectectorTest {
 
   @Test
   public void multiWordsWithSpecialCharsImage() throws Exception {
-    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
+    List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10, 10, 13));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 15, 11, 13));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("^+-", 22, 8, 13));
@@ -134,7 +134,7 @@ public final class ImageTextDectectorTest {
 
   @Test
   public void multiWordsInMultiLinesImage() throws Exception {
-    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
+    List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Canon", 134, 63, 71));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Camera", 237, 63, 71));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Pink", 134, 78, 86));
@@ -149,9 +149,9 @@ public final class ImageTextDectectorTest {
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
 
-    @Test
+  @Test
   public void singleWordsInMultiLinesImage() throws Exception {
-    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
+    List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
     shoppingListTextEntries.add(ShoppingListTextEntry.create("NoteBook", 10, 10, 15));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Tea", 10, 20, 26));
 

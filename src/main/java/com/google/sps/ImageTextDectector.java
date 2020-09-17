@@ -20,12 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class generates a shopping list based on image 
- * 1) It uses cloudVisionAPI to scan an image containing shopping
- * list items and detect text from it. 
- * 2) It then uses an algorithm to create shopping sentences (queries)
- * from the text and their position. 
- * 3) This list of queries is returned to the Servlet from the method 'extractShoppingList'.
+ * This class generates a shopping list based on image 1) It uses cloudVisionAPI to scan an image
+ * containing shopping list items and detect text from it. 2) It then uses an algorithm to create
+ * shopping sentences (queries) from the text and their position. 3) This list of queries is
+ * returned to the Servlet from the method 'extractShoppingList'.
  */
 public class ImageTextDectector {
 
@@ -51,7 +49,7 @@ public class ImageTextDectector {
 
     List<String> shoppingQueries = algorithm(shoppingListText);
     return shoppingQueries;
-    //return PhotoShoppingUtil.formatQuery(queryItem);
+    // return PhotoShoppingUtil.formatQuery(queryItem);
   }
 
   private List<String> algorithm(List<ShoppingListTextEntry> shoppingListText) {
@@ -62,37 +60,33 @@ public class ImageTextDectector {
     List<String> shoppingQueries = new ArrayList<>();
     int yAxisPrevUpper = shoppingListText.get(0).getUpperYBoundary();
     for (ShoppingListTextEntry singleWord : shoppingListText) {
-        xAxisCurrent = singleWord.getLowerXBoundary();
-        yAxisCurrentLower = singleWord.getLowerYBoundary();
-        yAxisCurrentUpper = singleWord.getUpperYBoundary();
+      xAxisCurrent = singleWord.getLowerXBoundary();
+      yAxisCurrentLower = singleWord.getLowerYBoundary();
+      yAxisCurrentUpper = singleWord.getUpperYBoundary();
 
-        if(checkForSameLineWord(xAxisCurrent, yAxisCurrentLower,yAxisPrevUpper)) {
-            sentence += singleWord.getText() + " ";
-        } else {
-            sentence = PhotoShoppingUtil.formatQuery(sentence);
-            if(!sentence.isEmpty()) {
-                shoppingQueries.add(sentence);
-            }
-            sentence = singleWord.getText() + " ";
+      if (checkForSameLineWord(xAxisCurrent, yAxisCurrentLower, yAxisPrevUpper)) {
+        sentence += singleWord.getText() + " ";
+      } else {
+        sentence = PhotoShoppingUtil.formatQuery(sentence);
+        if (!sentence.isEmpty()) {
+          shoppingQueries.add(sentence);
         }
+        sentence = singleWord.getText() + " ";
+      }
 
-        yAxisPrevUpper = yAxisCurrentUpper;
+      yAxisPrevUpper = yAxisCurrentUpper;
     }
     sentence = PhotoShoppingUtil.formatQuery(sentence);
-    if(!sentence.isEmpty()) {
-        shoppingQueries.add(sentence);
+    if (!sentence.isEmpty()) {
+      shoppingQueries.add(sentence);
     }
 
     return shoppingQueries;
   }
 
-    private boolean checkForSameLineWord(int lowerXCurrent, int lowerYCurrent, int prevUpperY) {
-    /*
-    ** If prevYUpper < currYLower -> Next sentence
-    ** If prevXlower > currXlower -> Next sentence
-    */
-    if(lowerYCurrent > prevUpperY) {
-        return false;
+  private boolean checkForSameLineWord(int lowerXCurrent, int lowerYCurrent, int prevUpperY) {
+    if (lowerYCurrent > prevUpperY) {
+      return false;
     }
     return true;
   }

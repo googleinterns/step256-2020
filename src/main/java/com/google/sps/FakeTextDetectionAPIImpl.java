@@ -19,32 +19,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-  * This is a fake implementation class used in the unit tests to avoid triggering cloudVisionAPI calls.
-  * The test's setup should provide either of the two values
-  * 1) Set the exception status
-  * 2) Set the data value with expected response to be returned back.
-  */
+ * This is a fake implementation class used in the unit tests to avoid triggering cloudVisionAPI
+ * calls. The test's setup should provide either of the two values 1) Set the exception status 2)
+ * Set the data value with expected response to be returned back.
+ */
 public class FakeTextDetectionAPIImpl implements TextDetectionAPI {
   private List<ShoppingListTextEntry> detectedData;
   private PhotoDetectionException photoDetectionException;
-  
+
   public FakeTextDetectionAPIImpl() {
-      // Initialize detectedData to a default value
-      detectedData = new ArrayList<>();
-      this.detectedData.add(ShoppingListTextEntry.create("Bag", 10, 10, 13));
+    // Initialize detectedData to a default value
+    detectedData = new ArrayList<>();
+    this.detectedData.add(ShoppingListTextEntry.create("Bag", 10, 10, 13));
   }
 
-  /** 
-   * Set expected response in detectedData variable to be returned. 
-   * Called from the test's setup, passing the expected response as parameter 
+  /**
+   * Set expected response in detectedData variable to be returned. Called from the test's setup,
+   * passing the expected response as parameter
    */
   public void setReturnValue(List<ShoppingListTextEntry> detectedData) {
     this.detectedData = detectedData;
   }
 
-  /** 
-   * Set exception to be thrown. 
-   * Called from the test's setup, passing the expected photoDetectionException as parameter
+  /**
+   * Set exception to be thrown. Called from the test's setup, passing the expected
+   * photoDetectionException as parameter
    */
   public void setException(PhotoDetectionException photoDetectionException) {
     this.photoDetectionException = photoDetectionException;
