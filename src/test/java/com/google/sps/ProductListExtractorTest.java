@@ -115,4 +115,29 @@ public final class ProductListExtractorTest {
 
     Assert.assertTrue(actualProducts.isEmpty());
   }
+
+  @Test
+  public void wrongClassNames() throws Exception {
+    // Have a doc where class names do noyt match the ones used in the Google Shopping results page.
+    
+    Document mockResultsDoc = 
+        Jsoup.parse(new File("./src/main/webapp/mock-shopping-results/wrong-classes.html"), "UTF-8");
+
+    List<Product> actualProducts = productListExtractor.extract(mockResultsDoc);
+
+    Assert.assertTrue(actualProducts.isEmpty());
+  }
+
+  @Test
+  public void interchangedClassNames() throws Exception {
+    // Have a doc with interchanged class names.
+    
+    Document mockResultsDoc = 
+        Jsoup.parse(
+            new File("./src/main/webapp/mock-shopping-results/interchange-class-names.html"), "UTF-8");
+
+    List<Product> actualProducts = productListExtractor.extract(mockResultsDoc);
+
+    Assert.assertTrue(actualProducts.isEmpty());
+  }
 }
