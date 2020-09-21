@@ -66,31 +66,35 @@ public class ImageTextDectector {
       yAxisCurrentLower = singleWord.getLowerYBoundary();
       yAxisCurrentUpper = singleWord.getUpperYBoundary();
 
-      if (checkForSameLineWord(xAxisCurrent, yAxisCurrentLower, yAxisPrevUpper)) {
+      if (isInSameLine(xAxisCurrent, yAxisCurrentLower, yAxisPrevUpper)) {
         sentence += singleWord.getText() + " ";
       } else {
-        sentence = PhotoShoppingUtil.formatQuery(sentence);
-        if (!sentence.isEmpty()) {
-          shoppingQueries.add(sentence);
-        }
+        shoppingQueries = addSentence(sentence, shoppingQueries);
         sentence = singleWord.getText() + " ";
       }
 
       yAxisPrevUpper = yAxisCurrentUpper;
     }
 
+    shoppingQueries = addSentence(sentence, shoppingQueries);
+
+    return shoppingQueries;
+  }
+
+  private boolean isInSameLine(int lowerXCurrent, int lowerYCurrent, int prevUpperY) {
+    if (lowerYCurrent > prevUpperY) {
+      return false;
+    }
+    return true;
+  }
+
+  private List<String> addSentence(String sentence, List<String> shoppingQueries) {
     sentence = PhotoShoppingUtil.formatQuery(sentence);
+
     if (!sentence.isEmpty()) {
       shoppingQueries.add(sentence);
     }
 
     return shoppingQueries;
-  }
-
-  private boolean checkForSameLineWord(int lowerXCurrent, int lowerYCurrent, int prevUpperY) {
-    if (lowerYCurrent > prevUpperY) {
-      return false;
-    }
-    return true;
   }
 }

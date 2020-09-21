@@ -20,8 +20,8 @@ import java.util.List;
 
 /**
  * This is a fake implementation class used in the unit tests to avoid triggering cloudVisionAPI
- * calls. The test's setup should provide either of the two values 
- * 1) Set the exception status 
+ * calls. The test's setup should provide either of the two values
+ * 1) Set the exception status
  * 2) Set the data value with expected response to be returned back.
  */
 public class FakeTextDetectionAPIImpl implements TextDetectionAPI {
