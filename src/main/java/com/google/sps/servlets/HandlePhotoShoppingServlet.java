@@ -112,7 +112,6 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         }
     shoppingResults.add(ShoppingResult.create(shoppingQueryInput.getShoppingQuery(), shoppingQuerierResults));
     }
-System.out.println(shoppingResults);
     // Convert {@code shoppingQuery} and products List - {@code shoppingQuerierResults} - into JSON
     // strings
     // using Gson library and send a JSON array with both of the JSON strings as response.
@@ -148,7 +147,6 @@ System.out.println(shoppingResults);
         List<String> shoppingQueries = new ArrayList<>();
         try {
           shoppingQueries = imageTextDectector.extractShoppingList(uploadedImageBytes);
-System.out.println("shoppingQueries:\n"+shoppingQueries);
         } catch (PhotoDetectionException exception) {
           throw exception;
         } catch (IOException e) {
