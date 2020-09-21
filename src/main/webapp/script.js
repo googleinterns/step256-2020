@@ -37,25 +37,28 @@ async function fetchBlobstoreUrlAndShowForm() {
  * into {@code products}, and calls the method for integrating those results into the main 
  * web page.
  */
+ let uploadedImageFile;
 async function onSubmitUploadImageForm() {
   // Get the data introduced by the user in the form.
   const photoCategory = document.getElementById('photo-category').value;
-  const selectedFile = document.getElementById('input-photo').files[0];
+  uploadedImageFile = document.getElementById('input-photo').files[0];
 
   // Construct the FormData object.
   let formData = new FormData();
   formData.append('photo-category', photoCategory);
-  formData.append('photo', selectedFile);
+  formData.append('photo', uploadedImageFile);
 
   // Before making the POST request, empty or hide containers from previous photo requests.
-  $('#shopping-query-display').empty();
   if (!$('#shopping-query-display-container').hasClass('hidden')) {
     $('#shopping-query-display-container').addClass('hidden');
   }
   $('#shopping-results-wrapper').empty();
+  $('#re-search-form').empty();
 
   // Stop displaying the logo.
-  $('#logo').addClass('hidden');
+  if (!$('#logo').hasClass('hidden')) {
+    $('#logo').addClass('hidden');
+  }
 
   // Close the form modal and display a prompt, alerting the user that the results are loading.
   $('#upload-image-modal').modal('hide');
@@ -91,6 +94,14 @@ async function onSubmitUploadImageForm() {
   // Show the user the shopping query built to search on Google Shopping.
   $('#shopping-query-display-container').removeClass('hidden');
   $('#shopping-query').text(shoppingQuery);
+
+  $('#re-search-form').html(
+        `<label><input type="checkbox" name="checkbox" value="shoe">Shoe</label><br>
+        <label><input type="checkbox" name="checkbox" value="pink">pink</label><br>
+        <label><input type="checkbox" name="checkbox" value="running">running</label><br>
+
+        <br>
+        <button class="button mt-3" onclick="onSubmitReSearchForm()">Re-search</button>`);
 
   appendShoppingResults(products);
 }
@@ -144,4 +155,70 @@ function getProductElementHTML(productTitle,
               </div>
             </div>
           </div>`;
+}
+
+// ----------------------------------------------------------------------
+
+async function onSubmitReSearchForm() {
+  let chosenLabels = [];
+
+  $('input:checkbox[name="checkbox"]:checked').each(function(){
+    chosenLabels.push($(this).val());
+  });
+  const reSearchShoppingQuery = chosenLabels.join(' ');
+
+
+  // Construct the FormData object.
+  let formData = new FormData();
+  formData.append('text-query', reSearchShoppingQuery);
+  formData.append('photo', uploadedImageFile);
+
+  // Before making the POST request, empty or hide containers from previous photo requests.
+  $('#shopping-query-display').empty();
+  if (!$('#shopping-query-display-container').hasClass('hidden')) {
+    $('#shopping-query-display-container').addClass('hidden');
+  }
+  $('#shopping-results-wrapper').empty();
+
+  // Stop displaying the logo.
+  if (!$('#logo').hasClass('hidden')) {
+    $('#logo').addClass('hidden');
+  }
+
+  // Close the form modal and display a prompt, alerting the user that the results are loading.
+  $('#upload-image-modal').modal('hide');
+  $('#search-loading-prompt').text('Shopping results loading, please wait!');
+  $('#loading-gif-prompt').removeClass('hidden');
+
+  // Make a POST request to '/text-search' to process the image uploading.
+  const response = await fetch('/text-search', {
+        method: 'POST',
+        body: formData
+      }).catch((error) => {
+        console.warn(error);
+        return new Response(JSON.stringify({
+          code: error.response.status,
+          message: 'Failed to fetch /text-search',
+        }));
+      });
+
+  if (!response.ok) {
+    return Promise.reject(response);
+  }
+
+  // The request returns a JSON array with the shopping query used to search on Google Shopping and
+  // the data about each product from the Google Shopping results page.
+  const data = await response.json();
+  const shoppingQuery = data[0]; 
+  const products = data[1]; 
+
+  // Empty the prompt container and add the {@code products} content into the page.
+  $('#search-loading-prompt').empty();
+  $('#loading-gif-prompt').addClass('hidden');
+
+  // Show the user the shopping query built to search on Google Shopping.
+  $('#shopping-query-display-container').removeClass('hidden');
+  $('#shopping-query').text(shoppingQuery);
+
+  appendShoppingResults(products);
 }

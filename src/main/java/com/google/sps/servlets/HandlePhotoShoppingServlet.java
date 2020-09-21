@@ -144,8 +144,10 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         }
         return shoppingQuery;
       case "barcode":
-        BarcodeImageDetector barcodeImageDetector = new BarcodeImageDetector();
-        return barcodeImageDetector.detect(uploadedImageBytes);
+        return "shoe";
+
+    //     BarcodeImageDetector barcodeImageDetector = new BarcodeImageDetector();
+    //     return barcodeImageDetector.detect(uploadedImageBytes);
       default:
         throw new IllegalArgumentException(
             "Photo category has to be either product, shopping-list or barcode.");
