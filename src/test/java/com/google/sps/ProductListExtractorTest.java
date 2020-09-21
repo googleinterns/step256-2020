@@ -59,7 +59,6 @@ public final class ProductListExtractorTest {
     
     Document mockResultsDoc = 
         Jsoup.parse(new File("./src/main/webapp/mock-shopping-results/complete-data.html"), "UTF-8");
-
     List<Product> actualProducts = productListExtractor.extract(mockResultsDoc);
 
     Assert.assertEquals(expectedProducts, actualProducts);
@@ -78,7 +77,6 @@ public final class ProductListExtractorTest {
     Document mockResultsDoc = 
         Jsoup.parse(
             new File("./src/main/webapp/mock-shopping-results/product-rating-missing.html"), "UTF-8");
-
     List<Product> actualProducts = productListExtractor.extract(mockResultsDoc);
 
     Assert.assertEquals(expectedProducts, actualProducts);
@@ -97,7 +95,6 @@ public final class ProductListExtractorTest {
     Document mockResultsDoc = 
         Jsoup.parse(
             new File("./src/main/webapp/mock-shopping-results/empty-product-title.html"), "UTF-8");
-
     List<Product> actualProducts = productListExtractor.extract(mockResultsDoc);
 
     Assert.assertEquals(expectedProducts, actualProducts);
@@ -110,7 +107,6 @@ public final class ProductListExtractorTest {
     
     Document mockResultsDoc = 
         Jsoup.parse(new File("./src/main/webapp/mock-shopping-results/no-data.html"), "UTF-8");
-
     List<Product> actualProducts = productListExtractor.extract(mockResultsDoc);
 
     Assert.assertTrue(actualProducts.isEmpty());
@@ -122,7 +118,6 @@ public final class ProductListExtractorTest {
     
     Document mockResultsDoc = 
         Jsoup.parse(new File("./src/main/webapp/mock-shopping-results/wrong-classes.html"), "UTF-8");
-
     List<Product> actualProducts = productListExtractor.extract(mockResultsDoc);
 
     Assert.assertTrue(actualProducts.isEmpty());
@@ -135,7 +130,6 @@ public final class ProductListExtractorTest {
     Document mockResultsDoc = 
         Jsoup.parse(
             new File("./src/main/webapp/mock-shopping-results/interchange-class-names.html"), "UTF-8");
-
     List<Product> actualProducts = productListExtractor.extract(mockResultsDoc);
 
     Assert.assertTrue(actualProducts.isEmpty());
