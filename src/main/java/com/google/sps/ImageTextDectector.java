@@ -49,6 +49,8 @@ public class ImageTextDectector {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
 
+    shoppingListText.remove(0);
+    
     List<String> shoppingQueries = algorithm(shoppingListText);
     return shoppingQueries;
     // return PhotoShoppingUtil.formatQuery(queryItem);
