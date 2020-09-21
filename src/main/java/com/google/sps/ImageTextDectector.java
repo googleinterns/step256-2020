@@ -20,10 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class generates a shopping list based on image 1) It uses cloudVisionAPI to scan an image
- * containing shopping list items and detect text from it. 2) It then uses an algorithm to create
- * shopping sentences (queries) from the text and their position. 3) This list of queries is
- * returned to the Servlet from the method 'extractShoppingList'.
+ * This class generates a shopping list based on image 
+ * 1) It uses cloudVisionAPI to scan an image containing shopping
+ * list items and detect text from it. 
+ * 2) It then uses an algorithm to create shopping sentences (queries)
+ * from the text and their position. 
+ * 3) This list of queries is returned to the Servlet from the method 'extractShoppingList'.
  */
 public class ImageTextDectector {
 
@@ -53,8 +55,8 @@ public class ImageTextDectector {
   }
 
   private List<String> algorithm(List<ShoppingListTextEntry> shoppingListText) {
-    // Create query sentences by separating out text returned by
-    // cloudVisionAPI; to group shoppping items based on their position (y axis).
+    // Create query sentences by separating out text returned by cloudVisionAPI 
+    // To group shoppping items based on their position (y axis).
     int xAxisCurrent, yAxisCurrentLower, yAxisCurrentUpper;
     String sentence = "";
     List<String> shoppingQueries = new ArrayList<>();
@@ -76,6 +78,7 @@ public class ImageTextDectector {
 
       yAxisPrevUpper = yAxisCurrentUpper;
     }
+
     sentence = PhotoShoppingUtil.formatQuery(sentence);
     if (!sentence.isEmpty()) {
       shoppingQueries.add(sentence);

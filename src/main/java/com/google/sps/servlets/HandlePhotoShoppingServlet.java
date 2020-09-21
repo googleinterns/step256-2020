@@ -101,12 +101,12 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     List<List<Product>> shoppingQuerierResults = new ArrayList<>();
     for(ShoppingQueryInput shoppingQueryInput : shoppingQueryInputs) {
         try {
-        shoppingQuerierResults.add(querier.query(shoppingQueryInput));
+            shoppingQuerierResults.add(querier.query(shoppingQueryInput));
         } catch (IllegalArgumentException
             | ShoppingQuerierConnectionException
             | IOException exception) {
-        response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
-        return;
+            response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+            return;
         }
     }
 
