@@ -107,8 +107,8 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
         } catch (IllegalArgumentException
             | ShoppingQuerierConnectionException
             | IOException exception) {
-        response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
-        return;
+            response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+            return;
         }
     shoppingResults.add(ShoppingResult.create(shoppingQueryInput.getShoppingQuery(), shoppingQuerierResults));
     }

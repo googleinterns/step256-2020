@@ -41,8 +41,8 @@ public final class ImageTextDectectorTest {
   }
 
   /**
-   * Set text detection result/exception, mocking Cloud Vision API, and initialize ImageTextDectector's
-   * object.
+   * Set text detection result/exception, mocking Cloud Vision API, and initialize
+   * ImageTextDectector's object.
    */
   private void initImageTextDectector(List<ShoppingListTextEntry> shoppingListTextEntries) {
     fakeTextDetectionAPIImpl.setReturnValue(shoppingListTextEntries);
@@ -71,7 +71,7 @@ public final class ImageTextDectectorTest {
   /** Negative test for no text */
   @Test
   public void noText() throws Exception {
-    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
+    List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
 
     initImageTextDectector(shoppingListTextEntries);
 
@@ -89,7 +89,7 @@ public final class ImageTextDectectorTest {
 
   @Test
   public void singleWordImage() throws Exception {
-    List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
+    List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Bag", 10, 10, 13));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Bag", 10, 10, 13));
 
@@ -153,7 +153,7 @@ public final class ImageTextDectectorTest {
     Assert.assertEquals(expectedShoppingQuery, actualShoppingQuery);
   }
 
-    @Test
+  @Test
   public void singleWordsInMultiLinesImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries= new ArrayList<>();
     shoppingListTextEntries.add(ShoppingListTextEntry.create("NoteBook Tea", 10, 10, 26));

@@ -53,49 +53,50 @@ public class ImageTextDectector {
 
     List<String> shoppingQueries = algorithm(shoppingListText);
     return shoppingQueries;
-    //return PhotoShoppingUtil.formatQuery(queryItem);
+    // return PhotoShoppingUtil.formatQuery(queryItem);
   }
 
   private List<String> algorithm(List<ShoppingListTextEntry> shoppingListText) {
-    // Create query sentences by separating out text returned by
-    // cloudVisionAPI; to group shoppping items based on their position (y axis).
+    // Create query sentences by separating out text returned by cloudVisionAPI 
+    // To group shoppping items based on their position (y axis).
     int xAxisCurrent, yAxisCurrentLower, yAxisCurrentUpper;
     String sentence = "";
     List<String> shoppingQueries = new ArrayList<>();
     int yAxisPrevUpper = shoppingListText.get(0).getUpperYBoundary();
     for (ShoppingListTextEntry singleWord : shoppingListText) {
-        xAxisCurrent = singleWord.getLowerXBoundary();
-        yAxisCurrentLower = singleWord.getLowerYBoundary();
-        yAxisCurrentUpper = singleWord.getUpperYBoundary();
+      xAxisCurrent = singleWord.getLowerXBoundary();
+      yAxisCurrentLower = singleWord.getLowerYBoundary();
+      yAxisCurrentUpper = singleWord.getUpperYBoundary();
 
-        if(checkForSameLineWord(xAxisCurrent, yAxisCurrentLower,yAxisPrevUpper)) {
-            sentence += singleWord.getText() + " ";
-        } else {
-            sentence = PhotoShoppingUtil.formatQuery(sentence);
-            if(!sentence.isEmpty()) {
-                shoppingQueries.add(sentence);
-            }
-            sentence = singleWord.getText() + " ";
-        }
+      if (isInSameLine(xAxisCurrent, yAxisCurrentLower, yAxisPrevUpper)) {
+        sentence += singleWord.getText() + " ";
+      } else {
+        shoppingQueries = addSentence(sentence, shoppingQueries);
+        sentence = singleWord.getText() + " ";
+      }
 
-        yAxisPrevUpper = yAxisCurrentUpper;
+      yAxisPrevUpper = yAxisCurrentUpper;
     }
-    sentence = PhotoShoppingUtil.formatQuery(sentence);
-    if(!sentence.isEmpty()) {
-        shoppingQueries.add(sentence);
-    }
-System.out.println("ImageTextDetector results:\n"+shoppingQueries);
+
+    shoppingQueries = addSentence(sentence, shoppingQueries);
+
     return shoppingQueries;
   }
 
-    private boolean checkForSameLineWord(int lowerXCurrent, int lowerYCurrent, int prevUpperY) {
-    /*
-    ** If prevYUpper < currYLower -> Next sentence
-    ** If prevXlower > currXlower -> Next sentence
-    */
-    if(lowerYCurrent > prevUpperY) {
-        return false;
+  private boolean isInSameLine(int lowerXCurrent, int lowerYCurrent, int prevUpperY) {
+    if (lowerYCurrent > prevUpperY) {
+      return false;
     }
     return true;
+  }
+
+  private List<String> addSentence(String sentence, List<String> shoppingQueries) {
+    sentence = PhotoShoppingUtil.formatQuery(sentence);
+
+    if (!sentence.isEmpty()) {
+      shoppingQueries.add(sentence);
+    }
+
+    return shoppingQueries;
   }
 }
