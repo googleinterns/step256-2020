@@ -94,7 +94,6 @@ public class TextDetectionAPIImpl implements TextDetectionAPI {
                 annotation.getBoundingPoly().getVertices(3).getY()));
       }
     }
-System.out.println("shoppingListText" +shoppingListText);
     return shoppingListText;
   }
 }

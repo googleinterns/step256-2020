@@ -87,6 +87,8 @@ async function onSubmitUploadImageForm() {
   $('#loading-gif-prompt').addClass('hidden');
 
   $('#shopping-query-display-container').removeClass('hidden');
+  // So that the results list starts at a new line
+  $('#shopping-query').append('<br />');
 
   appendShoppingResults(shoppingResults);
 }
@@ -97,7 +99,8 @@ async function onSubmitUploadImageForm() {
 async function appendShoppingResults(shoppingResults) {
   shoppingResults.forEach((result) => {
     // Show the user the shopping query built to search on Google Shopping.
-    const $query = '<div class = \'text-center query\'>'+result['query']+'</div>';
+    $('#shopping-query').append(result['query'] + '<br />');
+    const $query = '<div class = \'text-center query\'>' +result['query']+ '</div>';
     $('#shopping-results-wrapper').append($query);
 
     const $listProductsContainer = $('<div>', {class: 'row'});
