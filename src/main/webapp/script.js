@@ -53,6 +53,7 @@ async function onSubmitUploadImageForm() {
     $('#shopping-query-display-container').addClass('hidden');
   }
   $('#shopping-results-wrapper').empty();
+  $('#shopping-query').empty();
 
   // Stop displaying the logo.
   $('#logo').addClass('hidden');
