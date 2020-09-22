@@ -90,8 +90,8 @@ public final class ImageTextDectectorTest {
   @Test
   public void singleWordImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Bag", 10, 10, 13));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Bag", 10, 10, 13));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Bag", 10, 13));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Bag", 10, 13));
 
     initImageTextDectector(shoppingListTextEntries);
 
@@ -104,11 +104,11 @@ public final class ImageTextDectectorTest {
   @Test
   public void multiWordsInSingleLineImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue Shoes For Boys", 10, 9, 14));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10, 10, 13));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 15, 11, 14));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("For", 20, 9, 12));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Boys", 28, 10, 13));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue Shoes For Boys", 9, 14));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10, 13));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 11, 14));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("For", 9, 12));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Boys", 10, 13));
 
     initImageTextDectector(shoppingListTextEntries);
 
@@ -121,11 +121,11 @@ public final class ImageTextDectectorTest {
   @Test
   public void multiWordsWithSpecialCharsImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue Shoes ^+- \n", 10, 8, 13));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10, 10, 13));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 15, 11, 13));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("^+-", 22, 8, 13));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("\n", 29, 14, 13));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue Shoes ^+- \n", 8, 13));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10, 13));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 11, 13));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("^+-", 8, 13));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("\n", 14, 13));
 
     initImageTextDectector(shoppingListTextEntries);
 
@@ -138,11 +138,11 @@ public final class ImageTextDectectorTest {
   @Test
   public void multiWordsInMultiLinesImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Canon Camera Pink shoes", 134, 63, 86));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Canon", 134, 63, 71));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Camera", 237, 63, 71));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Pink", 134, 78, 86));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("shoes", 160, 78, 86));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Canon Camera Pink shoes", 63, 86));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Canon", 63, 71));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Camera", 63, 71));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Pink", 78, 86));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("shoes", 78, 86));
 
     initImageTextDectector(shoppingListTextEntries);
 
@@ -156,9 +156,9 @@ public final class ImageTextDectectorTest {
   @Test
   public void singleWordsInMultiLinesImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("NoteBook Tea", 10, 10, 26));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("NoteBook", 10, 10, 15));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Tea", 10, 20, 26));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("NoteBook Tea", 10, 26));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("NoteBook", 10, 15));
+    shoppingListTextEntries.add(ShoppingListTextEntry.create("Tea", 20, 26));
 
     initImageTextDectector(shoppingListTextEntries);
 
