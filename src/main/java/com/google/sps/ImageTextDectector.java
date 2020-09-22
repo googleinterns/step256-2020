@@ -39,60 +39,78 @@ public class ImageTextDectector {
       throws IOException, PhotoDetectionException {
     List<ShoppingListTextEntry> shoppingListText = textDetectionAPI.detect(shoppingImageBytes);
 
-    return createShoppingListQuery(shoppingListText);
+    return createShoppingListQueries(shoppingListText);
   }
 
   /** Creates query from the text detected by cloudVision API. */
-  private List<String> createShoppingListQuery(List<ShoppingListTextEntry> shoppingListText)
+  private List<String> createShoppingListQueries(List<ShoppingListTextEntry> shoppingListText)
       throws PhotoDetectionException {
     if (shoppingListText.isEmpty()) {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
 
+    // Remove the first element of this list because cloud vision API returns all the 
+    // text detetcted as the first element of the list followed by list of single 
+    // words and their properties. Examples of text returned from API can be seen in the test file.
     shoppingListText.remove(0);
-    
-    List<String> shoppingQueries = algorithm(shoppingListText);
-    return shoppingQueries;
-    // return PhotoShoppingUtil.formatQuery(queryItem);
-  }
 
-  private List<String> algorithm(List<ShoppingListTextEntry> shoppingListText) {
-    // Create query sentences by separating out text returned by cloudVisionAPI 
-    // To group shoppping items based on their position (y axis).
+    // To group shoppping items based on their position.
     int xAxisCurrent, yAxisCurrentLower, yAxisCurrentUpper;
     String sentence = "";
     List<String> shoppingQueries = new ArrayList<>();
+    // Initialize previous upper y axis for the first time with the current one.
     int yAxisPrevUpper = shoppingListText.get(0).getUpperYBoundary();
-    for (ShoppingListTextEntry singleWord : shoppingListText) {
-      xAxisCurrent = singleWord.getLowerXBoundary();
-      yAxisCurrentLower = singleWord.getLowerYBoundary();
-      yAxisCurrentUpper = singleWord.getUpperYBoundary();
 
-      if (isInSameLine(xAxisCurrent, yAxisCurrentLower, yAxisPrevUpper)) {
-        sentence += singleWord.getText() + " ";
+    for (ShoppingListTextEntry detectedWord : shoppingListText) {
+      xAxisCurrent = detectedWord.getLowerXBoundary();
+      yAxisCurrentLower = detectedWord.getLowerYBoundary();
+      yAxisCurrentUpper = detectedWord.getUpperYBoundary();
+
+      if (isInSameLine(yAxisCurrentLower, yAxisPrevUpper)) {
+        sentence += detectedWord.getText() + " ";
       } else {
-        shoppingQueries = addSentence(sentence, shoppingQueries);
-        sentence = singleWord.getText() + " ";
+        shoppingQueries = formatAndAddQuery(sentence, shoppingQueries);
+        sentence = detectedWord.getText() + " ";
       }
 
       yAxisPrevUpper = yAxisCurrentUpper;
     }
 
-    shoppingQueries = addSentence(sentence, shoppingQueries);
+    shoppingQueries = formatAndAddQuery(sentence, shoppingQueries);
 
     return shoppingQueries;
   }
 
-  private boolean isInSameLine(int lowerXCurrent, int lowerYCurrent, int prevUpperY) {
-    if (lowerYCurrent > prevUpperY) {
+  private boolean isInSameLine(int currentLowerY, int prevUpperY) {
+    // Check the lower boundary of the current word box to the upper boundary 
+    // of the previous word box.
+    // As noticed from the out put given by Cloud Vision API, the API returns words from left to right and from top to bottom
+    // but while giving their cordinates it places sentences from bottom to top.
+    // The test file has examples of that.
+    // So following the logic that lower y axis boundary is always smaller than the upper y axis boundary 
+    // of word boxes of the same sentence but once the sentence changes ie goes to the next sentence
+    // the lower boundary becomes greater than the upper boundary.  
+
+    // Line 2   // Box2
+                // v previous upper y axis
+    // Line 1   // Box1.1  Box1.2
+                //         ^ current lower y axis
+
+    // Line 2   // Box2
+                // ^ current lower y axis
+                //         v previous upper y axis
+    // Line 1   // Box1.1  Box1.2
+
+    if (currentLowerY > prevUpperY) {
       return false;
     }
     return true;
   }
 
-  private List<String> addSentence(String sentence, List<String> shoppingQueries) {
+  private List<String> formatAndAddQuery(String sentence, List<String> shoppingQueries) {
     sentence = PhotoShoppingUtil.formatQuery(sentence);
 
+    // Add the formatted sentence only if its not empty 
     if (!sentence.isEmpty()) {
       shoppingQueries.add(sentence);
     }
