@@ -87,7 +87,7 @@ async function onSubmitUploadImageForm() {
   $('#loading-gif-prompt').addClass('hidden');
 
   $('#shopping-query-display-container').removeClass('hidden');
-  // So that the results list starts at a new line
+  // So that the queries list starts at a new line
   $('#shopping-query').append('<br />');
 
   appendShoppingResults(shoppingResults);
@@ -98,34 +98,34 @@ async function onSubmitUploadImageForm() {
  */
 async function appendShoppingResults(shoppingResults) {
   shoppingResults.forEach((result) => {
-    // Show the user the shopping query built to search on Google Shopping.
-    $('#shopping-query').append(result['query'] + '<br />');
-    const $query = '<div class = \'text-center query\'>' +result['query']+ '</div>';
-    $('#shopping-results-wrapper').append($query);
+          // Show the user the shopping query built to search on Google Shopping.
+          $('#shopping-query').append(result['query'] + '<br />');
+          const $query = `<div class = 'text-center query'>${result['query']}</div>`;
+          $('#shopping-results-wrapper').append($query);
 
-    const $listProductsContainer = $('<div>', {class: 'row'});
+          const $listProductsContainer = $('<div>', { class: 'row' });
 
-    const $products = result['products'];
-    // Integrate the products into the web page.
-    $products.forEach((product) => {
-      // Create an HTML node for the item container.
-      const $productContainer = $('<div>', {class: 'col-md-4'});
+          const $products = result['products'];
+          // Integrate the products into the web page.
+          $products.forEach((product) => {
+              // Create an HTML node for the item container.
+              const $productContainer = $('<div>', { class: 'col-md-4' });
 
-      // Get the HTML content for the container.
-      const productElementHTML = getProductElementHTML(product.title,
-          product.imageLink,
-          product.priceAndSeller,
-          product.link,
-          product.shippingPrice);
+              // Get the HTML content for the container.
+              const productElementHTML = getProductElementHTML(product.title,
+                  product.imageLink,
+                  product.priceAndSeller,
+                  product.link,
+                  product.shippingPrice);
 
-      // Load the content using jQuery's append.
-      $productContainer.append(productElementHTML);
+              // Load the content using jQuery's append.
+              $productContainer.append(productElementHTML);
 
-      // Add the container to the results page, into the corresponding product wrapper.
-      $listProductsContainer.append($productContainer);
-    });
-    $('#shopping-results-wrapper').append($listProductsContainer);
-  });
+              // Add the container to the results page, into the corresponding product wrapper.
+              $listProductsContainer.append($productContainer);
+          });
+          $('#shopping-results-wrapper').append($listProductsContainer);
+      });
 }
 
 /**
