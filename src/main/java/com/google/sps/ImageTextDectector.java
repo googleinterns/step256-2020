@@ -92,13 +92,13 @@ public class ImageTextDectector {
     // the lower boundary of the current word box becomes greater than the upper boundary of the previous.  
 
     // SAMPLE ITERATION OF CLOUD VISION API OUTPUT
-    // 2nd LOOP 
+    // 2nd iteration 
     // Sentence 2   // Box2
                     // v previous upper y axis
     // Sentence 1   // Box1.1  Box1.2
                     //         ^ current lower y axis
 
-    // 3RD LOOP
+    // 3rd iteration
     // Sentence 2       // Box2
                         // ^ current lower y axis
                         //         v previous upper y axis
