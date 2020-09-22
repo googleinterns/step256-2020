@@ -20,16 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class generates a shopping list based on image 
- * 1) It uses cloudVisionAPI to scan an image containing shopping
+ * This class generates a shopping list based on image provided in method 'extractShoppingList'
+ * 1) It uses cloudVisionAPI to scan the image containing shopping
  * list items and detect text from it. 
- * 2) It then uses an algorithm to create shopping sentences (queries)
- * from the text and their position. 
+ * 2) It then uses an algorithm to extracts shopping sentences (queries)
+ * from the text based on their position (y coordinates). 
  * 3) This list of queries is returned to the Servlet from the method 'extractShoppingList'.
  */
 public class ImageTextDectector {
 
-  TextDetectionAPI textDetectionAPI;
+  // This variable is used to invoke interface's implimentation for real CloudVisionAPI calls and fake calls from tests.
+  private TextDetectionAPI textDetectionAPI;
 
   public ImageTextDectector(TextDetectionAPI textDetectionAPI) {
     this.textDetectionAPI = textDetectionAPI;
@@ -42,7 +43,7 @@ public class ImageTextDectector {
     return createShoppingListQueries(shoppingListText);
   }
 
-  /** Creates query from the text detected by cloudVision API. */
+  /** Creates query from the text detected by Cloud Vision API. */
   private List<String> createShoppingListQueries(List<ShoppingListTextEntry> shoppingListText)
       throws PhotoDetectionException {
     if (shoppingListText.isEmpty()) {
@@ -55,14 +56,14 @@ public class ImageTextDectector {
     shoppingListText.remove(0);
 
     // To group shoppping items based on their position.
-    int xAxisCurrent, yAxisCurrentLower, yAxisCurrentUpper;
+    int yAxisCurrentLower, yAxisCurrentUpper;
     String sentence = "";
     List<String> shoppingQueries = new ArrayList<>();
-    // Initialize previous upper y axis for the first time with the current one.
+
+    // Initialize yAxisPrevUpper with the current upper y value.
     int yAxisPrevUpper = shoppingListText.get(0).getUpperYBoundary();
 
     for (ShoppingListTextEntry detectedWord : shoppingListText) {
-      xAxisCurrent = detectedWord.getLowerXBoundary();
       yAxisCurrentLower = detectedWord.getLowerYBoundary();
       yAxisCurrentUpper = detectedWord.getUpperYBoundary();
 
@@ -73,38 +74,41 @@ public class ImageTextDectector {
         sentence = detectedWord.getText() + " ";
       }
 
+    // Assign current word's upper y value to yAxisPrevUpper for comparisions in the next iteration. 
       yAxisPrevUpper = yAxisCurrentUpper;
     }
 
     shoppingQueries = formatAndAddQuery(sentence, shoppingQueries);
-
     return shoppingQueries;
   }
 
   private boolean isInSameLine(int currentLowerY, int prevUpperY) {
-    // Check the lower boundary of the current word box to the upper boundary 
-    // of the previous word box.
-    // As noticed from the out put given by Cloud Vision API, the API returns words from left to right and from top to bottom
-    // but while giving their cordinates it places sentences from bottom to top.
-    // The test file has examples of that.
-    // So following the logic that lower y axis boundary is always smaller than the upper y axis boundary 
-    // of word boxes of the same sentence but once the sentence changes ie goes to the next sentence
-    // the lower boundary becomes greater than the upper boundary.  
+    // Compare the lower boundary of the current word box to the upper boundary of the previous word box.
+    // The Cloud Vision API returns words from left to right and from top to bottom
+    // but while giving their cordinates it places sentences/ lines from bottom to top.
+    // LOGIC :
+    // (1) Lower y axis boundary is always less than upper y axis boundary for word boxes on the same sentence. 
+    // (2) Once the sentence changes ie goes to the next sentence, 
+    // the lower boundary of the current word box becomes greater than the upper boundary of the previous.  
 
-    // Line 2   // Box2
-                // v previous upper y axis
-    // Line 1   // Box1.1  Box1.2
-                //         ^ current lower y axis
+    // SAMPLE ITERATION OF CLOUD VISION API OUTPUT
+    // 2nd LOOP 
+    // Sentence 2   // Box2
+                    // v previous upper y axis
+    // Sentence 1   // Box1.1  Box1.2
+                    //         ^ current lower y axis
 
-    // Line 2   // Box2
-                // ^ current lower y axis
-                //         v previous upper y axis
-    // Line 1   // Box1.1  Box1.2
+    // 3RD LOOP
+    // Sentence 2       // Box2
+                        // ^ current lower y axis
+                        //         v previous upper y axis
+    // Sentence 1       // Box1.1  Box1.2
 
     if (currentLowerY > prevUpperY) {
-      return false;
+      return false; // Next sentence
     }
-    return true;
+
+    return true; // Same sentence
   }
 
   private List<String> formatAndAddQuery(String sentence, List<String> shoppingQueries) {
