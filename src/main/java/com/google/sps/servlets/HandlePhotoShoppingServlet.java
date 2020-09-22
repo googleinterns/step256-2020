@@ -84,6 +84,8 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     }
 
     int maxResultsNumber = 24;
+    // For shopping-list, where the number of queries exceeds 1, 
+    // limit the number of products displayed for each item.
     if (shoppingQueries.size() > 1) {
       maxResultsNumber = 15;
     }
@@ -136,25 +138,23 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
 
         String productShoppingQuery;
         try {
-          productShoppingQuery = productPhotoDetector.buildShoppingQuery(uploadedImageBytes);
+          queryResults.add(productPhotoDetector.buildShoppingQuery(uploadedImageBytes));
         } catch (PhotoDetectionException exception) {
           throw exception;
         }
-        queryResults.add(productShoppingQuery);
         return queryResults;
       case "shopping-list":
         TextDetectionAPIImpl textDetectionAPI = new TextDetectionAPIImpl();
         ImageTextDectector imageTextDectector = new ImageTextDectector(textDetectionAPI);
 
-        List<String> shoppingQueries = new ArrayList<>();
         try {
-          shoppingQueries = imageTextDectector.extractShoppingList(uploadedImageBytes);
+          queryResults = imageTextDectector.extractShoppingList(uploadedImageBytes);
         } catch (PhotoDetectionException exception) {
           throw exception;
         } catch (IOException e) {
           throw new PhotoDetectionException("Error while getting shopping query.", e);
         }
-        return shoppingQueries;
+        return queryResults;
       case "barcode":
         BarcodeImageDetector barcodeImageDetector = new BarcodeImageDetector();
         queryResults.add(barcodeImageDetector.detect(uploadedImageBytes));

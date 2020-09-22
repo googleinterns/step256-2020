@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class generates a shopping list based on image provided in method 'extractShoppingList'
+ * This class generates a shopping list based on image provided in {@link #extractShoppingList(byte[])}
  * 1) It uses cloudVisionAPI to scan the image containing shopping
  * list items and detect text from it. 
- * 2) It then uses an algorithm to extracts shopping sentences (queries)
+ * 2) It then uses an algorithm to extract shopping sentences (queries)
  * from the text based on their position (y coordinates). 
- * 3) This list of queries is returned to the Servlet from the method 'extractShoppingList'.
+ * 3) This list of queries is returned to the Servlet from the {@link #extractShoppingList(byte[])}.
  */
 public class ImageTextDectector {
 
@@ -88,8 +88,8 @@ public class ImageTextDectector {
     // but while giving their cordinates it places sentences/ lines from bottom to top.
     // LOGIC :
     // (1) Lower y axis boundary is always less than upper y axis boundary for word boxes on the same sentence. 
-    // (2) Once the sentence changes ie goes to the next sentence, 
-    // the lower boundary of the current word box becomes greater than the upper boundary of the previous.  
+    // (2) Once the sentence changes (ie goes to the next row), the lower boundary of the current word box 
+    // becomes greater than the upper boundary of the previous.  
 
     // SAMPLE ITERATION OF CLOUD VISION API OUTPUT
     // 2nd iteration 
@@ -114,7 +114,7 @@ public class ImageTextDectector {
   private List<String> formatAndAddQuery(String sentence, List<String> shoppingQueries) {
     sentence = PhotoShoppingUtil.formatQuery(sentence);
 
-    // Add the formatted sentence only if its not empty 
+    // Add the formatted sentence only if it is not empty. 
     if (!sentence.isEmpty()) {
       shoppingQueries.add(sentence);
     }
