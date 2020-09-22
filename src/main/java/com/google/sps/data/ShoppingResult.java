@@ -16,11 +16,8 @@ package com.google.sps.data;
 
 import com.google.auto.value.AutoValue;
 import java.util.List;
-import com.google.sps.data.Product;
 
-/** 
- * Class containing the query sent to Google Shopping and its Results.
- */
+/** Class containing the query sent to Google Shopping and its Results. */
 @AutoValue
 public abstract class ShoppingResult {
 
@@ -29,5 +26,6 @@ public abstract class ShoppingResult {
   }
 
   public abstract String getQuery();
+
   public abstract List<Product> getProducts();
 }

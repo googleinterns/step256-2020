@@ -22,15 +22,13 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.gson.Gson;
-
 import com.google.sps.BarcodeImageDetector;
-import com.google.sps.ProductDetectionAPI;
-import com.google.sps.ProductDetectionAPIImpl;
-import com.google.sps.PhotoDetectionException;
-import com.google.sps.ProductPhotoDetector;
 import com.google.sps.GoogleShoppingQuerier;
 import com.google.sps.ImageTextDectector;
 import com.google.sps.PhotoDetectionException;
+import com.google.sps.ProductDetectionAPI;
+import com.google.sps.ProductDetectionAPIImpl;
+import com.google.sps.ProductPhotoDetector;
 import com.google.sps.ShoppingQuerierConnectionException;
 import com.google.sps.TextDetectionAPIImpl;
 import com.google.sps.data.Product;
@@ -87,30 +85,34 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     }
 
     int maxResultsNumber = 24;
-    if(shoppingQueries.size()>1){
-        maxResultsNumber = 15;
+    if (shoppingQueries.size() > 1) {
+      maxResultsNumber = 15;
     }
     List<ShoppingQueryInput> shoppingQueryInputs = new ArrayList<>();
     for (String shoppingQuery : shoppingQueries) {
-        shoppingQueryInputs.add(new ShoppingQueryInput.Builder(shoppingQuery).language("en").maxResultsNumber(maxResultsNumber).build());
+      shoppingQueryInputs.add(
+          new ShoppingQueryInput.Builder(shoppingQuery)
+              .language("en")
+              .maxResultsNumber(maxResultsNumber)
+              .build());
     }
-    
 
     // Initialize the Google Shopping querier.
     GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
 
     List<ShoppingResult> shoppingResults = new ArrayList<>();
     List<Product> shoppingQuerierResults = new ArrayList<>();
-    for(ShoppingQueryInput shoppingQueryInput : shoppingQueryInputs) {
-        try {
+    for (ShoppingQueryInput shoppingQueryInput : shoppingQueryInputs) {
+      try {
         shoppingQuerierResults = querier.query(shoppingQueryInput);
-        } catch (IllegalArgumentException
-            | ShoppingQuerierConnectionException
-            | IOException exception) {
-            response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
-            return;
-        }
-    shoppingResults.add(ShoppingResult.create(shoppingQueryInput.getShoppingQuery(), shoppingQuerierResults));
+      } catch (IllegalArgumentException
+          | ShoppingQuerierConnectionException
+          | IOException exception) {
+        response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+        return;
+      }
+      shoppingResults.add(
+          ShoppingResult.create(shoppingQueryInput.getShoppingQuery(), shoppingQuerierResults));
     }
     // Convert {@code shoppingQuery} and products List - {@code shoppingQuerierResults} - into JSON
     // strings
