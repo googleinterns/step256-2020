@@ -45,6 +45,7 @@ public final class ImageTextDectectorTest {
    * object.
    */
   private void initImageTextDectector(List<ShoppingListTextEntry> shoppingListTextEntries) {
+    shoppingListTextEntries.add(0, ShoppingListTextEntry.create("Will be ignored", 10));
     fakeTextDetectionAPIImpl.setReturnValue(shoppingListTextEntries);
     imageTextDectector = new ImageTextDectector(fakeTextDetectionAPIImpl);
   }
