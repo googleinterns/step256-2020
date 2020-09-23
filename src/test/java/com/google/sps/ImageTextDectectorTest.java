@@ -91,7 +91,6 @@ public final class ImageTextDectectorTest {
   public void singleWordImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Bag", 10, 13));
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Bag", 10, 13));
 
     initImageTextDectector(shoppingListTextEntries);
 
@@ -104,7 +103,6 @@ public final class ImageTextDectectorTest {
   @Test
   public void multiWordsInSingleLineImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue Shoes For Boys", 9, 14));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10, 13));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 11, 14));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("For", 9, 12));
@@ -121,7 +119,6 @@ public final class ImageTextDectectorTest {
   @Test
   public void multiWordsWithSpecialCharsImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue Shoes ^+- \n", 8, 13));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Blue", 10, 13));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Shoes", 11, 13));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("^+-", 8, 13));
@@ -138,7 +135,6 @@ public final class ImageTextDectectorTest {
   @Test
   public void multiWordsInMultiLinesImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("Canon Camera Pink shoes", 63, 86));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Canon", 63, 71));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Camera", 63, 71));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Pink", 78, 86));
@@ -156,7 +152,6 @@ public final class ImageTextDectectorTest {
   @Test
   public void singleWordsInMultiLinesImage() throws Exception {
     List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
-    shoppingListTextEntries.add(ShoppingListTextEntry.create("NoteBook Tea", 10, 26));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("NoteBook", 10, 15));
     shoppingListTextEntries.add(ShoppingListTextEntry.create("Tea", 20, 26));
 
