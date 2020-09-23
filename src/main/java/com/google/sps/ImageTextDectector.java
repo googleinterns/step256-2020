@@ -55,8 +55,11 @@ public class ImageTextDectector {
     // words and their properties. Examples of text returned from API can be seen in the test file.
     shoppingListText.remove(0);
 
+    if (shoppingListText.isEmpty()) {
+      throw new PhotoDetectionException("Shopping List is empty");
+    }
+
     // To group shoppping items based on their position.
-    int yAxisCurrentLower, yAxisCurrentUpper;
     String sentence = "";
     List<String> shoppingQueries = new ArrayList<>();
 
@@ -64,8 +67,12 @@ public class ImageTextDectector {
     int yAxisPrevUpper = shoppingListText.get(0).getUpperYBoundary();
 
     for (ShoppingListTextEntry detectedWord : shoppingListText) {
-      yAxisCurrentLower = detectedWord.getLowerYBoundary();
-      yAxisCurrentUpper = detectedWord.getUpperYBoundary();
+      int yAxisCurrentLower = detectedWord.getLowerYBoundary();
+      int yAxisCurrentUpper = detectedWord.getUpperYBoundary();
+      
+      // ToDo: Determine sentence's height by subtracting lower boundary (lower y-axis
+      // position) and upper boundary (upper y-axis position) to help in handwritten recognition
+      // when sentences height ration will vary
 
       if (isInSameLine(yAxisCurrentLower, yAxisPrevUpper)) {
         sentence += detectedWord.getText() + " ";
@@ -74,7 +81,7 @@ public class ImageTextDectector {
         sentence = detectedWord.getText() + " ";
       }
 
-    // Assign current word's upper y value to yAxisPrevUpper for comparisions in the next iteration. 
+      // Assign current word's upper y value to yAxisPrevUpper for comparisions in the next iteration. 
       yAxisPrevUpper = yAxisCurrentUpper;
     }
 
