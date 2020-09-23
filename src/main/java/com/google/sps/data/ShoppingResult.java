@@ -26,6 +26,5 @@ public abstract class ShoppingResult {
   }
 
   public abstract String getQuery();
-
   public abstract List<Product> getProducts();
 }
