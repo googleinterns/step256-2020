@@ -92,7 +92,7 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     }
     List<ShoppingQueryInput> shoppingQueryInputs = new ArrayList<>();
     for (String shoppingQuery : shoppingQueries) {
-      shoppingQueryInputs.add( 
+      shoppingQueryInputs.add(
           new ShoppingQueryInput.Builder(shoppingQuery)
               .language("en")
               .maxResultsNumber(maxResultsNumber)
