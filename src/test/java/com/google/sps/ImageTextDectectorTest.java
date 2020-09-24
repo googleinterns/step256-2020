@@ -50,7 +50,7 @@ public final class ImageTextDectectorTest {
     // https://cloud.google.com/vision/docs/ocr#detect_text_in_a_remote_image
     // So the first element is to be ignored while making shopping queries.
 
-    shoppingListTextEntries.add(0, ShoppingListTextEntry.create("Will be ignored", 10));
+    shoppingListTextEntries.add(0, ShoppingListTextEntry.create("Will be ignored", 10, 13));
     fakeTextDetectionAPIImpl.setReturnValue(shoppingListTextEntries);
     imageTextDectector = new ImageTextDectector(fakeTextDetectionAPIImpl);
   }
