@@ -63,26 +63,23 @@ public class ImageTextDectector {
     String sentence = "";
     List<String> shoppingQueries = new ArrayList<>();
 
-    // Initialize yAxisPrevLower with the current lower y value.
-    int yAxisPrevLower = shoppingListText.get(0).getLowerYBoundary();
+    // Initialize prevLowerYBoundary with the current lower y value.
+    int prevLowerYBoundary = shoppingListText.get(0).getLowerYBoundary();
 
-    for (ShoppingListTextEntry detectedWord : shoppingListText) {
-      int yAxisCurrentLower = detectedWord.getLowerYBoundary();
-      int yAxisCurrentUpper = detectedWord.getUpperYBoundary();
-      
+    for (ShoppingListTextEntry detectedWord : shoppingListText) {      
       // ToDo: Determine sentence's height by subtracting lower boundary (lower y-axis
       // position) and upper boundary (upper y-axis position) to help in handwritten recognition
       // when sentences height ration will vary
 
-      if (isInSameLine(yAxisCurrentUpper, yAxisPrevLower)) {
+      if (isInSameLine(detectedWord.getUpperYBoundary(), prevLowerYBoundary)) {
         sentence += detectedWord.getText() + " ";
       } else {
         shoppingQueries = formatAndAddQuery(sentence, shoppingQueries);
         sentence = detectedWord.getText() + " ";
       }
 
-      // Assign current word's lower y value to yAxisPrevLower for comparisions in the next iteration. 
-      yAxisPrevLower = yAxisCurrentLower;
+      // Assign current word's lower y value to prevLowerYBoundary for comparisions in the next iteration. 
+      prevLowerYBoundary = detectedWord.getLowerYBoundary();
     }
 
     shoppingQueries = formatAndAddQuery(sentence, shoppingQueries);
@@ -94,28 +91,11 @@ public class ImageTextDectector {
     // The Cloud Vision API returns words from left to right and from top to bottom, the origin being
     // the top-left corner.
     // LOGIC :
-    // (1) Upper y axis boundary is always less than lower y axis boundary for word boxes on the same sentence. 
-    // (2) Once the sentence changes (ie goes to the next row), the upper boundary of the current word box 
+    // (1) Upper y axis boundary is always less than lower y axis boundary for word boxes on the same line. 
+    // (2) Once the line changes (ie goes to the next row), the upper boundary of the current word box 
     // becomes greater than the lower boundary of the previous.
 
-    // SAMPLE ITERATION OF CLOUD VISION API OUTPUT
-    // 2nd iteration
-    //                         v current upper y axis
-    // Sentence 1   // Box1.1  Box1.2
-    //                 ^ previous lower y axis
-    // Sentence 2   // Box2
-
-    // 3rd iteration
-    // Sentence 1       // Box1.1  Box1.2
-    //                             ^ previous lower y axis
-    //                     v current upper y axis
-    // Sentence 2       // Box2
-
-    if (currentUpperY > prevLowerY) {
-      return false; // Next sentence
-    }
-
-    return true; // Same sentence
+    return currentUpperY <= prevLowerY;
   }
 
   private List<String> formatAndAddQuery(String sentence, List<String> shoppingQueries) {
