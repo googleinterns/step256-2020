@@ -33,6 +33,7 @@ import com.google.sps.ShoppingQuerierConnectionException;
 import com.google.sps.TextDetectionAPIImpl;
 import com.google.sps.data.Product;
 import com.google.sps.data.ShoppingQueryInput;
+import com.google.sps.data.ShoppingResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -101,27 +102,26 @@ public class HandlePhotoShoppingServlet extends HttpServlet {
     // Initialize the Google Shopping querier.
     GoogleShoppingQuerier querier = new GoogleShoppingQuerier();
 
-    List<List<Product>> shoppingQuerierResults = new ArrayList<>();
+    List<ShoppingResult> shoppingResults = new ArrayList<>();
+    List<Product> shoppingQuerierResults = new ArrayList<>();
     for (ShoppingQueryInput shoppingQueryInput : shoppingQueryInputs) {
       try {
-        shoppingQuerierResults.add(querier.query(shoppingQueryInput));
+        shoppingQuerierResults = querier.query(shoppingQueryInput);
       } catch (IllegalArgumentException
           | ShoppingQuerierConnectionException
           | IOException exception) {
         response.sendError(SC_INTERNAL_SERVER_ERROR, exception.getMessage());
         return;
       }
+      shoppingResults.add(
+          ShoppingResult.create(shoppingQueryInput.getShoppingQuery(), shoppingQuerierResults));
     }
-
     // Convert {@code shoppingQuery} and products List - {@code shoppingQuerierResults} - into JSON
     // strings
     // using Gson library and send a JSON array with both of the JSON strings as response.
     Gson gson = new Gson();
-
-    String shoppingQueryJSON = gson.toJson(shoppingQueries);
-    String shoppingQuerierResultsJSON = gson.toJson(shoppingQuerierResults);
     response.setContentType("application/json;");
-    response.getWriter().write("[" + shoppingQueryJSON + "," + shoppingQuerierResultsJSON + "]");
+    response.getWriter().write(gson.toJson(shoppingResults));
   }
 
   /**
