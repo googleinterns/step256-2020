@@ -15,18 +15,16 @@
 package com.google.sps.data;
 
 import com.google.auto.value.AutoValue;
+import java.util.List;
 
-/** 
- * Class containing Google Shopping list's words and their y-axis position.
- */
+/** Class containing the query sent to Google Shopping and its Results. */
 @AutoValue
-public abstract class ShoppingListTextEntry {
+public abstract class ShoppingResult {
 
-  public static ShoppingListTextEntry create(String text, int upperYBoundary, int lowerYBoundary) {
-    return new AutoValue_ShoppingListTextEntry(text, upperYBoundary, lowerYBoundary);
+  public static ShoppingResult create(String query, List<Product> products) {
+    return new AutoValue_ShoppingResult(query, products);
   }
 
-  public abstract String getText();
-  public abstract int getUpperYBoundary();
-  public abstract int getLowerYBoundary();
+  public abstract String getQuery();
+  public abstract List<Product> getProducts();
 }
