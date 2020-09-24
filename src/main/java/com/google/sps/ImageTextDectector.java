@@ -50,6 +50,16 @@ public class ImageTextDectector {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
 
+    // Remove the first element of this list because cloud vision API returns all the 
+    // text detected as the first element of the list followed by list of single 
+    // words and their properties. Documentation & example: 
+    // https://cloud.google.com/vision/docs/ocr#detect_text_in_a_remote_image
+    shoppingListText.remove(0);
+
+    if (shoppingListText.isEmpty()) {
+      throw new PhotoDetectionException("Shopping List doesn't contain any words");
+    }
+
     String queryItem = "";
     for (ShoppingListTextEntry singleWord : shoppingListText) {
       queryItem += singleWord.getText() + " ";
