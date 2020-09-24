@@ -50,8 +50,8 @@ public class ImageTextDectector {
       throw new PhotoDetectionException("Shopping List doesn't contain any text");
     }
 
-    // Remove the first element of this list because cloud vision API returns all the 
-    // text detetcted as the first element of the list followed by list of single 
+    // Remove the first element of this list because cloud vision API returns all the
+    // text detetcted as the first element of the list followed by list of single
     // words and their properties. Examples of text returned from API can be seen in the test file.
     shoppingListText.remove(0);
 

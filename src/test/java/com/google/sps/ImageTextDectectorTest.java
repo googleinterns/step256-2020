@@ -45,6 +45,12 @@ public final class ImageTextDectectorTest {
    * ImageTextDectector's object.
    */
   private void initImageTextDectector(List<ShoppingListTextEntry> shoppingListTextEntries) {
+    // Cloud vision API returns all the text detected as the first element of the list 
+    // followed by list of single words and their properties. Documentation & example: 
+    // https://cloud.google.com/vision/docs/ocr#detect_text_in_a_remote_image
+    // So the first element is to be ignored while making shopping queries.
+
+    shoppingListTextEntries.add(0, ShoppingListTextEntry.create("Will be ignored", 10));
     fakeTextDetectionAPIImpl.setReturnValue(shoppingListTextEntries);
     imageTextDectector = new ImageTextDectector(fakeTextDetectionAPIImpl);
   }
@@ -71,9 +77,8 @@ public final class ImageTextDectectorTest {
   /** Negative test for no text */
   @Test
   public void noText() throws Exception {
-    List<ShoppingListTextEntry> shoppingListTextEntries = new ArrayList<>();
-
-    initImageTextDectector(shoppingListTextEntries);
+    fakeTextDetectionAPIImpl.setReturnValue(new ArrayList<>());
+    imageTextDectector = new ImageTextDectector(fakeTextDetectionAPIImpl);
 
     Exception exception =
         Assertions.assertThrows(
